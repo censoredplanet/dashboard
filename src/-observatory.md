@@ -370,9 +370,9 @@ const table = view(
 ```js
 function createStackedBarChart(width) {
   const height = 500;
-  const originalMarginTop = 40;
+  const originalMarginTop = 10;
   let marginTop = originalMarginTop;
-  let marginBottom = 50;
+  let marginBottom = 10;
   const marginRight = 10;
   const marginLeft = 40;
   const sDate = new Date(start.value);
@@ -381,7 +381,7 @@ function createStackedBarChart(width) {
   const rotateLabels = daySpan > 60 || window.innerWidth <= 768;
   if (rotateLabels) marginBottom = 80;
   let data = stackedBarData;
-  if (source.value === "DNS" && window.innerWidth <= 768) {
+  if (source.value === "DNS") {
     data = stackedBarData.map((d) => ({
       ...d,
       outcome: d.outcome.includes(":") ? d.outcome.split(":")[0] : d.outcome,
@@ -682,10 +682,9 @@ const root = d3
       (d.index = d.parent ? (d.parent.index = d.parent.index + 1 || 0) : 0),
   );
 
-function height() {
-  let max = 1;
-  root.each((d) => d.children && (max = Math.max(max, d.children.length)));
-  return max * barStep + marginTop + marginBottom;
+function calculateHeight(d) {
+  const numChildren = d.children ? d.children.length : 1;
+  return numChildren * barStep + 15 + marginBottom;
 }
 
 function processData(newdata) {
@@ -831,8 +830,16 @@ function bar(svg, down, d, selector) {
 function down(svg, d) {
   if (!d.children || d3.active(svg.node())) return;
   svg.select(".background").datum(d);
+  const newHeight = calculateHeight(d);
   const transition1 = svg.transition().duration(duration);
   const transition2 = transition1.transition();
+
+  svg.transition(transition1)
+      .attr("height", newHeight)
+      .attr("viewBox", [0, 0, width, newHeight]);
+  svg.select(".background").transition(transition1)
+      .attr("height", newHeight);
+      
   const exit = svg.selectAll(".enter").attr("class", "exit");
   exit.selectAll("rect").attr("fill-opacity", (p) => (p === d ? 0 : null));
   exit.transition(transition1).attr("fill-opacity", 0).remove();
@@ -870,6 +877,14 @@ function up(svg, d) {
   svg.select(".background").datum(d.parent);
   const transition1 = svg.transition().duration(duration);
   const transition2 = transition1.transition();
+
+  const newHeight = calculateHeight(d.parent);
+  svg.transition(transition1)
+      .attr("height", newHeight)
+      .attr("viewBox", [0, 0, width, newHeight]);
+  svg.select(".background").transition(transition1)
+      .attr("height", newHeight);
+
   const exit = svg.selectAll(".enter").attr("class", "exit");
   const totalParentValue = d.parent.children.reduce(
     (sum, child) =>
@@ -907,11 +922,12 @@ function up(svg, d) {
 
 function chartBar(width, container) {
   const root = processData(newdata);
+  const initialHeight = calculateHeight(root);
   const svg = d3
     .create("svg")
-    .attr("viewBox", [0, 0, width, height(root)])
+    .attr("viewBox", [0, 0, width, initialHeight])
     .attr("width", width)
-    .attr("height", height(root))
+    .attr("height", initialHeight)
     .attr("style", "max-width: 100%; height: auto;");
   const totalValue = (root.children || []).reduce(
     (sum, child) =>
@@ -929,7 +945,7 @@ function chartBar(width, container) {
     .attr("fill", "none")
     .attr("pointer-events", "all")
     .attr("width", width)
-    .attr("height", height(root))
+    .attr("height", initialHeight)
     .attr("cursor", "pointer")
     .on("click", (event, d) => up(svg, d));
 
