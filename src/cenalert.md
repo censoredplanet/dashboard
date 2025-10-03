@@ -72,7 +72,13 @@ const countryInput = Inputs.select(countries, {
 });
 const countryGenerator = Generators.input(countryInput);
 ```
-
+<!-- ```js
+const timeRange = Inputs.select(countries, {
+  label: "Time Range",
+  value: defaultCountry ?? countries[0],
+});
+const countryGenerator = Generators.input(countryInput);
+``` -->
 ```js
 const countryCode = countryNameToCode[countryGenerator];
 const filteredEvents = events.filter((d) => d.country === countryCode);
@@ -223,11 +229,13 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
   <div class="filters-row">
     ${countryInput}
     ${Inputs.select(["VPN"], { label: "Search Term", value: "VPN" })}
+
+
   </div>
 </div>
 
 <div class="grid grid-cols-2-3" style="margin-top: 2rem;">
-  <div class="card card-big" style="display: flex; flex-direction: column;">
+  <!-- <div class="card card-big" style="display: flex; flex-direction: column;">
     <h2>${getStartEnd() === defaultStartEnd
         ? "Search volume over the past year"
         : getStartEnd().map(fmtDMY).join(" - ")}
@@ -259,8 +267,8 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
         ]
       })
     )}</span>
-  </div>
-  <div class="card card-side">
+  </div> -->
+  <!-- <div class="card card-side">
     ${eventsCard(filteredEvents, {
         title: "Events (selected period)",
         colorHeader: color.apply("vpn"),
@@ -268,7 +276,7 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
         useWindow: true
         // descKey: "description"
     })}
-  </div>
+  </div> -->
 </div>
 
 <div class="grid">
@@ -314,7 +322,7 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
       })
     )}
   </div>
-  <div class="card" style="display:flex; flex-direction:column;">
+  <!-- <div class="card" style="display:flex; flex-direction:column;">
     <h2>All Events</h2>
     <div style="flex:1; min-height:0; overflow:auto;">
       ${Inputs.table(filteredEventsNum, {
@@ -350,7 +358,7 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
         }
       })}
     </div>
-  </div>
+  </div> -->
 </div>
 
 ```js
