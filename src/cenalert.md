@@ -72,20 +72,52 @@ const countryInput = Inputs.select(countries, {
 });
 const countryGenerator = Generators.input(countryInput);
 ```
-<!-- ```js
-const timeRange = Inputs.select(countries, {
-  label: "Time Range",
-  value: defaultCountry ?? countries[0],
-});
-const countryGenerator = Generators.input(countryInput);
-``` -->
+
 ```js
 const countryCode = countryNameToCode[countryGenerator];
-const filteredEvents = events.filter((d) => d.country === countryCode);
-const timeSeriesFiltered = timeSeries.filter((d) => d.country === countryCode);
+const filteredEvents = events.filter((d) => d.country === countryCode &&
+    (!startDate || d.date >= startDate) &&
+    (!endDate || d.date <= endDate));
+const timeSeriesFiltered = timeSeries.filter((d) => d.country === countryCode &&
+    (!startDate || d.date >= startDate) &&
+    (!endDate || d.date <= endDate));
 const timeSeriesReducedFiltered = timeSeriesReduced.filter(
-  (d) => d.country === countryCode,
+  (d) => d.country === countryCode &&
+    (!startDate || d.date >= startDate) &&
+    (!endDate || d.date <= endDate)
 );
+```
+```js
+const minDate = timeSeriesReduced.reduce(
+  (min, d) => d.date < min ? d.date : min,
+  timeSeriesReduced[0]?.date
+);
+```
+```js
+const maxDate = timeSeriesReduced.reduce(
+  (max, d) => d.date > max ? d.date : max,
+  timeSeriesReduced[0]?.date
+);
+```
+```js
+const startDateInput = Inputs.date({
+  label: "Start Date",
+  value: minDate,
+  min: minDate,
+  max: maxDate,
+});
+```
+```js
+const endDateInput = Inputs.date({
+  label: "End Date",
+  value: maxDate,
+  min: minDate,
+  max: maxDate,
+});
+```
+```js
+const startDate = Generators.input(startDateInput);
+const endDate = Generators.input(endDateInput);
 ```
 
 ```js
@@ -229,7 +261,8 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
   <div class="filters-row">
     ${countryInput}
     ${Inputs.select(["VPN"], { label: "Search Term", value: "VPN" })}
-
+    ${startDateInput}
+    ${endDateInput}
 
   </div>
 </div>
