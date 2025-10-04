@@ -369,10 +369,7 @@ if (!window._tableTooltipBound) {
   flex-wrap: wrap;
 }
 
-.summary > * {
-  fl
-  ex: 1 1 220px;
-}
+
 .card-side {
   display: flex;
   flex-direction: column;
