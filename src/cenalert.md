@@ -255,21 +255,18 @@ const filteredEventsNum = filteredEvents.map((d) => {
 
 const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
 ```
-<div class="card" style="display:flex; flex-direction:column; width: 100%;">
-  <!-- <h2>Research</h2> -->
-  <p> 
-  CenAlert is an open-source, data-driven alert system that leverages Google Trends to pinpoint where and when global Internet censorship spikes—amplifying user voices even in hard-to-monitor regions. By detecting surges in searches for circumvention tools, CenAlert provides timely, prioritized insights and notifications to empower advocacy and response, bridging critical gaps left as traditional reporting channels face increasing threats. 
-  </p>
+<div class="card-big" style="display:flex; flex-direction:column;">
+  <div class="summary">
+    CenAlert is an open-source, data-driven alert system that leverages Google Trends to pinpoint where and when global Internet censorship spikes—amplifying user voices even in hard-to-monitor regions. By detecting surges in searches for circumvention tools, CenAlert provides timely, prioritized insights and notifications to empower advocacy and response, bridging critical gaps left as traditional reporting channels face increasing threats. 
+  </div>
 </div>
 
-<div class="card" style="display:flex; flex-direction:column;">
-  <!-- <h2>Filters</h2> -->
+<div class="card" style="display:flex; flex-direction:column; margin-top: 2rem;">
   <div class="filters-row">
     ${countryInput}
     ${Inputs.select(["VPN"], { label: "Search Term", value: "VPN" })}
     ${startDateInput}
     ${endDateInput}
-
   </div>
 </div>
 
@@ -445,9 +442,18 @@ if (!window._tableTooltipBound) {
 }
 
 .filters-row > * {
-  flex: 1 1 220px;
+  flex: 1 2 220px;
 }
 
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.summary > * {
+  fl
+  ex: 1 1 220px;
+}
 .card-side {
   display: flex;
   flex-direction: column;
@@ -502,8 +508,7 @@ if (!window._tableTooltipBound) {
     align-items: stretch;
   }
   .card-big {
-    grid-column: 1;
-    grid-row: 1 / span 2;
+    width: 95vw;
   }
   .card-side {
     grid-column: 2;
