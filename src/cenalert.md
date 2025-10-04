@@ -270,51 +270,6 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
   </div>
 </div>
 
-<div class="grid grid-cols-2-3" style="margin-top: 2rem;">
-  <!-- <div class="card card-big" style="display: flex; flex-direction: column;">
-    <h2>${getStartEnd() === defaultStartEnd
-        ? "Search volume over the past year"
-        : getStartEnd().map(fmtDMY).join(" - ")}
-    </h2><br>
-    <span style="flex-grow: 1;">${resize((width, height) =>
-      Plot.plot({
-        width,
-        height,
-        y: {grid: true, label: "rate (%)"},
-        color,
-        marks: [
-          Plot.lineY(timeSeriesReducedFiltered.filter((d) => startEnd[0] <= d.date && d.date < startEnd[1]), 
-          {x: "date", y: "rate", stroke: "topic", curve: "step", tip: true, markerEnd: true}),
-          Plot.rectY(zoomedAnomalies, {
-            x1: d => d.s,
-            x2: d => d.e,
-            y1: yMin,
-            y2: yMax,
-            fill: "#d33",
-            fillOpacity: 0.15,
-            tip: true,
-            title: d =>
-              `𝐂𝐚𝐮𝐬𝐞: ${d.cause}\n` +
-              `𝐃𝐮𝐫𝐚𝐭𝐢𝐨𝐧: ${fmtDMY(d.s)} – ${fmtDMY(d.e)}\n` +
-              (d.impact ? `𝐈𝐦𝐩𝐚𝐜𝐭: ${(+d.impact).toFixed(2)}` : ""),
-          }),
-          Plot.ruleX(zoomedAnomalies.map(d => d.s), { stroke: "#d33", strokeOpacity: 0.85, strokeWidth: 3}),
-          Plot.ruleX(zoomedAnomalies.map(d => d.e), { stroke: "#d33", strokeOpacity: 0.85, strokeWidth: 3})
-        ]
-      })
-    )}</span>
-  </div> -->
-  <!-- <div class="card card-side">
-    ${eventsCard(filteredEvents, {
-        title: "Events (selected period)",
-        colorHeader: color.apply("vpn"),
-        limit: 20,
-        useWindow: true
-        // descKey: "description"
-    })}
-  </div> -->
-</div>
-
 <div class="grid">
   <div class="card">
     <h2>Search volume all time (${d3.extent(timeSeriesFiltered, (d) => d.date.getUTCFullYear()).join("–")})</h2>
@@ -358,43 +313,7 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
       })
     )}
   </div>
-  <!-- <div class="card" style="display:flex; flex-direction:column;">
-    <h2>All Events</h2>
-    <div style="flex:1; min-height:0; overflow:auto;">
-      ${Inputs.table(filteredEventsNum, {
-        columns: ["start","end","who","cause","peak","impact"],
-        header: {
-          start: "Start Date",
-          end: "End Date",
-          cause: "Reported Cause",
-          who: "Reported By",
-          peak: "Peak Date",
-          impact: "Impact"
-        },
-        width: {
-          cause: 240,
-          who: 130,
-          impact: 25,
-          start: 40,
-          end: 40,
-          peak: 40
-        },
-        rows: 18,
-        sort: "start",
-        reverse: true,
-        format: {
-          impact: sparkbar(impactMax),
-          start: d => d ? fmtDMY(parseISO(String(d))) : "",
-          end:   d => d ? fmtDMY(parseISO(String(d))) : "",
-          peak:   d => d ? fmtDMY(parseISO(String(d))) : "",
-          cause: d => {
-            const s = String(d ?? "");
-            return html`<span class="cell-ellipsis" data-full=${s} aria-label=${s}>${s}</span>`;
-            }
-        }
-      })}
-    </div>
-  </div> -->
+  
 </div>
 
 ```js
