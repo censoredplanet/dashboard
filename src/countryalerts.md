@@ -5,45 +5,30 @@ title: CenAlert Countries
 [![Censored Planet Logo](logo-umichlab.svg)](/)
 
 ```js
+import { fetchCenalertEvents } from "./components/queries.js";
+import { fetchCenalertTimeseries } from "./components/queries.js";
+import { utcParse } from "https://esm.sh/d3-time-format@4";
+
+const parseISO = utcParse("%Y-%m-%d");
+
 const DAY = 24 * 60 * 60 * 1000;
 const PX_PADDING = -20;
-const events = await FileAttachment("data/events.csv").csv({
-  typed: false,
+
+const events = await fetchCenalertEvents({
+  country: null,
 });
 
-const rawEvents = events.map((d) => {
-  const isUnknown =
-    String(d.label ?? "")
-      .trim()
-      .toLowerCase() === "unknown";
-  return {
-    ...d,
-    who: isUnknown ? "CenAlert" : (d.who ?? ""),
-    cause: isUnknown ? "unknown" : (d.cause ?? ""),
-  };
-});
-
-const eventCounts = rawEvents.reduce((acc, d) => {
+const eventCounts = events.reduce((acc, d) => {
   const code = String(d.country).toUpperCase();
   acc[code] = (acc[code] || 0) + 1;
   return acc;
 }, {});
 
-const zipped = await FileAttachment("data/annotated_merged.csv.zip").zip();
-const timeSeries = await zipped.file("annotated_merged.csv").csv({ typed: true });
-const timeSeriesReduced = timeSeries.flatMap(({ date, value, country }) => [
-  {
-    date,
-    rate: value,
-    country,
-  },
-]);
-
 const regionNames = new Intl.DisplayNames(["en"], {
   type: "region",
 });
 
-const enriched = timeSeriesReduced.map((d) => ({
+const enriched = events.map((d) => ({
   ...d,
   countryName: regionNames.of(String(d.country).toUpperCase()) || d.country,
 }));
@@ -108,6 +93,7 @@ gridSection.append(gridHeader, grid);
 
 let selectedCode = null;
 let currentList = uniqueCountriesWithEvents;
+const tsCache = new Map();
 
 function renderGrid(list) {
   currentList = list;
@@ -123,10 +109,17 @@ function renderGrid(list) {
         data-name=${name}
         role="button"
         tabindex="0"
-        onclick=${() => {
+        onclick=${async () => {
           selectedCode = code;
           renderGrid(currentList);
-          openDetail(code, name);
+          if (!tsCache.has(code)) {
+            const data = await fetchCenalertTimeseries({ country: code });
+            const series = data
+              .map(d => ({ ...d, date: parseISO(d.date) }))
+              .sort((a, b) => a.date - b.date);
+            tsCache.set(code, series);
+          }
+          openDetail(code, name, tsCache.get(code));
         }}
         onkeydown=${(e) => {
           if (e.key === "Enter" || e.key === " ") {
@@ -170,13 +163,13 @@ searchInput.addEventListener("input", (e) => {
 
 renderGrid(uniqueCountriesWithEvents);
 
-function openDetail(code, name) {
-  const countryEvents = rawEvents
+function openDetail(code, name, seriesnew) {
+  const countryEvents = events
     .filter((d) => String(d.country).toUpperCase() === code)
     .map((d, i) => {
       const nImpact = Number(d.impact);
-      const start = formatDMYdots(d.start);
-      const end = formatDMYdots(d.end);
+      const start = formatDMYdots(d.startDate);
+      const end = formatDMYdots(d.endDate);
       const dateLabel =
         start && end && start !== end
           ? `${start} - ${end}`
@@ -184,20 +177,20 @@ function openDetail(code, name) {
       return {
         date: new Date(d.peak || d.start),
         dateLabel,
-        startISO: d.start || null,
-        endISO: d.end || null,
-        startDate: d.start ? new Date(d.start) : null,
-        endDate: d.end ? new Date(d.end) : null,
+        startISO: d.startDate || null,
+        endISO: d.endDate || null,
+        startDate: d.startDate ? new Date(d.startDate) : null,
+        endDate: d.endDate ? new Date(d.endDate) : null,
         code: "Impact",
         title: Number.isFinite(nImpact) ? formatImpact(nImpact) : "—",
-        who: d.who || "",
+        who: d.reportedBy || "",
         impact: nImpact,
-        description: softBreakLongTokens(d.cause || "unknown", 16),
+        description: softBreakLongTokens(d.description || "unknown", 16),
       };
     })
     .sort((a, b) => b.date - a.date || a.title.localeCompare(b.title));
 
-  renderDetail(code, name, countryEvents);
+  renderDetail(code, name, countryEvents, seriesnew);
   gridSection.hidden = true;
   detailSection.hidden = false;
   window.scrollTo({
@@ -206,7 +199,7 @@ function openDetail(code, name) {
   });
 }
 
-function renderDetail(code, name, events) {
+function renderDetail(code, name, events, seriesnew) {
   detailSection.innerHTML = "";
   const flag = flagEmoji(code);
   const heading = html`<h2 class="detail-title">
@@ -219,33 +212,38 @@ function renderDetail(code, name, events) {
     return;
   }
 
-  const r = 36;
+  const r = window.matchMedia("(max-width: 768px)").matches ? 68 : 36;
+
   const margin = {
     top: 24,
-    right: 20,
+    right: 10,
     bottom: 24,
     left: 20,
   };
-  const laneX = 160;
+  const laneX = 70;
   const width = 540;
+  const baseMinRow = r * 2.2;        
+  const nodeGap = 12; 
+  const extraLastGap = 0;
   const rowHeight = r * 2.8;
   const baseHeight = margin.top + margin.bottom + events.length * rowHeight;
-  const extraLastGap = 180;
-  const height = baseHeight + extraLastGap;
+  
+  let height = 600;
 
-  const VISIBLE_ROWS = 5;
-  const viewHeight = margin.top + margin.bottom + VISIBLE_ROWS * rowHeight;
+  const isMobile = window.matchMedia("(max-width: 768px)").matches;
+  const VISIBLE_ROWS = isMobile ? 2 : 5;
+  const viewHeight = margin.top + margin.bottom + VISIBLE_ROWS * baseMinRow;
 
-  const y = d3
-    .scaleBand()
-    .domain(d3.range(events.length))
-    .range([margin.top + r, baseHeight - margin.bottom - r])
-    .paddingInner(0.35);
-
-  const svg = d3.create("svg").attr("width", width).attr("height", height);
+  const svg = d3.create("svg")
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .attr("preserveAspectRatio", "xMinYMin meet")
+    .style("width", "100%")
+    .style("height", "auto")
+    .style("display", "block");
 
   svg
     .append("line")
+    .attr("class", "lane")
     .attr("x1", laneX)
     .attr("x2", laneX)
     .attr("y1", margin.top)
@@ -265,10 +263,7 @@ function renderDetail(code, name, events) {
     )
     .join("g")
     .attr("class", "node")
-    .attr(
-      "transform",
-      (d) => `translate(${laneX}, ${y(d.i) + y.bandwidth() / 2})`,
-    )
+    .attr("transform", d => `translate(${laneX}, ${margin.top + r})`)
     .style("cursor", "pointer");
 
   node
@@ -327,7 +322,15 @@ function renderDetail(code, name, events) {
     });
 
   const labelDx = r + 12;
-  const labelWidth = 320;
+  let labelWidth = 0;
+  function computeLabelWidth() {
+    const el = svg.node();
+    const rectW = el.getBoundingClientRect().width;
+    const svgPx = rectW || el.clientWidth || width;  
+    labelWidth = Math.max(380, svgPx - (laneX + labelDx) - margin.right);
+    g.selectAll("foreignObject").attr("width", labelWidth);
+  }
+
   const label = node.append("g").attr("transform", `translate(${labelDx}, 0)`);
 
   label
@@ -348,10 +351,8 @@ function renderDetail(code, name, events) {
     .append("foreignObject")
     .attr("x", labelDx)
     .attr("y", 6)
-    .attr("width", labelWidth)
-    .attr("height", (d, i) =>
-      i === events.length - 1 ? rowHeight + extraLastGap : rowHeight,
-    );
+    .attr("width", 320)
+    .attr("height", 10);
 
   const htmlBox = fo.append("xhtml:div").attr("class", "label-html");
 
@@ -371,9 +372,6 @@ function renderDetail(code, name, events) {
     .attr("class", "label-value")
     .text((d) => d.description || "—");
 
-  const timeSeriesCountries = timeSeriesReduced.filter(
-    (d) => String(d.country).toUpperCase() === code,
-  );
   const rightCard = html`<div class="card">
     <h3 class="right-title">Rate over time</h3>
     <div class="right-body"></div>
@@ -382,33 +380,36 @@ function renderDetail(code, name, events) {
   function renderRight(selectedEvent = null) {
     const titleEl = rightCard.querySelector(".right-title");
     const bodyEl = rightCard.querySelector(".right-body");
+    const mobileExtra = window.matchMedia("(max-width: 768px)").matches ? 380 : 0;
 
     titleEl.textContent = selectedEvent
       ? selectedEvent.dateLabel
       : "Rate over time";
     bodyEl.innerHTML = "";
 
-    if (!timeSeriesCountries.length) {
+    if (!seriesnew.length) {
       bodyEl.append(html`<div class="empty">No time series for ${name}.</div>`);
       return;
     }
 
     if (!selectedEvent) {
-      const chart = Plot.plot({
-        height: viewHeight + PX_PADDING,
+      const chart = resize((width) => 
+      Plot.plot({
+        height: viewHeight + PX_PADDING + mobileExtra + 9,
         y: {
           grid: true,
           label: "rate (%)",
         },
         marks: [
-          Plot.lineY(timeSeriesCountries, {
+          Plot.lineY(seriesnew, {
             x: "date",
             y: "rate",
             curve: "step",
             tip: true,
           }),
         ],
-      });
+      })
+      );
       bodyEl.append(chart);
       return;
     }
@@ -419,10 +420,10 @@ function renderDetail(code, name, events) {
     const x0 = new Date(s.getTime() - 3 * DAY);
     const x1 = new Date(e.getTime() + 3 * DAY);
 
-    const slice = timeSeriesCountries.filter(
+    const slice = seriesnew.filter(
       (d) => d.date >= x0 && d.date <= x1,
     );
-    const series = slice.length ? slice : timeSeriesCountries;
+    const series = slice.length ? slice : seriesnew;
 
     const yMin = d3.min(series, (d) => d.rate);
     const yMax = d3.max(series, (d) => d.rate);
@@ -461,8 +462,9 @@ function renderDetail(code, name, events) {
         }),
       );
 
-    const chart = Plot.plot({
-      height: viewHeight + PX_PADDING - 9,
+    const chart = resize((width) =>
+      Plot.plot({
+      height: viewHeight + PX_PADDING + mobileExtra,
       y: {
         grid: true,
         label: "rate (%)",
@@ -472,7 +474,8 @@ function renderDetail(code, name, events) {
         nice: false,
       },
       marks,
-    });
+    })
+    );
 
     const meta = html`<div class="event-meta" style="margin-top:.5rem;"></div>`;
     bodyEl.append(chart, meta);
@@ -488,6 +491,70 @@ function renderDetail(code, name, events) {
   leftCard.append(scroller);
   const layout = html`<div class="grid-1-2">${leftCard}${rightCard}</div>`;
   detailSection.append(detailHeader, layout);
+  function layoutNodes() {
+    
+    node.each(function (d) {
+      const foEl = d3.select(this).select("foreignObject");
+      const div = d3.select(this).select(".label-html").node();
+      
+      const labelH = Math.ceil(div?.scrollHeight || 0);
+      const rowH = Math.max(baseMinRow, labelH + 50); 
+      d.__rowH = rowH;
+      foEl.attr("height", rowH);  
+    });
+
+    
+    let yCursor = margin.top + r;
+    node.each(function (d) {
+      d.__y = yCursor;
+      d3.select(this).attr("transform", `translate(${laneX}, ${d.__y})`);
+      yCursor += d.__rowH + nodeGap;
+    });
+
+    
+    const newBase = yCursor + r + margin.bottom;
+    height = newBase + extraLastGap;           
+    svg.attr("viewBox", `0 0 ${width} ${height}`);
+
+    
+    
+    const dataWithY = node.data();
+
+    
+    const firstY = d3.min(dataWithY, d => d.__y) ?? (margin.top + r);
+    const lastY  = d3.max(dataWithY, d => d.__y) ?? (margin.top + r);
+
+    
+    svg.select(".lane")
+      .attr("y1", firstY - r)
+      .attr("y2", lastY + r);
+
+  }
+  computeLabelWidth();
+  requestAnimationFrame(() => {
+    layoutNodes();
+    
+    if (labelWidth <= 200) {
+      computeLabelWidth();
+      requestAnimationFrame(layoutNodes);
+    }
+  });
+  
+  const onResize = () => {
+    const nowMobile = window.matchMedia("(max-width: 768px)").matches;
+    const rows = nowMobile ? 4 : 5;
+    const newViewHeight = margin.top + margin.bottom + rows * baseMinRow;
+    scroller.style.height = `${newViewHeight}px`;
+    computeLabelWidth();
+    requestAnimationFrame(() => {
+      layoutNodes();
+      if (labelWidth <= 200) {
+        computeLabelWidth();
+        requestAnimationFrame(layoutNodes);
+      }
+    });
+  };
+  window.addEventListener("resize", onResize, { passive: true });
 }
 
 display(gridSection);
@@ -497,7 +564,7 @@ display(detailSection);
 <style>
 .tiles-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1rem;
 }
 
@@ -586,7 +653,8 @@ display(detailSection);
 .label-html { font-size: 12px; line-height: 1.2; color: #555; }
 .label-row { display: flex; align-items: flex-start; gap: .35rem; margin-top: 2px; }
 .label-key { font-weight: 600; color: #333; white-space: nowrap; }
-.label-value { flex: 1; overflow-wrap: anywhere; word-break: break-word; }
+.label-value { flex: 1; overflow-wrap: break-word; word-break: break-word; }
+.desc-row .label-value { overflow-wrap: anywhere; word-break: break-word; }
 
 .detail-view .detail-header {
   display: flex;
@@ -597,7 +665,7 @@ display(detailSection);
 
 .grid-1-2{
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
   align-items: start;
 }
@@ -609,4 +677,10 @@ display(detailSection);
   overflow: auto;
   overscroll-behavior: contain;
 }
+
+@media (max-width: 768px){
+  .timeline-scroller svg text { font-size: 24px; }
+  .timeline-scroller .label-html { font-size: 24px; }
+}
+
 </style>
