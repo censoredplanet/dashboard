@@ -8,6 +8,10 @@ title: CenAlert Countries
 import { fetchCenalertEvents } from "./components/queries.js";
 import { fetchCenalertTimeseries } from "./components/queries.js";
 import { utcParse } from "https://esm.sh/d3-time-format@4";
+import { formatDMYdots, norm } from "./components/utils.js";
+import { createGridRenderer } from "./components/render-grid.js";
+import { createDetailOpener } from "./components/detail-view.js";
+
 
 const parseISO = utcParse("%Y-%m-%d");
 
@@ -54,28 +58,9 @@ const formatImpact = new Intl.NumberFormat("de-AT", {
   useGrouping: false,
 }).format;
 
-const formatDMYdots = (s) => {
-  if (!s) return "";
-  const y = s.slice(0, 4),
-    m = s.slice(5, 7),
-    d = s.slice(8, 10);
-  return y && m && d ? `${d}.${m}.${y}` : "";
-};
-
 const softBreakLongTokens = (s, every = 16) =>
   String(s).replace(new RegExp(`(\\S{${every}})(?=\\S)`, "g"), "$1 ");
 
-function flagEmoji(code) {
-  return code
-    .toUpperCase()
-    .replace(/./g, (c) => String.fromCodePoint(c.charCodeAt(0) + 127397));
-}
-
-const norm = (s) =>
-  String(s)
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-    .toLowerCase();
 const gridSection = html`<div class="card card-with-search"></div>`;
 const detailSection = html`<div class="card detail-view" hidden></div>`;
 
@@ -91,61 +76,24 @@ const gridHeader = html`<div class="card-header">
 const grid = html`<div class="tiles-grid"></div>`;
 gridSection.append(gridHeader, grid);
 
-let selectedCode = null;
 let currentList = uniqueCountriesWithEvents;
+const state = {
+  selectedCode: null,
+  tsCache: new Map(),
+  setCurrentList: (list) => { currentList = list; }
+};
+
 const tsCache = new Map();
 
-function renderGrid(list) {
-  currentList = list;
-  grid.innerHTML = "";
-  for (const { code, name, totalEvents } of list) {
-    const flag = flagEmoji(code);
-    const isSelected = code === selectedCode;
+const openDetail = createDetailOpener({
+  html, d3, Plot, resize,
+  DAY, PX_PADDING,
+  events, formatImpact, softBreakLongTokens,
+  gridSection, detailSection,
+  formatDMYdots,
+});
 
-    const tile = html`
-      <div
-        class=${`tile card ${isSelected ? "selected" : ""}`}
-        data-code=${code}
-        data-name=${name}
-        role="button"
-        tabindex="0"
-        onclick=${async () => {
-          selectedCode = code;
-          renderGrid(currentList);
-          if (!tsCache.has(code)) {
-            const data = await fetchCenalertTimeseries({ country: code });
-            const series = data
-              .map(d => ({ ...d, date: parseISO(d.date) }))
-              .sort((a, b) => a.date - b.date);
-            tsCache.set(code, series);
-          }
-          openDetail(code, name, tsCache.get(code));
-        }}
-        onkeydown=${(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            selectedCode = code;
-            renderGrid(currentList);
-            openDetail(code, name);
-          }
-        }}
-      >
-        <div class="tile-content">
-          <div class="line-top">
-            <span class="flag">${flag}</span>
-            <span class="country-name">${name}</span>
-          </div>
-          <div class="line-bottom">
-            <span class="events">
-              ${totalEvents} ${totalEvents === 1 ? "Event" : "Events"}
-            </span>
-          </div>
-        </div>
-      </div>
-    `;
-    grid.append(tile);
-  }
-}
+const renderGrid = createGridRenderer({ html, parseISO, openDetail });
 
 const searchInput = gridHeader.querySelector(".country-search");
 searchInput.addEventListener("input", (e) => {
@@ -158,404 +106,18 @@ searchInput.addEventListener("input", (e) => {
     grid.innerHTML = `<div class="empty">No countries match “${e.target.value}”.</div>`;
     return;
   }
-  renderGrid(filtered);
+  renderGrid(
+    grid,
+    filtered,
+    state
+  );
 });
 
-renderGrid(uniqueCountriesWithEvents);
-
-function openDetail(code, name, seriesnew) {
-  const countryEvents = events
-    .filter((d) => String(d.country).toUpperCase() === code)
-    .map((d, i) => {
-      const nImpact = Number(d.impact);
-      const start = formatDMYdots(d.startDate);
-      const end = formatDMYdots(d.endDate);
-      const dateLabel =
-        start && end && start !== end
-          ? `${start} - ${end}`
-          : start || end || "—";
-      return {
-        date: new Date(d.peak || d.start),
-        dateLabel,
-        startISO: d.startDate || null,
-        endISO: d.endDate || null,
-        startDate: d.startDate ? new Date(d.startDate) : null,
-        endDate: d.endDate ? new Date(d.endDate) : null,
-        code: "Impact",
-        title: Number.isFinite(nImpact) ? formatImpact(nImpact) : "—",
-        who: d.reportedBy || "",
-        impact: nImpact,
-        description: softBreakLongTokens(d.description || "unknown", 16),
-      };
-    })
-    .sort((a, b) => b.date - a.date || a.title.localeCompare(b.title));
-
-  renderDetail(code, name, countryEvents, seriesnew);
-  gridSection.hidden = true;
-  detailSection.hidden = false;
-  window.scrollTo({
-    top: detailSection.offsetTop,
-    behavior: "smooth",
-  });
-}
-
-function renderDetail(code, name, events, seriesnew) {
-  detailSection.innerHTML = "";
-  const flag = flagEmoji(code);
-  const heading = html`<h2 class="detail-title">
-    <span class="flag">${flag}</span>
-    <span class="country-name">Events in ${name}</span>
-  </h2>`;
-  const detailHeader = html`<div class="detail-header">${heading}</div>`;
-  if (!events.length) {
-    detailSection.append(html`<div class="empty">No events for ${name}.</div>`);
-    return;
-  }
-
-  const r = window.matchMedia("(max-width: 768px)").matches ? 68 : 36;
-
-  const margin = {
-    top: 24,
-    right: 10,
-    bottom: 24,
-    left: 20,
-  };
-  const laneX = 70;
-  const width = 540;
-  const baseMinRow = r * 2.2;        
-  const nodeGap = 12; 
-  const extraLastGap = 0;
-  const rowHeight = r * 2.8;
-  const baseHeight = margin.top + margin.bottom + events.length * rowHeight;
-  
-  let height = 600;
-
-  const isMobile = window.matchMedia("(max-width: 768px)").matches;
-  const VISIBLE_ROWS = isMobile ? 2 : 5;
-  const viewHeight = margin.top + margin.bottom + VISIBLE_ROWS * baseMinRow;
-
-  const svg = d3.create("svg")
-    .attr("viewBox", `0 0 ${width} ${height}`)
-    .attr("preserveAspectRatio", "xMinYMin meet")
-    .style("width", "100%")
-    .style("height", "auto")
-    .style("display", "block");
-
-  svg
-    .append("line")
-    .attr("class", "lane")
-    .attr("x1", laneX)
-    .attr("x2", laneX)
-    .attr("y1", margin.top)
-    .attr("y2", height - margin.bottom)
-    .attr("stroke", "#bbb")
-    .attr("stroke-width", 2);
-
-  const g = svg.append("g");
-
-  const node = g
-    .selectAll(".node")
-    .data(
-      events.map((d, i) => ({
-        ...d,
-        i,
-      })),
-    )
-    .join("g")
-    .attr("class", "node")
-    .attr("transform", d => `translate(${laneX}, ${margin.top + r})`)
-    .style("cursor", "pointer");
-
-  node
-    .append("circle")
-    .attr("r", r)
-    .attr("fill", "#fcfcfc")
-    .attr("stroke", "#444")
-    .attr("stroke-width", 1.5);
-
-  node
-    .append("text")
-    .attr("text-anchor", "middle")
-    .attr("dy", "-0.2em")
-    .text((d) => d.code);
-
-  node
-    .append("text")
-    .attr("text-anchor", "middle")
-    .attr("dy", "1.1em")
-    .attr("font-size", 12)
-    .attr("fill", "#555")
-    .attr("font-weight", 700)
-    .text((d) => d.title);
-
-  node
-    .on("mouseenter", function () {
-      d3.select(this)
-        .select("circle")
-        .attr("stroke", "#1e90ff")
-        .attr("stroke-width", 2);
-    })
-    .on("mouseleave", function () {
-      if (!d3.select(this).classed("active")) {
-        d3.select(this)
-          .select("circle")
-          .attr("stroke", "#444")
-          .attr("stroke-width", 1.5);
-      }
-    })
-    .on("click", function (event, d) {
-      const self = d3.select(this);
-      const isActive = self.classed("active");
-      g.selectAll(".node")
-        .classed("active", false)
-        .select("circle")
-        .attr("stroke", "#444")
-        .attr("stroke-width", 1.5);
-      if (!isActive) {
-        self
-          .classed("active", true)
-          .select("circle")
-          .attr("stroke", "#1e90ff")
-          .attr("stroke-width", 2.5);
-      }
-      renderRight(d);
-    });
-
-  const labelDx = r + 12;
-  let labelWidth = 0;
-  function computeLabelWidth() {
-    const el = svg.node();
-    const rectW = el.getBoundingClientRect().width;
-    const svgPx = rectW || el.clientWidth || width;  
-    labelWidth = Math.max(380, svgPx - (laneX + labelDx) - margin.right);
-    g.selectAll("foreignObject").attr("width", labelWidth);
-  }
-
-  const label = node.append("g").attr("transform", `translate(${labelDx}, 0)`);
-
-  label
-    .append("line")
-    .attr("x1", -8)
-    .attr("x2", 0)
-    .attr("y1", 0)
-    .attr("y2", 0)
-    .attr("stroke", "#ccc");
-
-  label
-    .append("text")
-    .attr("font-weight", 600)
-    .attr("y", -10)
-    .text((d) => `${d.dateLabel}`);
-
-  const fo = node
-    .append("foreignObject")
-    .attr("x", labelDx)
-    .attr("y", 6)
-    .attr("width", 320)
-    .attr("height", 10);
-
-  const htmlBox = fo.append("xhtml:div").attr("class", "label-html");
-
-  const rowWho = htmlBox.append("xhtml:div").attr("class", "label-row who-row");
-  rowWho.append("xhtml:span").attr("class", "label-key").text("Reported By:");
-  rowWho
-    .append("xhtml:span")
-    .attr("class", "label-value")
-    .text((d) => d.who || "—");
-  rowWho.style("display", (d) => (d.who ? null : "none"));
-  const rowDesc = htmlBox
-    .append("xhtml:div")
-    .attr("class", "label-row desc-row");
-  rowDesc.append("xhtml:span").attr("class", "label-key").text("Cause:");
-  rowDesc
-    .append("xhtml:span")
-    .attr("class", "label-value")
-    .text((d) => d.description || "—");
-
-  const rightCard = html`<div class="card">
-    <h3 class="right-title">Rate over time</h3>
-    <div class="right-body"></div>
-  </div>`;
-
-  function renderRight(selectedEvent = null) {
-    const titleEl = rightCard.querySelector(".right-title");
-    const bodyEl = rightCard.querySelector(".right-body");
-    const mobileExtra = window.matchMedia("(max-width: 768px)").matches ? 380 : 0;
-
-    titleEl.textContent = selectedEvent
-      ? selectedEvent.dateLabel
-      : "Rate over time";
-    bodyEl.innerHTML = "";
-
-    if (!seriesnew.length) {
-      bodyEl.append(html`<div class="empty">No time series for ${name}.</div>`);
-      return;
-    }
-
-    if (!selectedEvent) {
-      const chart = resize((width) => 
-      Plot.plot({
-        height: viewHeight + PX_PADDING + mobileExtra + 9,
-        y: {
-          grid: true,
-          label: "rate (%)",
-        },
-        marks: [
-          Plot.lineY(seriesnew, {
-            x: "date",
-            y: "rate",
-            curve: "step",
-            tip: true,
-          }),
-        ],
-      })
-      );
-      bodyEl.append(chart);
-      return;
-    }
-
-    const s = selectedEvent.startDate || selectedEvent.date;
-    const e =
-      selectedEvent.endDate || selectedEvent.startDate || selectedEvent.date;
-    const x0 = new Date(s.getTime() - 3 * DAY);
-    const x1 = new Date(e.getTime() + 3 * DAY);
-
-    const slice = seriesnew.filter(
-      (d) => d.date >= x0 && d.date <= x1,
-    );
-    const series = slice.length ? slice : seriesnew;
-
-    const yMin = d3.min(series, (d) => d.rate);
-    const yMax = d3.max(series, (d) => d.rate);
-
-    const marks = [
-      Plot.lineY(series, {
-        x: "date",
-        y: "rate",
-        curve: "step",
-        tip: true,
-      }),
-      Plot.rectY(
-        [{s,e,},],
-        {
-          x1: (d) => d.s,
-          x2: (d) => d.e,
-          y1: yMin,
-          y2: yMax,
-          fill: "#d33",
-          fillOpacity: 0.15,
-          title: `${selectedEvent.dateLabel}\n${selectedEvent.who || ""}\n${selectedEvent.description || ""}`,
-        },
-      ),
-      Plot.ruleX([s], {
-        stroke: "#d33",
-        strokeOpacity: 0.9,
-        strokeWidth: 2,
-      }),
-    ];
-    if (+e !== +s)
-      marks.push(
-        Plot.ruleX([e], {
-          stroke: "#d33",
-          strokeOpacity: 0.9,
-          strokeWidth: 2,
-        }),
-      );
-
-    const chart = resize((width) =>
-      Plot.plot({
-      height: viewHeight + PX_PADDING + mobileExtra,
-      y: {
-        grid: true,
-        label: "rate (%)",
-      },
-      x: {
-        domain: [x0, x1],
-        nice: false,
-      },
-      marks,
-    })
-    );
-
-    const meta = html`<div class="event-meta" style="margin-top:.5rem;"></div>`;
-    bodyEl.append(chart, meta);
-  }
-
-  renderRight();
-  const scroller = html`<div class="timeline-scroller"></div>`;
-  scroller.style.height = `${viewHeight}px`;
-  scroller.style.overflow = "auto";
-  scroller.append(svg.node());
-
-  const leftCard = html`<div class="card"></div>`;
-  leftCard.append(scroller);
-  const layout = html`<div class="grid-1-2">${leftCard}${rightCard}</div>`;
-  detailSection.append(detailHeader, layout);
-  function layoutNodes() {
-    
-    node.each(function (d) {
-      const foEl = d3.select(this).select("foreignObject");
-      const div = d3.select(this).select(".label-html").node();
-      
-      const labelH = Math.ceil(div?.scrollHeight || 0);
-      const rowH = Math.max(baseMinRow, labelH + 50); 
-      d.__rowH = rowH;
-      foEl.attr("height", rowH);  
-    });
-
-    
-    let yCursor = margin.top + r;
-    node.each(function (d) {
-      d.__y = yCursor;
-      d3.select(this).attr("transform", `translate(${laneX}, ${d.__y})`);
-      yCursor += d.__rowH + nodeGap;
-    });
-
-    
-    const newBase = yCursor + r + margin.bottom;
-    height = newBase + extraLastGap;           
-    svg.attr("viewBox", `0 0 ${width} ${height}`);
-
-    
-    
-    const dataWithY = node.data();
-
-    
-    const firstY = d3.min(dataWithY, d => d.__y) ?? (margin.top + r);
-    const lastY  = d3.max(dataWithY, d => d.__y) ?? (margin.top + r);
-
-    
-    svg.select(".lane")
-      .attr("y1", firstY - r)
-      .attr("y2", lastY + r);
-
-  }
-  computeLabelWidth();
-  requestAnimationFrame(() => {
-    layoutNodes();
-    
-    if (labelWidth <= 200) {
-      computeLabelWidth();
-      requestAnimationFrame(layoutNodes);
-    }
-  });
-  
-  const onResize = () => {
-    const nowMobile = window.matchMedia("(max-width: 768px)").matches;
-    const rows = nowMobile ? 4 : 5;
-    const newViewHeight = margin.top + margin.bottom + rows * baseMinRow;
-    scroller.style.height = `${newViewHeight}px`;
-    computeLabelWidth();
-    requestAnimationFrame(() => {
-      layoutNodes();
-      if (labelWidth <= 200) {
-        computeLabelWidth();
-        requestAnimationFrame(layoutNodes);
-      }
-    });
-  };
-  window.addEventListener("resize", onResize, { passive: true });
-}
+renderGrid(
+  grid,
+  uniqueCountriesWithEvents,
+  state
+);
 
 display(gridSection);
 display(detailSection);
