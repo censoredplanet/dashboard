@@ -7,7 +7,7 @@ export function createDetailOpener(deps) {
     gridSection, detailSection,
   } = deps;
 
-  function renderDetail(code, name, countryEvents, seriesnew) {
+  function renderDetail(code, name, countryEvents) {
     detailSection.innerHTML = "";
     const flag = (code) =>
       code.toUpperCase().replace(/./g, (c) => String.fromCodePoint(c.charCodeAt(0) + 127397));
@@ -118,7 +118,7 @@ export function createDetailOpener(deps) {
       titleEl.textContent = selectedEvent ? selectedEvent.dateLabel : "Rate over time";
       bodyEl.innerHTML = "";
 
-      const seriesnew = deps.seriesForSelectedCountry; // injected each time via openDetail
+      const seriesnew = deps.seriesForSelectedCountry;
 
       if (!seriesnew?.length) {
         bodyEl.append(html`<div class="empty">No time series.</div>`);
@@ -236,9 +236,7 @@ export function createDetailOpener(deps) {
     window.addEventListener("resize", onResize, { passive: true });
   }
 
-  // Returned function uses current deps + the series for selected country
   function openDetail(code, name, seriesForSelectedCountry) {
-    // map + sort country events:
     const countryEvents = events
       .filter((d) => String(d.country).toUpperCase() === code)
       .map((d) => {
@@ -262,7 +260,7 @@ export function createDetailOpener(deps) {
       })
       .sort((a, b) => b.date - a.date || a.title.localeCompare(b.title));
 
-    deps.seriesForSelectedCountry = seriesForSelectedCountry; // pass to renderRight via closure
+    deps.seriesForSelectedCountry = seriesForSelectedCountry;
     renderDetail(code, name, countryEvents, seriesForSelectedCountry);
     gridSection.hidden = true;
     detailSection.hidden = false;

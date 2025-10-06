@@ -20,7 +20,7 @@ export function createGridRenderer({ html, parseISO, openDetail }) {
           role="button"
           tabindex="0"
           onclick=${async () => {
-            state.selectedCode = code;                // ← update in-place
+            state.selectedCode = code;
             await renderGrid(grid, list, state); 
 
             if (!tsCache.has(code)) {
