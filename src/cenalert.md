@@ -48,19 +48,6 @@ const countryGenerator = Generators.input(countryInput);
 
 ```js
 const countryCode = countryNameToCode[countryGenerator];
-const filteredEvents = events.filter((d) => d.country === countryCode &&
-    (!startDate || d.date >= startDate) &&
-    (!endDate || d.date <= endDate));
-const timeSeriesFiltered = timeSeries.filter((d) => d.country === countryCode &&
-    (!startDate || d.date >= startDate) &&
-    (!endDate || d.date <= endDate));
-const timeSeriesReducedFiltered = timeSeriesReduced.filter(
-  (d) => d.country === countryCode &&
-    (!startDate || d.date >= startDate) &&
-    (!endDate || d.date <= endDate)
-);
-```
-```js
 const events = await fetchCenalertEvents({
   country: countryCode,
 });
@@ -70,41 +57,20 @@ const timeseriesFetched = await fetchCenalertTimeseries({
 const timeseries = timeseriesFetched
   .map(d => ({ ...d, date: parseISO(d.date), topic: "vpn" }))
   .sort((a, b) => a.date - b.date);
-```
-```js
-const minDate = timeSeriesReduced.reduce(
-  (min, d) => d.date < min ? d.date : min,
-  timeSeriesReduced[0]?.date
-);
-```
-```js
-const maxDate = timeSeriesReduced.reduce(
-  (max, d) => d.date > max ? d.date : max,
-  timeSeriesReduced[0]?.date
-);
-```
-```js
-const startDateInput = Inputs.date({
-  label: "Start Date",
-  value: minDate,
-  min: minDate,
-  max: maxDate,
-});
-```
-```js
-const endDateInput = Inputs.date({
-  label: "End Date",
-  value: maxDate,
-  min: minDate,
-  max: maxDate,
-});
-```
-```js
-const startDate = Generators.input(startDateInput);
-const endDate = Generators.input(endDateInput);
+
 ```
 
+```js
+const openDetail = createDetailOpener({
+  html, d3, Plot, resize,
+  DAY, PX_PADDING,
+  events, formatImpact, softBreakLongTokens,
+  gridSection, detailSection,
+  formatDMYdots,
+});
 
+openDetail(countryCode);
+```
 ```js
 function eventsCard(
   rows,
@@ -241,16 +207,12 @@ const filteredEventsNum = events.map((d) => {
 
 const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
 ```
-<div class="card-big" style="display:flex; flex-direction:column;">
-    CenAlert is an open-source, data-driven alert system that leverages Google Trends to pinpoint where and when global Internet censorship spikes—amplifying user voices even in hard-to-monitor regions. By detecting surges in searches for circumvention tools, CenAlert provides timely, prioritized insights and notifications to empower advocacy and response, bridging critical gaps left as traditional reporting channels face increasing threats. 
-</div>
 
-<div class="card" style="display:flex; flex-direction:column; margin-top: 2rem;">
+<div class="card" style="display:flex; flex-direction:column;">
+  <h2>Filters</h2>
   <div class="filters-row">
     ${countryInput}
     ${Inputs.select(["VPN"], { label: "Search Term", value: "VPN" })}
-    ${startDateInput}
-    ${endDateInput}
   </div>
 </div>
 
@@ -340,7 +302,6 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
       })
     )}
   </div>
-  
   <div class="card" style="display:flex; flex-direction:column;">
     <h2>All Events</h2>
     <div style="flex:1; min-height:0; overflow:auto;">
@@ -458,8 +419,8 @@ const formatImpact = new Intl.NumberFormat("de-AT", {
 const softBreakLongTokens = (s, every = 16) =>
   String(s).replace(new RegExp(`(\\S{${every}})(?=\\S)`, "g"), "$1 ");
 
-const gridSection = html`<div class="card card-with-search"></div>`;
-const detailSection = html`<div class="card detail-view" hidden></div>`;
+const gridSection = html`<div class="card card-with-search" style="display:none"></div>`;
+const detailSection = html`<div class="card detail-view"></div>`;
 
 const gridHeader = html`<div class="card-header"></div>`;
 
@@ -522,12 +483,7 @@ display(detailSection);
 }
 
 .filters-row > * {
-  flex: 1 2 220px;
-}
-
-.summary {
-  display: flex;
-  flex-wrap: wrap;
+  flex: 1 1 220px;
 }
 
 .card-side {
@@ -584,8 +540,8 @@ display(detailSection);
     align-items: stretch;
   }
   .card-big {
-    display: flex;
-    flex-wrap: wrap;
+    grid-column: 1;
+    grid-row: 1 / span 2;
   }
   .card-side {
     grid-column: 2;
