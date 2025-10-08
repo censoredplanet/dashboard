@@ -4,7 +4,6 @@ title: Observatory Dashboard
 
 ```js
 import SlimSelect from "npm:slim-select";
-import { fetchDashboard } from "./components/queries.js";
 const params = new URLSearchParams(window.location.search);
 const countryParam = (params.get("country") ?? "").trim();
 ```
@@ -258,10 +257,19 @@ setTimeout(() => {
 
 <div class="card">
   <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+  <style>
+    @media (max-width: 767px) {
+      .domain-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
     <div style="flex: 1 1 200px;">${country}</div>
     <div style="flex: 1 1 200px;">${source}</div>
     <div style="flex: 1 1 200px;">${start}</div>
     <div style="flex: 1 1 200px;">${end}</div>
+    <div class="domain-container" style="display: flex;  gap: 8px;">
   </div>
   </div>
 </div>
@@ -280,6 +288,49 @@ setTimeout(() => {
 
 ```js
 const searchButton = view(Inputs.button("Search"));
+```
+
+```js
+async function fetchDashboard(country, source, startDate, endDate, domains) {
+  const query = `
+    query GetDashboard($filter: FilterDashboard!) {
+      dashboard(filter: $filter) {
+        domain
+        category
+        network
+        subnetwork: subNetwork
+        date
+        outcome
+        probe_count: count  
+        unexpected_count: unexpectedCount
+      }
+    }
+  `;
+
+  const filter = {
+    country,
+    source,
+    startDate: startDate.toISOString().slice(0, 10),
+    endDate: endDate.toISOString().slice(0, 10),
+    domains,
+  };
+
+  const variables = { filter };
+  const res = await fetch("https://data.censoredplanet.org/query", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query, variables }),
+  });
+  if (!res.ok) {
+    throw new Error(`GraphQL HTTP ${res.status}: ${await res.text()}`);
+  }
+  const { data, errors } = await res.json();
+  if (errors) {
+    throw new Error(errors.map((e) => e.message).join("\n"));
+  }
+
+  return data.dashboard;
+}
 ```
 
 ```js
@@ -1311,25 +1362,22 @@ function measurementSummary(windowWidth) {
 }
 ```
 
-<div class = "grid grid-cols-2">
-    <div class="grid-colspan-2 card">
-      <h2>Outcome Timeline</h2><br>
-      ${resize(width => createStackedBarChart(width))}
-    </div>
-</div>
+# Outcome Timeline
 
 <div class = "grid grid-cols-2">
-    <div class="grid-colspan-2 card">
-      <h2>Outcome per Network</h2><br>
-      ${resize(width => chartBar(width))}
-    </div>
+    <div class="grid-colspan-2 card">${resize(width => createStackedBarChart(width))}</div>
 </div>
+
+# Outcome per Network
+
+<div class = "grid grid-cols-2">
+    <div class="grid-colspan-2 card">${resize(width => chartBar(width))}</div>
+</div>
+
+# Measurement Summary
 
 <div class="grid grid-cols-2">
-  <div class="grid-colspan-2 card">
-    <h2>Measurement Summary</h2><br>
-    ${resize(width => measurementSummary(width))}
-  </div>
+  <div class="grid-colspan-2 card">${resize(width => measurementSummary(width))}</div>
 </div>
 
 <style>
@@ -1338,8 +1386,7 @@ function measurementSummary(windowWidth) {
   color: black !important;
 }
 
-.ss-content.ss-open-below,
-.ss-content.ss-open-above {
+.ss-content.ss-open-below {
   background-color: #cccbcbff !important;
   border-color: black;
 }
@@ -1497,32 +1544,4 @@ function measurementSummary(windowWidth) {
   opacity: 1;
   visibility: visible;
 }
-
-@media (max-width: 768px){
-  .domains-card{
-    flex-direction: column;
-    align-items: stretch;
-    gap: 6px;
-  }
-
-  .domains-label{
-    margin-bottom: 2px;
-  }
-
-  .domain-select-wrap{
-    min-width: 0;
-    width: 100%;
-  }
-
-  .domain-select-wrap .ss-main{
-    width: 100% !important;
-    box-sizing: border-box;
-  }
-
-  .domain-select-wrap .ss-content{
-    max-width: 100% !important;
-    box-sizing: border-box;
-  }
-}
-
 </style>

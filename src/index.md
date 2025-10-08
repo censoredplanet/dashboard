@@ -19,15 +19,24 @@ const countsByDateFormatted = new Intl.NumberFormat("de-DE").format(
 
 const data = await FileAttachment("data/interferenceRateByCountry.json").json();
 const countryCount = await FileAttachment("data/totalCountries.json").json();
-const eventsFetched = await FileAttachment("data/cenalertEvents.json").json();
+
+const rawEvents = await FileAttachment("data/events.csv").csv({ typed: false });
 const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
 
-const events = eventsFetched
+const now = new Date();
+const sixMonthsAgo = new Date();
+sixMonthsAgo.setMonth(now.getMonth() - 6);
+
+const events = rawEvents
+  .filter((d) => {
+    const startDate = new Date(d.start);
+    return startDate >= sixMonthsAgo && startDate <= now;
+  })
   .map((d) => ({
     country: regionNames.of(d.country),
     impact: parseFloat(d.impact),
-    start: d.startDate,
-    end: d.endDate,
+    start: d.start,
+    end: d.end,
   }))
   .sort((a, b) => new Date(b.start) - new Date(a.start));
 
@@ -163,7 +172,7 @@ const listAlerts = (() => {
   </div>
 
   <div class="card col-span-2">
-    <h2>Potential Censorship Alerts Last 6 Months</h2>
+    <h2>Censorship Alerts Last 6 Months </h2>
     ${listAlerts}
   </div>
   </div>
