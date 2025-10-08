@@ -208,6 +208,9 @@ const filteredEventsNum = events.map((d) => {
 const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
 ```
 
+<div class="card-big" style="display:flex; flex-direction:column;">
+      CenAlert is an open-source, data-driven alert system that leverages Google Trends to pinpoint where and when global Internet censorship spikes—amplifying user voices even in hard-to-monitor regions. By detecting surges in searches for circumvention tools, CenAlert provides timely, prioritized insights and notifications to empower advocacy and response, bridging critical gaps left as traditional reporting channels face increasing threats.
+</div>
 <div class="card" style="display:flex; flex-direction:column;">
   <div class="filters-row">
     ${countryInput}
@@ -457,15 +460,15 @@ display(detailSection);
     grid-auto-rows: 260px;
     align-items: stretch;
   }
-  .card-big {
-    grid-column: 1;
-    grid-row: 1 / span 2;
-  }
   .card-side {
     grid-column: 2;
     grid-row: 1 / span 2;
   }
 }
+.card-big {
+    display: flex;
+    flex-wrap: wrap;
+  }
 
 .card-side h2 {
     margin-bottom: 0;
