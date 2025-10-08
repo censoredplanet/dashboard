@@ -6,64 +6,37 @@ title: CenAlert Dashboard
 
 ```js
 import { utcParse, utcFormat } from "https://esm.sh/d3-time-format@4";
+import { fetchCenalertEvents } from "./components/queries.js";
+import { fetchCenalertTimeseries } from "./components/queries.js";
+import { formatDMYdots, norm } from "./components/utils.js";
+import { createGridRenderer } from "./components/render-grid.js";
+import { createDetailOpener } from "./components/detail-view.js";
 
 const params = new URLSearchParams(window.location.search);
 const countryParam = (params.get("country") ?? "").trim();
 const parseDate = utcParse("%m/%d/%Y");
 const parseISO = utcParse("%Y-%m-%d");
 const fmtDMY = utcFormat("%d.%m.%Y");
-const zipped = await FileAttachment("data/annotated_merged.csv.zip").zip();
-let timeSeries = await zipped.file("annotated_merged.csv").csv({ typed: true });
-
-timeSeries = timeSeries
-  .map((d) => {
-    const s = String(d.date).trim();
-    const dt =
-      parseISO(s) ||
-      parseDate(s) ||
-      (isFinite(Date.parse(s)) ? new Date(s) : null);
-    return {
-      ...d,
-      date: dt,
-      country: (d.country ?? "").trim(),
-    };
-  })
-  .filter((d) => d.date instanceof Date && !isNaN(d.date));
-
-const timeSeriesReduced = timeSeries.flatMap(({ date, value, country }) => [
-  { date, rate: value, country, topic: "vpn" },
-]);
-
-const rawEvents = await FileAttachment("data/events.csv").csv({ typed: false });
-const events = rawEvents.map((d) => ({
-  ...d,
-  description: String(d.cause ?? ""),
-}));
-
 const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+const countriesNew = await FileAttachment("data/cenalertCountries.json").json();
+
+const countriesList = [...new Set(countriesNew)]
+  .filter((code) => code)
+  .map((code) => ({ code: String(code).trim().toUpperCase(), name: regionNames.of(code) ?? code }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+
 const countryNameToCode = {};
-const countries = Array.from(
-  new Set(
-    timeSeriesReduced
-      .map((d) => {
-        const countryCode = (d?.country ?? "").trim().toUpperCase();
-        if (!countryCode || countryCode === "UNKNOWN") {
-          return null;
-        }
-        const countryName = regionNames.of(countryCode) || countryCode;
-        countryNameToCode[countryName] = countryCode;
+for (const { name, code } of countriesList) {
+  countryNameToCode[name] = code;
+}
 
-        return countryName;
-      })
-      .filter((s) => s !== null),
-  ),
-).sort();
-
+const countries = countriesList.map((c) => c.name);
 let defaultCountry = null;
 if (countries.includes(countryParam)) {
   defaultCountry = countryParam;
 }
 ```
+
 
 ```js
 const countryInput = Inputs.select(countries, {
@@ -86,6 +59,17 @@ const timeSeriesReducedFiltered = timeSeriesReduced.filter(
     (!startDate || d.date >= startDate) &&
     (!endDate || d.date <= endDate)
 );
+```
+```js
+const events = await fetchCenalertEvents({
+  country: countryCode,
+});
+const timeseriesFetched = await fetchCenalertTimeseries({
+  country: countryCode,
+});
+const timeseries = timeseriesFetched
+  .map(d => ({ ...d, date: parseISO(d.date), topic: "vpn" }))
+  .sort((a, b) => a.date - b.date);
 ```
 ```js
 const minDate = timeSeriesReduced.reduce(
@@ -120,6 +104,7 @@ const startDate = Generators.input(startDateInput);
 const endDate = Generators.input(endDateInput);
 ```
 
+
 ```js
 function eventsCard(
   rows,
@@ -127,9 +112,9 @@ function eventsCard(
     title = "Events",
     colorHeader = "#444",
     valueKey = "impact",
-    filterStartKey = "start",
-    filterEndKey = "end",
-    sortBy = "start",
+    filterStartKey = "startDate",
+    filterEndKey = "endDate",
+    sortBy = "startDate",
     sort = "desc",
     useWindow = false,
   } = {},
@@ -195,25 +180,26 @@ function eventsCard(
 ```js
 const color = Plot.scale({ color: { domain: ["vpn"] } });
 const defaultStartEnd = [
-  timeSeriesFiltered.at(-365).date,
-  timeSeriesFiltered.at(-1).date,
+  timeseries.at(-365).date,
+  timeseries.at(-1).date,
 ];
+
 const startEnd = Mutable(defaultStartEnd);
 const setStartEnd = (se) => (startEnd.value = se ?? defaultStartEnd);
 const getStartEnd = () => startEnd.value;
 ```
 
 ```js
-const zoomedAnomalies = filteredEvents
+const zoomedAnomalies = events
   .map((d) => {
-    const s = parseISO(String(d.start)) ?? new Date(d.start);
-    const e = parseISO(String(d.end)) ?? new Date(d.end ?? d.start);
+    const s = parseISO(String(d.startDate)) ?? new Date(d.startDate);
+    const e = parseISO(String(d.endDate)) ?? new Date(d.endDate ?? d.startDate);
     return { ...d, s, e };
   })
   .filter((d) => d.s && d.e && !(d.e < startEnd[0] || d.s > startEnd[1]));
 
 const [yMin, yMax] = d3.extent(
-  timeSeriesReducedFiltered.filter(
+  timeseries.filter(
     (d) => startEnd[0] <= d.date && d.date < startEnd[1],
   ),
   (d) => d.rate,
@@ -240,7 +226,7 @@ function sparkbar(max) {
   };
 }
 
-const filteredEventsNum = filteredEvents.map((d) => {
+const filteredEventsNum = events.map((d) => {
   const isUnknown =
     String(d.label ?? "")
       .trim()
@@ -248,8 +234,8 @@ const filteredEventsNum = filteredEvents.map((d) => {
   return {
     ...d,
     impact: +d.impact,
-    who: isUnknown ? "CenAlert" : (d.who ?? ""),
-    cause: isUnknown ? "unknown" : (d.cause ?? ""),
+    reportedBy: isUnknown ? "CenAlert" : (d.reportedBy ?? ""),
+    description: isUnknown ? "unknown" : (d.description ?? ""),
   };
 });
 
@@ -268,9 +254,52 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
   </div>
 </div>
 
+<div class="grid grid-cols-2-3" style="margin-top: 2rem;">
+  <div class="card card-big" style="display: flex; flex-direction: column;">
+    <h2>${startEnd === defaultStartEnd
+        ? "Search volume over the past year"
+        : startEnd.map(fmtDMY).join(" - ")}</h2><br>
+    <span style="flex-grow: 1;">${resize((width, height) =>
+      Plot.plot({
+        width,
+        height,
+        y: {grid: true, label: "rate (%)"},
+        color,
+        marks: [
+          Plot.lineY(timeseries.filter((d) => startEnd[0] <= d.date && d.date < startEnd[1]), 
+          {x: "date", y: "rate", stroke: "topic", curve: "step", tip: true, markerEnd: true}),
+          Plot.rectY(zoomedAnomalies, {
+            x1: d => d.s,
+            x2: d => d.e,
+            y1: yMin,
+            y2: yMax,
+            fill: "#d33",
+            fillOpacity: 0.15,
+            tip: true,
+            title: d =>
+              `𝐂𝐚𝐮𝐬𝐞: ${d.cause}\n` +
+              `𝐃𝐮𝐫𝐚𝐭𝐢𝐨𝐧: ${fmtDMY(d.s)} – ${fmtDMY(d.e)}\n` +
+              (d.impact ? `𝐈𝐦𝐩𝐚𝐜𝐭: ${(+d.impact).toFixed(2)}` : ""),
+          }),
+          Plot.ruleX(zoomedAnomalies.map(d => d.s), { stroke: "#d33", strokeOpacity: 0.85, strokeWidth: 3}),
+          Plot.ruleX(zoomedAnomalies.map(d => d.e), { stroke: "#d33", strokeOpacity: 0.85, strokeWidth: 3})
+        ]
+      })
+    )}</span>
+  </div>
+  <div class="card card-side">
+    ${eventsCard(events, {
+        title: "Events (selected period)",
+        colorHeader: color.apply("vpn"),
+        limit: 20,
+        useWindow: true
+    })}
+  </div>
+</div>
+
 <div class="grid">
   <div class="card">
-    <h2>Search volume all time (${d3.extent(timeSeriesFiltered, (d) => d.date.getUTCFullYear()).join("–")})</h2>
+    <h2>Search volume all time (${d3.extent(timeseries, (d) => d.date.getUTCFullYear()).join("–")})</h2>
     <h3>Click or drag to zoom</h3><br>
     ${resize((width) =>
       Plot.plot({
@@ -279,7 +308,7 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
         color,
         marks: [
           Plot.ruleY([0]),
-          Plot.lineY(timeSeriesReducedFiltered, {x: "date", y: "rate", stroke: "topic", tip: true}),
+          Plot.lineY(timeseries, {x: "date", y: "rate", stroke: "topic", tip: true}),
           (index, scales, channels, dimensions, context) => {
             const x1 = dimensions.marginLeft;
             const y1 = 0;
@@ -289,7 +318,7 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
               if (!event.sourceEvent) return;
               let {selection} = event;
               if (!selection) {
-                const r = 10; // radius of point-based selection
+                const r = 10;
                 let [px] = d3.pointer(event, context.ownerSVGElement);
                 px = Math.max(x1 + r, Math.min(x2 - r, px));
                 selection = [px - r, px + r];
@@ -312,6 +341,43 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
     )}
   </div>
   
+  <div class="card" style="display:flex; flex-direction:column;">
+    <h2>All Events</h2>
+    <div style="flex:1; min-height:0; overflow:auto;">
+      ${Inputs.table(filteredEventsNum, {
+        columns: ["startDate","endDate","reportedBy","description","peak","impact"],
+        header: {
+          startDate: "Start Date",
+          endDate: "End Date",
+          description: "Reported Cause",
+          reportedBy: "Reported By",
+          peak: "Peak Date",
+          impact: "Impact"
+        },
+        width: {
+          description: 240,
+          reportedBy: 130,
+          impact: 25,
+          startDate: 40,
+          endDate: 40,
+          peak: 40
+        },
+        rows: 18,
+        sort: "startDate",
+        reverse: true,
+        format: {
+          impact: sparkbar(impactMax),
+          startDate: d => d ? fmtDMY(parseISO(String(d))) : "",
+          endDate:   d => d ? fmtDMY(parseISO(String(d))) : "",
+          peak:   d => d ? fmtDMY(parseISO(String(d))) : "",
+          description: d => {
+            const s = String(d ?? "");
+            return html`<span class="cell-ellipsis" data-full=${s} aria-label=${s}>${s}</span>`;
+            }
+        }
+      })}
+    </div>
+  </div>
 </div>
 
 ```js
@@ -351,6 +417,103 @@ if (!window._tableTooltipBound) {
   });
 }
 ```
+
+```js
+
+const DAY = 24 * 60 * 60 * 1000;
+const PX_PADDING = -20;
+
+const eventCounts = events.reduce((acc, d) => {
+  const code = String(d.country).toUpperCase();
+  acc[code] = (acc[code] || 0) + 1;
+  return acc;
+}, {});
+
+const enriched = events.map((d) => ({
+  ...d,
+  countryName: regionNames.of(String(d.country).toUpperCase()) || d.country,
+}));
+
+const uniqueCountries = [
+  ...new Map(enriched.map((d) => [d.country, d.countryName])).entries(),
+]
+  .map(([code, name]) => ({
+    code,
+    name,
+  }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+  const uniqueCountriesWithEvents = uniqueCountries.map(({ code, name }) => ({
+  code,
+  name,
+  totalEvents: eventCounts[code] || 0,
+}));
+
+const formatImpact = new Intl.NumberFormat("de-AT", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+  useGrouping: false,
+}).format;
+
+const softBreakLongTokens = (s, every = 16) =>
+  String(s).replace(new RegExp(`(\\S{${every}})(?=\\S)`, "g"), "$1 ");
+
+const gridSection = html`<div class="card card-with-search"></div>`;
+const detailSection = html`<div class="card detail-view" hidden></div>`;
+
+const gridHeader = html`<div class="card-header"></div>`;
+
+const grid = html`<div class="tiles-grid"></div>`;
+gridSection.append(gridHeader, grid);
+
+let currentList = uniqueCountriesWithEvents;
+const state = {
+  selectedCode: null,
+  tsCache: new Map(),
+  setCurrentList: (list) => { currentList = list; }
+};
+
+const tsCache = new Map();
+
+const openDetail = createDetailOpener({
+  html, d3, Plot, resize,
+  DAY, PX_PADDING,
+  events, formatImpact, softBreakLongTokens,
+  gridSection, detailSection,
+  formatDMYdots,
+});
+
+const renderGrid = createGridRenderer({ html, parseISO, openDetail });
+
+// const searchInput = gridHeader.querySelector(".country-search");
+// searchInput.addEventListener("input", (e) => {
+//   const q = norm(e.target.value.trim());
+//   const filtered = q
+//     ? uniqueCountriesWithEvents.filter(({ name }) => norm(name).startsWith(q))
+//     : uniqueCountriesWithEvents;
+
+//   if (!filtered.length) {
+//     grid.innerHTML = `<div class="empty">No countries match “${e.target.value}”.</div>`;
+//     return;
+//   }
+//   renderGrid(
+//     grid,
+//     filtered,
+//     state
+//   );
+// });
+
+renderGrid(
+  grid,
+  uniqueCountriesWithEvents,
+  state
+);
+
+display(gridSection);
+display(detailSection);
+
+```
+
 <style>
 .filters-row {
   display: flex;
@@ -476,4 +639,68 @@ if (!window._tableTooltipBound) {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+
+.detail-view .detail-header {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: .5rem;
+}
+
+.card-with-search {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+
+.tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.tile.card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  cursor: pointer;
+  padding: 2rem 1rem;
+  font-size: 1.2rem;
+  user-select: none;
+  transition: transform .05s ease, box-shadow .15s ease, border-color .15s ease;
+}
+
+.tile.card:hover {
+  transform: translateY(-2px);
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 14px rgba(0,0,0,.06);
+}
+
+.tile.card.selected {
+  border-color: #1e90ff;
+  box-shadow: 0 0 0 3px rgba(30,144,255,.15);
+}
+
+.tile.card .flag {
+  font-size: 1.8rem;
+}
+
+.grid-1-2{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+@media (max-width: 840px){
+  .grid-1-2{ grid-template-columns: 1fr; }
+}
+
+.timeline-scroller{
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+
 </style>
