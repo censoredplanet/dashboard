@@ -69,7 +69,7 @@ const openDetail = createDetailOpener({
   formatDMYdots,
 });
 
-openDetail(countryCode);
+showCountryDetail(countryCode, countryGenerator);
 ```
 ```js
 function eventsCard(
@@ -365,6 +365,17 @@ const openDetail = createDetailOpener({
   formatDMYdots,
 });
 
+async function showCountryDetail(code, name) {
+  if (!tsCache.has(code)) {
+    const data = await fetchCenalertTimeseries({ country: code });
+    const series = data
+      .map((d) => ({ ...d, date: parseISO(d.date) }))
+      .sort((a, b) => a.date - b.date);
+    tsCache.set(code, series);
+  }
+
+  openDetail(code, name, tsCache.get(code));
+}
 const renderGrid = createGridRenderer({ html, parseISO, openDetail });
 
 // const searchInput = gridHeader.querySelector(".country-search");
