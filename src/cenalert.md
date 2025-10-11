@@ -61,30 +61,29 @@ const dateRangeInput = Inputs.select(dateRangeOptions, {
 const dateRangeGenerator = Generators.input(dateRangeInput);
 ```
 ```js
-let customStartDate, customEndDate;
-dateRangeGenerator; // referencing it makes this cell re-run automatically
-customStartDate = Inputs.date({
+const customStartDateInput = Inputs.date({
   label: "Start date",
   value: new Date(new Date().getFullYear(), 0, 1)
 });
-customEndDate = Inputs.date({
+const customEndDateInput = Inputs.date({
   label: "End date",
   value: new Date()
 });
 
-dateRangeGenerator.value === "custom"
-  ? html`
-      <div class="filters-row" style="display:flex; gap:1rem; margin-top:0.5rem;">
-        ${customStartDate}
-        ${customEndDate}
-      </div>
-    `
-  : null;
+const customStartDate = Generators.input(customStartDateInput);
+const customEndDate = Generators.input(customEndDateInput);
+
+dateRangeGenerator; // still needed to re-run this cell on range change
+customStartDate;
+customEndDate;
 ```
+
 ```js
+dateRangeGenerator; // still needed to re-run this cell on range change
+customStartDate;
+customEndDate;
 const now = new Date();
 let startDate, endDate;
-
 if (dateRangeGenerator.value === "present") {
   endDate = now;
   startDate = new Date(now);
@@ -94,10 +93,11 @@ if (dateRangeGenerator.value === "present") {
   startDate = new Date(now);
   startDate.setFullYear(now.getFullYear() - 1);
 } else if (dateRangeGenerator.value === "custom") {
-  startDate = customStartDate?.value ?? now;
-  endDate = customEndDate?.value ?? now;
+  startDate = customStartDate?.value;
+  endDate = customEndDate?.value;
 }
 ```
+
 ```js
 const countryCode = countryNameToCode[countryGenerator];
 const events = await fetchCenalertEvents({
@@ -107,11 +107,14 @@ const timeseriesFetched = await fetchCenalertTimeseries({
   country: countryCode,
 });
 
-const timeseries = timeseriesFetched
-  .map(d => ({ ...d, date: parseISO(d.date), topic: "vpn" }))
+const timeseries = (await fetchCenalertTimeseries({ country: countryCode }))
+  .map(d => ({
+    ...d,
+    date: parseISO(d.date),
+    topic: "vpn"
+  }))
   .filter(d => {
     if (!d.date) return false;
-    if (!startDate && !endDate) return true; // skip filtering until range defined
     return (!startDate || d.date >= startDate) && (!endDate || d.date <= endDate);
   })
   .sort((a, b) => a.date - b.date);
@@ -278,6 +281,13 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
     ${countryInput}
     ${Inputs.select(["VPN"], { label: "Search Term", value: "VPN" })}
     ${dateRangeInput}
+    ${dateRangeInput.value.value === "custom"
+    ? html`<div style="display:flex; gap:0.5rem;">
+        ${customStartDateInput}
+        ${customEndDateInput}
+      </div>`
+    : ""
+  }
   </div>
 </div>
 <div class="grid">
