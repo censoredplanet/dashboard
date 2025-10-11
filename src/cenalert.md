@@ -42,10 +42,62 @@ if (countries.includes(countryParam)) {
 const countryInput = Inputs.select(countries, {
   label: "Country",
   value: defaultCountry ?? countries[0],
+  onchange: () => {}
 });
 const countryGenerator = Generators.input(countryInput);
-```
 
+const dateRangeOptions = [
+  { label: "Present (past 60 days)", value: "present" },
+  { label: "Past year", value: "year" },
+  { label: "Custom range", value: "custom" },
+];
+
+const dateRangeInput = Inputs.select(dateRangeOptions, {
+  label: "Date range",
+  format: d => d.label,
+  value: dateRangeOptions[0],
+  onchange: () => {}
+});
+const dateRangeGenerator = Generators.input(dateRangeInput);
+```
+```js
+let customStartDate, customEndDate;
+dateRangeGenerator; // referencing it makes this cell re-run automatically
+customStartDate = Inputs.date({
+  label: "Start date",
+  value: new Date(new Date().getFullYear(), 0, 1)
+});
+customEndDate = Inputs.date({
+  label: "End date",
+  value: new Date()
+});
+
+dateRangeGenerator.value === "custom"
+  ? html`
+      <div class="filters-row" style="display:flex; gap:1rem; margin-top:0.5rem;">
+        ${customStartDate}
+        ${customEndDate}
+      </div>
+    `
+  : null;
+```
+```js
+const now = new Date();
+let startDate, endDate;
+
+if (dateRangeGenerator.value === "present") {
+  endDate = now;
+  startDate = new Date(now);
+  startDate.setDate(now.getDate() - 60);
+} else if (dateRangeGenerator.value === "year") {
+  endDate = now;
+  startDate = new Date(now);
+  startDate.setFullYear(now.getFullYear() - 1);
+} else if (dateRangeGenerator.value === "custom") {
+  startDate = customStartDate?.value ?? now;
+  endDate = customEndDate?.value ?? now;
+}
+```
 ```js
 const countryCode = countryNameToCode[countryGenerator];
 const events = await fetchCenalertEvents({
@@ -54,8 +106,14 @@ const events = await fetchCenalertEvents({
 const timeseriesFetched = await fetchCenalertTimeseries({
   country: countryCode,
 });
+
 const timeseries = timeseriesFetched
   .map(d => ({ ...d, date: parseISO(d.date), topic: "vpn" }))
+  .filter(d => {
+    if (!d.date) return false;
+    if (!startDate && !endDate) return true; // skip filtering until range defined
+    return (!startDate || d.date >= startDate) && (!endDate || d.date <= endDate);
+  })
   .sort((a, b) => a.date - b.date);
 
 ```
@@ -145,10 +203,14 @@ function eventsCard(
 
 ```js
 const color = Plot.scale({ color: { domain: ["vpn"] } });
-const defaultStartEnd = [
-  timeseries.at(-365).date,
-  timeseries.at(-1).date,
-];
+const defaultStartEnd = (() => {
+  const lastIndex = timeseries.length - 1;
+  const firstIndex = Math.max(0, lastIndex - 364); // use first element if < 365
+  return [
+    timeseries[firstIndex]?.date ?? new Date(),  // fallback if empty
+    timeseries[lastIndex]?.date ?? new Date(),   // fallback if empty
+  ];
+})();
 
 const startEnd = Mutable(defaultStartEnd);
 const setStartEnd = (se) => (startEnd.value = se ?? defaultStartEnd);
@@ -215,11 +277,12 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
   <div class="filters-row">
     ${countryInput}
     ${Inputs.select(["VPN"], { label: "Search Term", value: "VPN" })}
+    ${dateRangeInput}
   </div>
 </div>
 <div class="grid">
   <div class="card">
-    <h2>Search volume all time (${d3.extent(timeseries, (d) => d.date.getUTCFullYear()).join("–")})</h2>
+    <h2>Search volume (${d3.extent(timeseries, (d) => d.date.getUTCFullYear()).join("–")})</h2>
     <h3>Click or drag to zoom</h3><br>
     ${resize((width) =>
       Plot.plot({
@@ -227,36 +290,9 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
         y: {grid: true, label: "rate (%)"},
         color,
         marks: [
-          Plot.ruleY([0]),
-          Plot.lineY(timeseries, {x: "date", y: "rate", stroke: "topic", tip: true}),
-          (index, scales, channels, dimensions, context) => {
-            const x1 = dimensions.marginLeft;
-            const y1 = 0;
-            const x2 = dimensions.width - dimensions.marginRight;
-            const y2 = dimensions.height;
-            const brushed = (event) => {
-              if (!event.sourceEvent) return;
-              let {selection} = event;
-              if (!selection) {
-                const r = 10;
-                let [px] = d3.pointer(event, context.ownerSVGElement);
-                px = Math.max(x1 + r, Math.min(x2 - r, px));
-                selection = [px - r, px + r];
-                g.call(brush.move, selection);
-              }
-              setStartEnd(selection.map(scales.x.invert));
-            };
-            const pointerdowned = (event) => {
-              const pointerleave = new PointerEvent("pointerleave", {bubbles: true, pointerType: "mouse"});
-              event.target.dispatchEvent(pointerleave);
-            };
-            const brush = d3.brushX().extent([[x1, y1], [x2, y2]]).on("brush end", brushed);
-            const g = d3.create("svg:g").call(brush);
-            g.call(brush.move, getStartEnd().map(scales.x));
-            g.on("pointerdown", pointerdowned);
-            return g.node();
-          }
-        ]
+        Plot.ruleY([0]),
+        Plot.lineY(timeseries, {x: "date", y: "rate", stroke: "topic", tip: true})
+      ]
       })
     )}
   </div>
@@ -373,10 +409,13 @@ async function showCountryDetail(code, name) {
       .sort((a, b) => a.date - b.date);
     tsCache.set(code, series);
   }
-
+  const scrollY = window.scrollY;
   openDetail(code, name, tsCache.get(code));
+  window.scrollTo(0, scrollY);
 }
+const scrollY = window.scrollY;
 const renderGrid = createGridRenderer({ html, parseISO, openDetail });
+window.scrollTo(0, scrollY);
 
 // const searchInput = gridHeader.querySelector(".country-search");
 // searchInput.addEventListener("input", (e) => {
