@@ -5,6 +5,7 @@ export function createDetailOpener(deps) {
     DAY, PX_PADDING,
     events, formatImpact, softBreakLongTokens,
     gridSection, detailSection,
+    startDate, endDate,
   } = deps;
 
   function renderDetail(code, name, countryEvents) {
@@ -124,13 +125,19 @@ export function createDetailOpener(deps) {
         bodyEl.append(html`<div class="empty">No time series.</div>`);
         return;
       }
-
+      let seriesFiltered = seriesnew;
+      if (startDate || endDate) {
+        seriesFiltered = seriesnew.filter(d => {
+          if (!d.date) return false;
+          return (!startDate || d.date >= startDate) && (!endDate || d.date <= endDate);
+        });
+      }
       if (!selectedEvent) {
         const chart = resize((width) =>
           Plot.plot({
             height: (margin.top + margin.bottom + VISIBLE_ROWS * baseMinRow) + PX_PADDING + mobileExtra + 9,
             y: { grid: true, label: "rate (%)" },
-            marks: [Plot.lineY(seriesnew, { x: "date", y: "rate", curve: "step", tip: true })],
+            marks: [Plot.lineY(seriesFiltered, { x: "date", y: "rate", curve: "step", tip: true })],
           })
         );
         bodyEl.append(chart);
@@ -141,8 +148,13 @@ export function createDetailOpener(deps) {
       const e = selectedEvent.endDate || selectedEvent.startDate || selectedEvent.date;
       const x0 = new Date(s.getTime() - 3 * DAY);
       const x1 = new Date(e.getTime() + 3 * DAY);
-      const slice = seriesnew.filter((d) => d.date >= x0 && d.date <= x1);
-      const series = slice.length ? slice : seriesnew;
+      const slice = seriesFiltered.filter((d) => d.date >= x0 && d.date <= x1);
+      if (startDate || endDate) {
+        slice = slice.filter(d => {
+          return (!startDate || d.date >= startDate) && (!endDate || d.date <= endDate);
+        });
+      }
+      const series = slice.length ? slice : seriesFiltered;
 
       const yMin = d3.min(series, (d) => d.rate);
       const yMax = d3.max(series, (d) => d.rate);
@@ -237,6 +249,8 @@ export function createDetailOpener(deps) {
   }
 
   function openDetail(code, name, seriesForSelectedCountry) {
+    const startDate = d3.min(seriesForSelectedCountry, d => d.date);
+    const endDate = d3.max(seriesForSelectedCountry, d => d.date);
     const countryEvents = events
       .filter((d) => String(d.country).toUpperCase() === code)
       .map((d) => {
@@ -257,6 +271,12 @@ export function createDetailOpener(deps) {
           impact: nImpact,
           description: softBreakLongTokens(d.description || "unknown", 16),
         };
+      })
+      .filter((d) => {
+        const s = d.startDate || d.date;
+        const e = d.endDate || d.date;
+        if (!s || !e) return false;
+        return (!startDate || e >= startDate) && (!endDate || s <= endDate);
       })
       .sort((a, b) => b.date - a.date || a.title.localeCompare(b.title));
 

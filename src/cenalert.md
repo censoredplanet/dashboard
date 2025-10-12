@@ -128,6 +128,8 @@ const openDetail = createDetailOpener({
   events, formatImpact, softBreakLongTokens,
   gridSection, detailSection,
   formatDMYdots,
+  startDate,
+  endDate,
 });
 
 showCountryDetail(countryCode, countryGenerator);
@@ -416,11 +418,15 @@ async function showCountryDetail(code, name) {
     const data = await fetchCenalertTimeseries({ country: code });
     const series = data
       .map((d) => ({ ...d, date: parseISO(d.date) }))
+      .filter(d => {
+      if (!d.date) return false;
+      return (!startDate || d.date >= startDate) && (!endDate || d.date <= endDate);
+    })
       .sort((a, b) => a.date - b.date);
     tsCache.set(code, series);
   }
   const scrollY = window.scrollY;
-  openDetail(code, name, tsCache.get(code));
+  openDetail(code, name, timeseries);
   window.scrollTo(0, scrollY);
 }
 const scrollY = window.scrollY;
