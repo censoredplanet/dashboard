@@ -93,8 +93,8 @@ if (dateRangeGenerator.value === "present") {
   startDate = new Date(now);
   startDate.setFullYear(now.getFullYear() - 1);
 } else if (dateRangeGenerator.value === "custom") {
-  startDate = customStartDate?.value;
-  endDate = customEndDate?.value;
+  startDate = customStartDate;
+  endDate = customEndDate;
 }
 ```
 
