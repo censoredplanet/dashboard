@@ -49,6 +49,7 @@ const countryGenerator = Generators.input(countryInput);
 const dateRangeOptions = [
   { label: "Present (past 60 days)", value: "present" },
   { label: "Past year", value: "year" },
+  { label: "All time", value: "all" },
   { label: "Custom range", value: "custom" },
 ];
 
@@ -63,11 +64,15 @@ const dateRangeGenerator = Generators.input(dateRangeInput);
 ```js
 const customStartDateInput = Inputs.date({
   label: "Start date",
-  value: new Date(new Date().getFullYear(), 0, 1)
+  value: null,       
+  min: earliestDate,          
+  max: latestDate             
 });
 const customEndDateInput = Inputs.date({
   label: "End date",
-  value: new Date()
+  value: null,          
+  min: earliestDate,          
+  max: latestDate          
 });
 
 const customStartDate = Generators.input(customStartDateInput);
@@ -92,9 +97,25 @@ if (dateRangeGenerator.value === "present") {
   endDate = now;
   startDate = new Date(now);
   startDate.setFullYear(now.getFullYear() - 1);
-} else if (dateRangeGenerator.value === "custom") {
-  startDate = customStartDate;
-  endDate = customEndDate;
+} else if (dateRangeGenerator.value === "all") {
+  endDate = now;
+}
+else if (dateRangeGenerator.value === "custom") {
+  if (customStartDate && customEndDate) {
+    startDate = customStartDate;
+    endDate = customEndDate;
+    
+    // if (startDate < earliestDate) startDate = earliestDate;
+    // if (endDate > latestDate) endDate = latestDate;
+    if (startDate > endDate) {
+      const temp = startDate;
+      startDate = endDate;
+      endDate = startDate;
+    }
+  } else {
+    startDate = null;
+    endDate = null;
+  }
 }
 ```
 
@@ -106,7 +127,15 @@ const events = await fetchCenalertEvents({
 const timeseriesFetched = await fetchCenalertTimeseries({
   country: countryCode,
 });
-
+```
+```js
+const allDates = timeseriesFetched
+  .map(d => parseISO(d.date))
+  .filter(Boolean);
+const earliestDate = new Date(Math.min(...allDates.map(d => d.getTime())));
+const latestDate = new Date(Math.max(...allDates.map(d => d.getTime())));
+```
+```js
 const timeseries = (await fetchCenalertTimeseries({ country: countryCode }))
   .map(d => ({
     ...d,
@@ -295,7 +324,6 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
 <div class="grid">
   <div class="card">
     <h2>Search volume (${d3.extent(timeseries, (d) => d.date.getUTCFullYear()).join("–")})</h2>
-    <h3>Click or drag to zoom</h3><br>
     ${resize((width) =>
       Plot.plot({
         width,
@@ -303,8 +331,35 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
         color,
         marks: [
         Plot.ruleY([0]),
-        Plot.lineY(timeseries, {x: "date", y: "rate", stroke: "topic", tip: true})
-      ]
+          Plot.lineY(timeseries, {x: "date", y: "rate", stroke: "topic", tip: true}),
+          (index, scales, channels, dimensions, context) => {
+            const x1 = dimensions.marginLeft;
+            const y1 = 0;
+            const x2 = dimensions.width - dimensions.marginRight;
+            const y2 = dimensions.height;
+            const brushed = (event) => {
+              if (!event.sourceEvent) return;
+              let {selection} = event;
+              if (!selection) {
+                const r = 10;
+                let [px] = d3.pointer(event, context.ownerSVGElement);
+                px = Math.max(x1 + r, Math.min(x2 - r, px));
+                selection = [px - r, px + r];
+                g.call(brush.move, selection);
+              }
+              setStartEnd(selection.map(scales.x.invert));
+            };
+            const pointerdowned = (event) => {
+              const pointerleave = new PointerEvent("pointerleave", {bubbles: true, pointerType: "mouse"});
+              event.target.dispatchEvent(pointerleave);
+            };
+            const brush = d3.brushX().extent([[x1, y1], [x2, y2]]).on("brush end", brushed);
+            const g = d3.create("svg:g").call(brush);
+            g.call(brush.move, getStartEnd().map(scales.x));
+            g.on("pointerdown", pointerdowned);
+            return g.node();
+          }
+        ]
       })
     )}
   </div>
