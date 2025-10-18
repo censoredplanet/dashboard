@@ -78,6 +78,8 @@ const customEndDateInput = Inputs.date({
 const customStartDate = Generators.input(customStartDateInput);
 const customEndDate = Generators.input(customEndDateInput);
 
+
+
 dateRangeGenerator; // still needed to re-run this cell on range change
 customStartDate;
 customEndDate;
@@ -107,10 +109,11 @@ else if (dateRangeGenerator.value === "custom") {
     
     // if (startDate < earliestDate) startDate = earliestDate;
     // if (endDate > latestDate) endDate = latestDate;
+    
     if (startDate > endDate) {
       const temp = startDate;
       startDate = endDate;
-      endDate = startDate;
+      endDate = temp;
     }
   } else {
     startDate = null;
