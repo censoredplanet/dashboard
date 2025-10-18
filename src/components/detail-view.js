@@ -183,7 +183,7 @@ export function createDetailOpener(deps) {
       bodyEl.append(chart, meta);
     }
 
-    renderRight();
+    renderRight(countryEvents.length ? countryEvents[0] : null);
     const scroller = html`<div class="timeline-scroller"></div>`;
     scroller.style.height = `${viewHeight}px`;
     scroller.style.overflow = "auto";

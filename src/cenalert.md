@@ -326,7 +326,11 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
 </div>
 <div class="grid">
   <div class="card">
-    <h2>Search volume (${d3.extent(timeseries, (d) => d.date.getUTCFullYear()).join("–")})</h2>
+    <h2>Search volume  (${
+    d3.extent(timeseries, d => d.date)
+      .map(d3.timeFormat("%b %d, %Y"))
+      .join(" – ")
+  })</h2>
     ${resize((width) =>
       Plot.plot({
         width,
