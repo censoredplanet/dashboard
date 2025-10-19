@@ -12,10 +12,15 @@ export function createDetailOpener(deps) {
     detailSection.innerHTML = "";
     const flag = (code) =>
       code.toUpperCase().replace(/./g, (c) => String.fromCodePoint(c.charCodeAt(0) + 127397));
-
+    const fmtYMDdots = d3.utcFormat("%Y.%m.%d");
+    const dateRangeLabel =
+      startDate && endDate
+        ? `${fmtYMDdots(startDate)} – ${fmtYMDdots(endDate)}`
+        : "";
     const heading = html`<h2 class="detail-title">
       <span class="flag">${flag(code)}</span>
       <span class="country-name">Events in ${name}</span>
+      ${dateRangeLabel ? html`<span class="date-range">(${dateRangeLabel})</span>` : ""}
     </h2>`;
     const detailHeader = html`<div class="detail-header">${heading}</div>`;
 
@@ -249,14 +254,15 @@ export function createDetailOpener(deps) {
   }
 
   function openDetail(code, name, seriesForSelectedCountry) {
+    const fmtYMDdots = d3.utcFormat("%Y.%m.%d");
     const startDate = d3.min(seriesForSelectedCountry, d => d.date);
     const endDate = d3.max(seriesForSelectedCountry, d => d.date);
     const countryEvents = events
       .filter((d) => String(d.country).toUpperCase() === code)
       .map((d) => {
         const nImpact = Number(d.impact);
-        const start = deps.formatDMYdots(d.startDate);
-        const end = deps.formatDMYdots(d.endDate);
+        const start = d.startDate ? fmtYMDdots(new Date(d.startDate)) : null;
+        const end = d.endDate ? fmtYMDdots(new Date(d.endDate)) : null;
         const dateLabel = start && end && start !== end ? `${start} - ${end}` : start || end || "—";
         return {
           date: new Date(d.peak || d.start),
