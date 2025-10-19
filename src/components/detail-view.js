@@ -83,6 +83,14 @@ export function createDetailOpener(deps) {
       g.selectAll(".node").classed("active", false).select("circle").attr("stroke", "#444").attr("stroke-width", 1.5);
       if (!isActive) self.classed("active", true).select("circle").attr("stroke", "#1e90ff").attr("stroke-width", 2.5);
       renderRight(d);
+      const descBox = document.getElementById("bottom-desc");
+      if (d.description && d.description.length > 0) {
+        descBox.textContent = d.description;
+        descBox.classList.remove("hidden");
+      } else {
+        descBox.textContent = "";
+        descBox.classList.add("hidden");
+      }
     });
 
     const labelDx = r + 12;
@@ -109,9 +117,18 @@ export function createDetailOpener(deps) {
     rowWho.style("display", (d) => (d.who ? null : "none"));
 
     const rowDesc = htmlBox.append("xhtml:div").attr("class", "label-row desc-row");
-    rowDesc.append("xhtml:span").attr("class", "label-key").text("Cause:");
-    rowDesc.append("xhtml:span").attr("class", "label-value").text((d) => d.description || "—");
 
+    rowDesc.append("xhtml:span").attr("class", "label-key").text("Cause:");
+
+    rowDesc.append("xhtml:span")
+      .attr("class", "label-value")
+      .text(d => {
+        const desc = d.description || "—";
+        return desc.length > 80 ? "Click to read more" : desc;
+      })
+      .attr("data-full", d => d.description || "")
+      .style("color", d => (d.description?.length > 80 ? "#1e90ff" : null))
+      .style("cursor", d => (d.description?.length > 80 ? "pointer" : null));
     const rightCard = html`<div class="card">
       <h3 class="right-title">Rate over time</h3>
       <div class="right-body"></div>
@@ -199,7 +216,8 @@ export function createDetailOpener(deps) {
     leftCard.append(scroller);
     const layout = html`<div class="grid-1-2">${leftCard}${rightCard}</div>`;
     detailSection.append(detailHeader, layout);
-
+    const bottomDesc = html`<div id="bottom-desc" class="bottom-desc hidden"></div>`;
+    detailSection.append(detailHeader, layout, bottomDesc);
     function layoutNodes() {
       node.each(function (d) {
         const foEl = d3.select(this).select("foreignObject");
@@ -298,3 +316,28 @@ export function createDetailOpener(deps) {
 
   return openDetail;
 }
+
+const style = document.createElement("style");
+style.textContent = `
+  .bottom-desc {
+    position: sticky; /* or fixed if you prefer */
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border-top: 1px solid #ddd;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    color: #333;
+    max-height: 8rem;
+    overflow-y: auto;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.08);
+    transition: opacity 0.3s ease;
+    z-index: 10;
+  }
+  .hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+`;
+document.head.appendChild(style);
