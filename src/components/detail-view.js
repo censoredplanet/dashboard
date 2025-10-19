@@ -266,7 +266,9 @@ export function createDetailOpener(deps) {
           startDate: d.startDate ? new Date(d.startDate) : null,
           endDate: d.endDate ? new Date(d.endDate) : null,
           code: "Impact",
-          title: Number.isFinite(nImpact) ? formatImpact(nImpact) : "—",
+          title: Number.isFinite(nImpact)
+          ? formatImpact(nImpact).replace(/,/g, ".")
+          : "—",
           who: d.reportedBy || "",
           impact: nImpact,
           description: softBreakLongTokens(d.description || "unknown", 16),
