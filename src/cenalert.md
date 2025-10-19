@@ -19,7 +19,7 @@ const parseISO = utcParse("%Y-%m-%d");
 const fmtDMY = utcFormat("%d.%m.%Y");
 const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
 const countriesNew = await FileAttachment("data/cenalertCountries.json").json();
-
+const tsCache = new Map();
 const countriesList = [...new Set(countriesNew)]
   .filter((code) => code)
   .map((code) => ({ code: String(code).trim().toUpperCase(), name: regionNames.of(code) ?? code }))
@@ -36,7 +36,6 @@ if (countries.includes(countryParam)) {
   defaultCountry = countryParam;
 }
 ```
-
 
 ```js
 const countryInput = Inputs.select(countries, {
@@ -62,6 +61,32 @@ const dateRangeInput = Inputs.select(dateRangeOptions, {
 const dateRangeGenerator = Generators.input(dateRangeInput);
 ```
 ```js
+async function getTimeseriesForCountry(code) {
+  if (!tsCache.has(code)) {
+    const data = await fetchCenalertTimeseries({ country: code });
+    const series = data.map((d) => ({
+      ...d,
+      date: parseISO(d.date),
+      topic: "vpn",
+    }));
+    tsCache.set(code, series);
+  }
+  return tsCache.get(code);
+}
+```
+```js
+const countryCode = countryNameToCode[countryGenerator];
+const events = await fetchCenalertEvents({
+  country: countryCode,
+});
+const timeseriesFetched = await getTimeseriesForCountry(countryCode);
+const allDates = timeseriesFetched
+  .map(d => d.date)
+  .filter(d => d instanceof Date && !isNaN(d));
+const earliestDate = new Date(Math.min(...allDates.map(d => d.getTime())));
+const latestDate = new Date(Math.max(...allDates.map(d => d.getTime())));
+```
+```js
 const customStartDateInput = Inputs.date({
   label: "Start date",
   value: null,       
@@ -77,8 +102,6 @@ const customEndDateInput = Inputs.date({
 
 const customStartDate = Generators.input(customStartDateInput);
 const customEndDate = Generators.input(customEndDateInput);
-
-
 
 dateRangeGenerator; // still needed to re-run this cell on range change
 customStartDate;
@@ -107,9 +130,6 @@ else if (dateRangeGenerator.value === "custom") {
     startDate = customStartDate;
     endDate = customEndDate;
     
-    // if (startDate < earliestDate) startDate = earliestDate;
-    // if (endDate > latestDate) endDate = latestDate;
-    
     if (startDate > endDate) {
       const temp = startDate;
       startDate = endDate;
@@ -122,27 +142,11 @@ else if (dateRangeGenerator.value === "custom") {
 }
 ```
 
+
 ```js
-const countryCode = countryNameToCode[countryGenerator];
-const events = await fetchCenalertEvents({
-  country: countryCode,
-});
-const timeseriesFetched = await fetchCenalertTimeseries({
-  country: countryCode,
-});
-```
-```js
-const allDates = timeseriesFetched
-  .map(d => parseISO(d.date))
-  .filter(Boolean);
-const earliestDate = new Date(Math.min(...allDates.map(d => d.getTime())));
-const latestDate = new Date(Math.max(...allDates.map(d => d.getTime())));
-```
-```js
-const timeseries = (await fetchCenalertTimeseries({ country: countryCode }))
+const timeseries = (await getTimeseriesForCountry(countryCode))
   .map(d => ({
     ...d,
-    date: parseISO(d.date),
     topic: "vpn"
   }))
   .filter(d => {
@@ -465,8 +469,6 @@ const state = {
   setCurrentList: (list) => { currentList = list; }
 };
 
-const tsCache = new Map();
-
 const openDetail = createDetailOpener({
   html, d3, Plot, resize,
   DAY, PX_PADDING,
@@ -476,17 +478,10 @@ const openDetail = createDetailOpener({
 });
 
 async function showCountryDetail(code, name) {
-  if (!tsCache.has(code)) {
-    const data = await fetchCenalertTimeseries({ country: code });
-    const series = data
-      .map((d) => ({ ...d, date: parseISO(d.date) }))
-      .filter(d => {
-      if (!d.date) return false;
-      return (!startDate || d.date >= startDate) && (!endDate || d.date <= endDate);
-    })
-      .sort((a, b) => a.date - b.date);
-    tsCache.set(code, series);
-  }
+  const series = await getTimeseriesForCountry(code);
+  const filtered = series.filter(d =>
+    (!startDate || d.date >= startDate) && (!endDate || d.date <= endDate)
+  );
   const scrollY = window.scrollY;
   openDetail(code, name, timeseries);
   window.scrollTo(0, scrollY);
@@ -494,24 +489,6 @@ async function showCountryDetail(code, name) {
 const scrollY = window.scrollY;
 const renderGrid = createGridRenderer({ html, parseISO, openDetail });
 window.scrollTo(0, scrollY);
-
-// const searchInput = gridHeader.querySelector(".country-search");
-// searchInput.addEventListener("input", (e) => {
-//   const q = norm(e.target.value.trim());
-//   const filtered = q
-//     ? uniqueCountriesWithEvents.filter(({ name }) => norm(name).startsWith(q))
-//     : uniqueCountriesWithEvents;
-
-//   if (!filtered.length) {
-//     grid.innerHTML = `<div class="empty">No countries match “${e.target.value}”.</div>`;
-//     return;
-//   }
-//   renderGrid(
-//     grid,
-//     filtered,
-//     state
-//   );
-// });
 
 renderGrid(
   grid,
