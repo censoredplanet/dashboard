@@ -9,13 +9,15 @@ export function createDetailOpener(deps) {
   } = deps;
 
   function renderDetail(code, name, countryEvents) {
+    const rangeStart = d3.min(countryEvents, d => d.date);
+    const rangeEnd = d3.max(countryEvents, d => d.date);
     detailSection.innerHTML = "";
     const flag = (code) =>
       code.toUpperCase().replace(/./g, (c) => String.fromCodePoint(c.charCodeAt(0) + 127397));
     const fmtYMDdots = d3.utcFormat("%Y.%m.%d");
     const dateRangeLabel =
-      startDate && endDate
-        ? `${fmtYMDdots(startDate)} – ${fmtYMDdots(endDate)}`
+      rangeStart && rangeEnd
+        ? `${fmtYMDdots(rangeStart)} - ${fmtYMDdots(rangeEnd)}`
         : "";
     const heading = html`<h2 class="detail-title">
       <span class="flag">${flag(code)}</span>
@@ -23,7 +25,6 @@ export function createDetailOpener(deps) {
       ${dateRangeLabel ? html`<span class="date-range">(${dateRangeLabel})</span>` : ""}
     </h2>`;
     const detailHeader = html`<div class="detail-header">${heading}</div>`;
-
     if (!countryEvents.length) {
       detailSection.append(html`<div class="empty">No events for ${name}.</div>`);
       return;
