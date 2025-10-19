@@ -146,8 +146,8 @@ export function createDetailOpener(deps) {
 
       const s = selectedEvent.startDate || selectedEvent.date;
       const e = selectedEvent.endDate || selectedEvent.startDate || selectedEvent.date;
-      const x0 = new Date(s.getTime() - 3 * DAY);
-      const x1 = new Date(e.getTime() + 3 * DAY);
+      const x0 = new Date(s.getTime() - 60 * DAY);
+      const x1 = new Date(e.getTime() + 60 * DAY);
       const slice = seriesFiltered.filter((d) => d.date >= x0 && d.date <= x1);
       if (startDate || endDate) {
         slice = slice.filter(d => {
