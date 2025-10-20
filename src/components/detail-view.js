@@ -159,7 +159,7 @@ export function createDetailOpener(deps) {
         const chart = resize((width) =>
           Plot.plot({
             height: (margin.top + margin.bottom + VISIBLE_ROWS * baseMinRow) + PX_PADDING + mobileExtra + 9,
-            y: { grid: true, label: "rate (%)" },
+            y: { grid: true, label: "" },
             marks: [Plot.lineY(seriesFiltered, { x: "date", y: "rate", curve: "step", tip: true })],
           })
         );
@@ -170,7 +170,7 @@ export function createDetailOpener(deps) {
       const s = selectedEvent.startDate || selectedEvent.date;
       const e = selectedEvent.endDate || selectedEvent.startDate || selectedEvent.date;
       const x0 = new Date(s.getTime() - 60 * DAY);
-      const x1 = new Date(e.getTime() + 60 * DAY);
+      const x1 = new Date(e.getTime() + 1 * DAY);
       const slice = seriesFiltered.filter((d) => d.date >= x0 && d.date <= x1);
       if (startDate || endDate) {
         slice = slice.filter(d => {
@@ -196,7 +196,7 @@ export function createDetailOpener(deps) {
       const chart = resize((width) =>
         Plot.plot({
           height: (margin.top + margin.bottom + VISIBLE_ROWS * baseMinRow) + PX_PADDING + mobileExtra,
-          y: { grid: true, label: "rate (%)" },
+          y: { grid: true, label: "" },
           x: { domain: [x0, x1], nice: false },
           marks,
         })
@@ -323,7 +323,7 @@ style.textContent = `
     position: sticky; /* or fixed if you prefer */
     bottom: 0;
     left: 0;
-    width: 100%;
+    width: 97.5%;
     background: #fff;
     border-top: 1px solid #ddd;
     padding: 0.75rem 1rem;

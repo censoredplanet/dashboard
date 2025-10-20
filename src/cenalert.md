@@ -312,7 +312,7 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
 ```
 
 <div class="card-big" style="display:flex; flex-direction:column;">
-      CenAlert is an open-source, data-driven alert system that leverages Google Trends to pinpoint where and when global Internet censorship spikes—amplifying user voices even in hard-to-monitor regions. By detecting surges in searches for circumvention tools, CenAlert provides timely, prioritized insights and notifications to empower advocacy and response, bridging critical gaps left as traditional reporting channels face increasing threats.
+      CenAlert is an open-source, data-driven alert system that leverages Google Trends to pinpoint where and when global Internet censorship spikes, amplifying user voices even in hard-to-monitor regions. By detecting surges in searches for circumvention tools, CenAlert provides timely, prioritized insights and notifications to empower advocacy and response, bridging critical gaps left as traditional reporting channels face increasing threats.
 </div>
 <div class="card" style="display:flex; flex-direction:column;">
   <div class="filters-row">
@@ -338,38 +338,11 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
     ${resize((width) =>
       Plot.plot({
         width,
-        y: {grid: true, label: "rate (%)"},
+        y: {grid: true, label: ""},
         color,
         marks: [
         Plot.ruleY([0]),
-          Plot.lineY(timeseries, {x: "date", y: "rate", stroke: "topic", tip: true}),
-          (index, scales, channels, dimensions, context) => {
-            const x1 = dimensions.marginLeft;
-            const y1 = 0;
-            const x2 = dimensions.width - dimensions.marginRight;
-            const y2 = dimensions.height;
-            const brushed = (event) => {
-              if (!event.sourceEvent) return;
-              let {selection} = event;
-              if (!selection) {
-                const r = 10;
-                let [px] = d3.pointer(event, context.ownerSVGElement);
-                px = Math.max(x1 + r, Math.min(x2 - r, px));
-                selection = [px - r, px + r];
-                g.call(brush.move, selection);
-              }
-              setStartEnd(selection.map(scales.x.invert));
-            };
-            const pointerdowned = (event) => {
-              const pointerleave = new PointerEvent("pointerleave", {bubbles: true, pointerType: "mouse"});
-              event.target.dispatchEvent(pointerleave);
-            };
-            const brush = d3.brushX().extent([[x1, y1], [x2, y2]]).on("brush end", brushed);
-            const g = d3.create("svg:g").call(brush);
-            g.call(brush.move, getStartEnd().map(scales.x));
-            g.on("pointerdown", pointerdowned);
-            return g.node();
-          }
+        Plot.lineY(timeseries, {x: "date", y: "rate", stroke: "topic", tip: true})
         ]
       })
     )}
@@ -678,11 +651,5 @@ display(detailSection);
 @media (max-width: 840px){
   .grid-1-2{ grid-template-columns: 1fr; }
 }
-
-.timeline-scroller{
-  overflow: auto;
-  overscroll-behavior: contain;
-}
-
 
 </style>
