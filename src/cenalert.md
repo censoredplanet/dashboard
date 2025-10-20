@@ -652,4 +652,9 @@ display(detailSection);
   .grid-1-2{ grid-template-columns: 1fr; }
 }
 
+.timeline-scroller{
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
 </style>
