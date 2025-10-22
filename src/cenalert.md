@@ -82,22 +82,35 @@ const events = await fetchCenalertEvents({
 const timeseriesFetched = await getTimeseriesForCountry(countryCode);
 const allDates = timeseriesFetched
   .map(d => d.date)
-  .filter(d => d instanceof Date && !isNaN(d));
+  .filter(d => d instanceof Date && !isNaN(d)); 
 const earliestDate = new Date(Math.min(...allDates.map(d => d.getTime())));
 const latestDate = new Date(Math.max(...allDates.map(d => d.getTime())));
+
+latestDate.setDate(latestDate.getDate() + 1);
 ```
 ```js
+if (!globalThis.customDateState) {
+  globalThis.customDateState = { start: null, end: null };
+}
+const storedDates = globalThis.customDateState;
 const customStartDateInput = Inputs.date({
   label: "Start date",
-  value: null,       
+  value: storedDates.start ?? null,      
   min: earliestDate,          
   max: latestDate             
 });
 const customEndDateInput = Inputs.date({
   label: "End date",
-  value: null,          
+  value: storedDates.end ?? null,        
   min: earliestDate,          
   max: latestDate          
+});
+
+customStartDateInput.addEventListener?.("input", e => {
+  storedDates.start = e.target.valueAsDate;
+});
+customEndDateInput.addEventListener?.("input", e => {
+  storedDates.end = e.target.valueAsDate;
 });
 
 const customStartDate = Generators.input(customStartDateInput);
@@ -131,6 +144,7 @@ else if (dateRangeGenerator.value === "custom") {
     endDate = customEndDate;
     
     if (startDate > endDate) {
+      alert("⚠️ The end date cannot be before the start date. Please select valid dates.");
       const temp = startDate;
       startDate = endDate;
       endDate = temp;
@@ -332,9 +346,9 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
   <div class="card">
     <h2>Search volume  (${
     d3.extent(timeseries, d => d.date)
-      .map(d3.timeFormat("%b %d, %Y"))
-      .join(" – ")
-  })</h2>
+    .map(d3.utcFormat("%b %d, %Y")) // use UTC to avoid time zone offset
+    .join(" – ")
+    })</h2>
     ${resize((width) =>
       Plot.plot({
         width,
