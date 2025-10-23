@@ -376,25 +376,73 @@ export function createDetailOpener(deps) {
 
 const style = document.createElement("style");
 style.textContent = `
-  .bottom-desc {
-    position: sticky; /* or fixed if you prefer */
-    bottom: 0;
-    left: 0;
-    width: 97.5%;
-    background: #fff;
-    border-top: 1px solid #ddd;
-    padding: 0.75rem 1rem;
-    font-size: 0.95rem;
-    color: #333;
-    max-height: 8rem;
-    overflow-y: auto;
-    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.08);
-    transition: opacity 0.3s ease;
-    z-index: 10;
+  .detail-grid {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    margin-top: 1rem;
   }
-  .hidden {
-    opacity: 0;
-    pointer-events: none;
+
+  /* LEFT COLUMN — Events list / scroller */
+  .left-col {
+    flex: 0 0 240px;   /* fixed width */
+    max-width: 240px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .events-scroller {
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    background: #fafafa;
+    padding: 0.5rem;
+    overflow-y: auto;
+    height: 380px; /* slightly shorter */
+  }
+
+  /* CENTER COLUMN — Graph */
+  .center-col {
+    flex: 1 1 auto;  /* main focus, flexible width */
+    min-width: 400px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .graph-wrap {
+    border-radius: 0.5rem;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    padding: 1rem;
+  }
+
+  /* RIGHT COLUMN — Summary */
+  .right-col {
+    flex: 0 0 280px; /* fixed width */
+    max-width: 280px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .summary-wrap {
+    border-radius: 0.5rem;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    padding: 1rem;
+  }
+
+  @media (max-width: 900px) {
+    .detail-grid {
+      flex-direction: column;
+    }
+    .left-col,
+    .right-col {
+      flex: 1 1 auto;
+      max-width: 100%;
+    }
+    .events-scroller {
+      height: auto;
+      max-height: 400px;
+    }
   }
 `;
 document.head.appendChild(style);
