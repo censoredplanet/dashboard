@@ -42,8 +42,44 @@ export function createDetailOpener(deps) {
       }
       return;
   }
+      const container = html`<div class="detail-grid">
+      <div class="left-col">
+        <div class="events-scroller"></div>
+      </div>
+      <div class="center-col">
+        <div class="graph-wrap"></div>
+      </div>
+      <div class="right-col">
+        <div class="summary-wrap"></div>
+      </div>
+    </div>`;
 
+    detailSection.append(container);
 
+    const scroller = container.querySelector(".events-scroller");
+    const graphWrap = container.querySelector(".graph-wrap");
+    const summaryWrap = container.querySelector(".summary-wrap");
+
+    // Put the rightCard (rate over time) into the center-col's graphWrap by default
+    const rightCard = html`<div class="card right-card">
+      <h3 class="right-title">Rate over time</h3>
+      <div class="right-body"></div>
+    </div>`;
+    graphWrap.append(rightCard);
+
+    const summaryCard = html`<div class="card summary-card">
+      <h3 class="summary-title">Event summary</h3>
+      <div id="summary-body" class="summary-body">Select an event to see details.</div>
+    </div>`;
+    summaryWrap.append(summaryCard);
+    let bottomDesc = document.getElementById("bottom-desc");
+    if (!bottomDesc) {
+      bottomDesc = html`<div id="bottom-desc" class="bottom-desc hidden"></div>`;
+      summaryWrap.append(bottomDesc);
+    } else {
+      // ensure it's inside the summaryWrap
+      summaryWrap.append(bottomDesc);
+    }
     const r = window.matchMedia("(max-width: 768px)").matches ? 68 : 36;
     const margin = { top: 24, right: 10, bottom: 24, left: 20 };
     const laneX = 70;
@@ -97,15 +133,25 @@ export function createDetailOpener(deps) {
       g.selectAll(".node").classed("active", false).select("circle").attr("stroke", "#444").attr("stroke-width", 1.5);
       if (!isActive) self.classed("active", true).select("circle").attr("stroke", "#1e90ff").attr("stroke-width", 2.5);
       renderRight(d);
-      const descBox = document.getElementById("bottom-desc");
-      if (d.description && d.description.length > 0) {
-        descBox.textContent = d.description;
-        descBox.classList.remove("hidden");
-      } else {
-        descBox.textContent = "";
-        descBox.classList.add("hidden");
+      // const descBox = document.getElementById("bottom-desc");
+      // if (d.description && d.description.length > 0) {
+      //   descBox.textContent = d.description;
+      //   descBox.classList.remove("hidden");
+      // } else {
+      //   descBox.textContent = "";
+      //   descBox.classList.add("hidden");
+      // }
+      const summaryBody = document.getElementById("summary-body");
+      if (summaryBody) {
+        summaryBody.innerHTML = `
+          <div><strong>${d.dateLabel}</strong></div>
+          <div style="margin-top:.5rem"><em>${d.title}</em></div>
+          <div style="margin-top:.5rem">Reported by: ${d.who || "—"}</div>
+          <div style="margin-top:.75rem">${(d.description && d.description.length > 0) ? d.description : "No additional explanation."}</div>
+        `;
       }
     });
+    
 
     const labelDx = r + 12;
     let labelWidth = 0;
@@ -143,10 +189,10 @@ export function createDetailOpener(deps) {
       .attr("data-full", d => d.description || "")
       .style("color", d => (d.description?.length > 80 ? "#1e90ff" : null))
       .style("cursor", d => (d.description?.length > 80 ? "pointer" : null));
-    const rightCard = html`<div class="card">
-      <h3 class="right-title">Rate over time</h3>
-      <div class="right-body"></div>
-    </div>`;
+    // const rightCard = html`<div class="card">
+    //   <h3 class="right-title">Rate over time</h3>
+    //   <div class="right-body"></div>
+    // </div>`;
 
     function renderRight(selectedEvent = null) {
       const titleEl = rightCard.querySelector(".right-title");
@@ -221,17 +267,14 @@ export function createDetailOpener(deps) {
     }
 
     renderRight(countryEvents.length ? countryEvents[0] : null);
-    const scroller = html`<div class="timeline-scroller"></div>`;
     scroller.style.height = `${viewHeight}px`;
-    scroller.style.overflow = "auto";
-    scroller.append(svg.node());
+  scroller.style.overflowY = "auto";
+  scroller.append(svg.node());
 
-    const leftCard = html`<div class="card"></div>`;
-    leftCard.append(scroller);
-    const layout = html`<div class="grid-1-2">${leftCard}${rightCard}</div>`;
-    detailSection.append(detailHeader, layout);
-    const bottomDesc = html`<div id="bottom-desc" class="bottom-desc hidden"></div>`;
-    detailSection.append(detailHeader, layout, bottomDesc);
+  // Append the container (which already has the three columns)
+  detailSection.append(detailHeader, container);
+    // const bottomDesc = html`<div id="bottom-desc" class="bottom-desc hidden"></div>`;
+    // detailSection.append(detailHeader, layout, bottomDesc);
     function layoutNodes() {
       node.each(function (d) {
         const foEl = d3.select(this).select("foreignObject");
