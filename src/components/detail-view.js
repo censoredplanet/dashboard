@@ -8,7 +8,7 @@ export function createDetailOpener(deps) {
     startDate, endDate,
   } = deps;
 
-  function renderDetail(code, name, countryEvents) {
+  function renderDetail(code, name, countryEvents, countryHasAnyEvents) {
     const rangeStart = d3.min(countryEvents, d => d.date);
     const rangeEnd = d3.max(countryEvents, d => d.date);
     detailSection.innerHTML = "";
@@ -24,11 +24,25 @@ export function createDetailOpener(deps) {
       <span class="country-name">Events in ${name}</span>
       ${dateRangeLabel ? html`<span class="date-range">(${dateRangeLabel})</span>` : ""}
     </h2>`;
-    const detailHeader = html`<div class="detail-header">${heading}</div>`;
+     const detailHeader = html`<div class="detail-header">${heading}</div>`;
+
+    // Always append the header (keeps "Events in ..." visible)
+    detailSection.append(detailHeader);
     if (!countryEvents.length) {
-      detailSection.append(html`<div class="empty">No events for ${name}.</div>`);
+      if (!countryHasAnyEvents) {
+        // Country truly has no events at all
+        detailSection.append(html`<div class="empty">No events.</div>`);
+      } else {
+        // Country has events overall, but none matching the current filters
+        detailSection.append(html`
+          <div class="empty">
+            No events within the selected time range. Try expanding the date range or changing filters.
+          </div>
+        `);
+      }
       return;
-    }
+  }
+
 
     const r = window.matchMedia("(max-width: 768px)").matches ? 68 : 36;
     const margin = { top: 24, right: 10, bottom: 24, left: 20 };
