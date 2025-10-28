@@ -88,7 +88,7 @@ export function createDetailOpener(deps) {
 
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
     const VISIBLE_ROWS = isMobile ? 2 : 5;
-    const viewHeight = margin.top + margin.bottom + VISIBLE_ROWS * baseMinRow;
+    const viewHeight = 5 + VISIBLE_ROWS * baseMinRow;
 
     const svg = d3.create("svg")
       .attr("viewBox", `0 0 ${width} ${height}`)
@@ -264,12 +264,12 @@ export function createDetailOpener(deps) {
     }
 
     renderRight(countryEvents.length ? countryEvents[0] : null);
-    // scroller.style.height = `${viewHeight}px`;
-  scroller.style.overflowY = "auto";
-  scroller.append(svg.node());
+    scroller.style.height = `${viewHeight}px`;
+    scroller.style.overflowY = "auto";
+    scroller.append(svg.node());
 
-  // Append the container (which already has the three columns)
-  detailSection.append(detailHeader, container);
+    // Append the container (which already has the three columns)
+    detailSection.append(detailHeader, container);
     // const bottomDesc = html`<div id="bottom-desc" class="bottom-desc hidden"></div>`;
     // detailSection.append(detailHeader, layout, bottomDesc);
     function layoutNodes() {
