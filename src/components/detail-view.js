@@ -264,7 +264,7 @@ export function createDetailOpener(deps) {
     }
 
     renderRight(countryEvents.length ? countryEvents[0] : null);
-    scroller.style.height = `${viewHeight}px`;
+    // scroller.style.height = `${viewHeight}px`;
   scroller.style.overflowY = "auto";
   scroller.append(svg.node());
 
@@ -415,7 +415,6 @@ style.textContent = `
     padding: 0;
     background: transparent;
     overflow-y: auto;
-    height: 380px; /* slightly shorter */
   }
   .graph-wrap {
     border: none;
