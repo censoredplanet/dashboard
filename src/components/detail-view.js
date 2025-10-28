@@ -400,6 +400,23 @@ style.textContent = `
     height: 380px; /* slightly shorter */
   }
 
+  /* CENTER COLUMN — Graph */
+  .center-col {
+    flex: 1 1 auto;  /* main focus, flexible width */
+    min-width: 400px;
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  /* RIGHT COLUMN — Summary */
+  .right-col {
+    flex: 0 0 280px; /* fixed width */
+    max-width: 280px;
+    display: flex;
+    flex-direction: column;
+  }
+
   @media (max-width: 900px) {
     .detail-grid {
       flex-direction: column;
