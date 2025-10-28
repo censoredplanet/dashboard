@@ -60,18 +60,15 @@ export function createDetailOpener(deps) {
     const graphWrap = container.querySelector(".graph-wrap");
     const summaryWrap = container.querySelector(".summary-wrap");
 
-    // Put the rightCard (rate over time) into the center-col's graphWrap by default
-    const rightCard = html`<div class="card right-card">
-      <h3 class="right-title">Rate over time</h3>
-      <div class="right-body"></div>
-    </div>`;
-    graphWrap.append(rightCard);
+    // Graph (center column)
+    const rightTitle = html`<h3 class="right-title">Rate over time</h3>`;
+    const rightBody = html`<div class="right-body"></div>`;
+    graphWrap.append(rightTitle, rightBody);
 
-    const summaryCard = html`<div class="card summary-card">
-      <h3 class="summary-title">Event summary</h3>
-      <div id="summary-body" class="summary-body">Select an event to see details.</div>
-    </div>`;
-    summaryWrap.append(summaryCard);
+    // Summary (right column)
+    const summaryTitle = html`<h3 class="summary-title">Event summary</h3>`;
+    const summaryBody = html`<div id="summary-body" class="summary-body">Select an event to see details.</div>`;
+    summaryWrap.append(summaryTitle, summaryBody);
     let bottomDesc = document.getElementById("bottom-desc");
     if (!bottomDesc) {
       bottomDesc = html`<div id="bottom-desc" class="bottom-desc hidden"></div>`;
@@ -195,8 +192,8 @@ export function createDetailOpener(deps) {
     // </div>`;
 
     function renderRight(selectedEvent = null) {
-      const titleEl = rightCard.querySelector(".right-title");
-      const bodyEl = rightCard.querySelector(".right-body");
+      const titleEl = graphWrap.querySelector(".right-title");
+      const bodyEl = graphWrap.querySelector(".right-body");
       const mobileExtra = window.matchMedia("(max-width: 768px)").matches ? 380 : 0;
 
       titleEl.textContent = selectedEvent ? selectedEvent.dateLabel : "Rate over time";
@@ -383,38 +380,50 @@ style.textContent = `
     margin-top: 1rem;
   }
 
-  /* LEFT COLUMN — Events list / scroller */
   .left-col {
     flex: 0 0 240px;   /* fixed width */
     max-width: 240px;
     display: flex;
     flex-direction: column;
-  }
-
-  .events-scroller {
     border: 1px solid #ddd;
     border-radius: 0.5rem;
-    background: #fafafa;
     padding: 0.5rem;
-    overflow-y: auto;
-    height: 380px; /* slightly shorter */
   }
 
-  /* CENTER COLUMN — Graph */
   .center-col {
-    flex: 1 1 auto;  /* main focus, flexible width */
+    flex: 1 1 auto; 
     min-width: 400px;
     display: flex;
     flex-direction: column;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
   }
 
-
-  /* RIGHT COLUMN — Summary */
   .right-col {
     flex: 0 0 280px; /* fixed width */
     max-width: 280px;
     display: flex;
     flex-direction: column;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .events-scroller {
+    border: none;
+    padding: 0;
+    background: transparent;
+    overflow-y: auto;
+    height: 380px; /* slightly shorter */
+  }
+  .graph-wrap {
+    border: none;
+    padding: 0;
+  }
+  .summary-wrap {
+    border: none;
+    padding: 0;
   }
 
   @media (max-width: 900px) {
