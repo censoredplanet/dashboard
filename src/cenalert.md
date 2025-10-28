@@ -465,14 +465,12 @@ const openDetail = createDetailOpener({
 });
 
 async function showCountryDetail(code, name) {
+  // const series = await getTimeseriesForCountry(code);
   const fullSeries = await getTimeseriesForCountry(code);
   const hasAnyEvents = Array.isArray(fullSeries) && fullSeries.length > 0;
-  const filtered = fullSeries.filter(d =>
-    (!startDate || d.date >= startDate) && (!endDate || d.date <= endDate)
-  );
 
   const scrollY = window.scrollY;
-  openDetail(code, name, filtered, hasAnyEvents);
+  openDetail(code, name, timeseries, hasAnyEvents);
   window.scrollTo(0, scrollY);
 }
 const scrollY = window.scrollY;
