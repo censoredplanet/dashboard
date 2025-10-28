@@ -89,7 +89,8 @@ export function createDetailOpener(deps) {
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
     const VISIBLE_ROWS = isMobile ? 2 : 5;
     const viewHeight = 5 + VISIBLE_ROWS * baseMinRow;
-
+    summaryWrap.style.height = `${viewHeight}px`;
+    summaryWrap.style.overflowY = "auto";
     const svg = d3.create("svg")
       .attr("viewBox", `0 0 ${width} ${height}`)
       .attr("preserveAspectRatio", "xMinYMin meet")
@@ -423,6 +424,7 @@ style.textContent = `
   .summary-wrap {
     border: none;
     padding: 0;
+    overflow-y: auto;
   }
 
   @media (max-width: 900px) {
