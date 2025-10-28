@@ -400,36 +400,6 @@ style.textContent = `
     height: 380px; /* slightly shorter */
   }
 
-  /* CENTER COLUMN — Graph */
-  .center-col {
-    flex: 1 1 auto;  /* main focus, flexible width */
-    min-width: 400px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .graph-wrap {
-    border-radius: 0.5rem;
-    background: #fff;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    padding: 1rem;
-  }
-
-  /* RIGHT COLUMN — Summary */
-  .right-col {
-    flex: 0 0 280px; /* fixed width */
-    max-width: 280px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .summary-wrap {
-    border-radius: 0.5rem;
-    background: #fff;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    padding: 1rem;
-  }
-
   @media (max-width: 900px) {
     .detail-grid {
       flex-direction: column;
