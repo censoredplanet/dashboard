@@ -113,9 +113,27 @@ export function createDetailOpener(deps) {
       .attr("transform", (d) => `translate(${laneX}, ${margin.top + r})`)
       .style("cursor", "pointer");
 
-    node.append("circle").attr("r", r).attr("fill", "#fcfcfc").attr("stroke", "#444").attr("stroke-width", 1.5);
-    node.append("text").attr("text-anchor", "middle").attr("dy", "-0.25em").style("font-size", "18px").text((d) => d.code);
-    node.append("text").attr("text-anchor", "middle").attr("dy", "1.2em").style("font-size", "18px").attr("fill", "#555").attr("font-weight", 700).text((d) => d.title);
+    const colorScale = d3.scaleSequential(d3.interpolateReds)
+      .domain([0, 3]);
+
+    const impactColors = ["#fee5d9", "#fcae91", "#fb6a4a", "#cb181d"];
+    function getContrastColor(color) {
+      const rgb = d3.color(color);
+      if (!rgb) return "#000";
+      const luminance = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
+      return luminance < 140 ? "#fff" : "#000"; // lower threshold = darker color
+    }
+
+    node.append("circle").attr("r", r).attr("fill",  d => impactColors[d.impactQuartile ?? Math.floor(Math.random() * 4)]).attr("stroke", "#444").attr("stroke-width", 1.5);
+    node.append("text").attr("text-anchor", "middle").attr("dy", "-0.25em").style("font-size", "18px").text((d) => d.code).attr("fill", d => {
+    const c = impactColors[d.impactQuartile ?? 0];
+    return getContrastColor(c);
+  });
+;
+    node.append("text").attr("text-anchor", "middle").attr("dy", "1.2em").style("font-size", "18px").attr("fill", "#555").attr("font-weight", 700).text((d) => d.title).attr("fill", d => {
+    const c = impactColors[d.impactQuartile ?? 0];
+    return getContrastColor(c);
+  });
 
     node.on("mouseenter", function () {
       d3.select(this).select("circle").attr("stroke", "#1e90ff").attr("stroke-width", 2);
@@ -353,6 +371,7 @@ export function createDetailOpener(deps) {
           : "—",
           who: d.reportedBy || "",
           impact: nImpact,
+          impactQuartile: Math.floor(Math.random() * 4),
           description: softBreakLongTokens(d.description || "unknown", 16),
         };
       })
