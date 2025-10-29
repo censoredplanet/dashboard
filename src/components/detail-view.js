@@ -77,18 +77,18 @@ export function createDetailOpener(deps) {
       // ensure it's inside the summaryWrap
       summaryWrap.append(bottomDesc);
     }
-    const r = window.matchMedia("(max-width: 768px)").matches ? 80 : 50;
+    const r = window.matchMedia("(max-width: 768px)").matches ? 100 : 60;
     const margin = { top: 24, right: 10, bottom: 24, left: 20 };
     const laneX = 70;
     const width = 540;
-    const baseMinRow = r * 2.2;
-    const nodeGap = 12;
+    const baseMinRow = 110;
+    const nodeGap = 30;
     const extraLastGap = 0;
     let height = 600;
 
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
     const VISIBLE_ROWS = isMobile ? 2 : 5;
-    const viewHeight = 5 + VISIBLE_ROWS * baseMinRow;
+    const viewHeight = VISIBLE_ROWS * baseMinRow;
     summaryWrap.style.height = `${viewHeight}px`;
     summaryWrap.style.overflowY = "auto";
     const svg = d3.create("svg")
@@ -114,8 +114,8 @@ export function createDetailOpener(deps) {
       .style("cursor", "pointer");
 
     node.append("circle").attr("r", r).attr("fill", "#fcfcfc").attr("stroke", "#444").attr("stroke-width", 1.5);
-    node.append("text").attr("text-anchor", "middle").attr("dy", "-0.2em").text((d) => d.code);
-    node.append("text").attr("text-anchor", "middle").attr("dy", "1.1em").attr("font-size", 12).attr("fill", "#555").attr("font-weight", 700).text((d) => d.title);
+    node.append("text").attr("text-anchor", "middle").attr("dy", "-0.25em").style("font-size", "18px").text((d) => d.code);
+    node.append("text").attr("text-anchor", "middle").attr("dy", "1.2em").style("font-size", "18px").attr("fill", "#555").attr("font-weight", 700).text((d) => d.title);
 
     node.on("mouseenter", function () {
       d3.select(this).select("circle").attr("stroke", "#1e90ff").attr("stroke-width", 2);
@@ -164,19 +164,19 @@ export function createDetailOpener(deps) {
 
     const label = node.append("g").attr("transform", `translate(${labelDx}, 0)`);
     label.append("line").attr("x1", -8).attr("x2", 0).attr("y1", 0).attr("y2", 0).attr("stroke", "#ccc");
-    label.append("text").attr("font-weight", 600).attr("y", -10).text((d) => `${d.dateLabel}`);
+    label.append("text").attr("font-weight", 600).attr("y", -r * 0.29).text((d) => `${d.dateLabel}`).style("font-size", "18px");
 
-    const fo = node.append("foreignObject").attr("x", labelDx).attr("y", 6).attr("width", 320).attr("height", 10);
+    const fo = node.append("foreignObject").attr("x", labelDx).attr("y", r*0.1).attr("width", 320).attr("height", 10);
     const htmlBox = fo.append("xhtml:div").attr("class", "label-html");
 
     const rowWho = htmlBox.append("xhtml:div").attr("class", "label-row who-row");
-    rowWho.append("xhtml:span").attr("class", "label-key").text("Reported By:");
-    rowWho.append("xhtml:span").attr("class", "label-value").text((d) => d.who || "—");
+    rowWho.append("xhtml:span").attr("class", "label-key").text("Reported By:").style("font-size", "18px");
+    rowWho.append("xhtml:span").attr("class", "label-value").text((d) => d.who || "—").style("font-size", "18px");
     rowWho.style("display", (d) => (d.who ? null : "none"));
 
     const rowDesc = htmlBox.append("xhtml:div").attr("class", "label-row desc-row");
 
-    rowDesc.append("xhtml:span").attr("class", "label-key").text("Cause:");
+    rowDesc.append("xhtml:span").attr("class", "label-key").style("font-size", "18px").text("Cause:");
 
     rowDesc.append("xhtml:span")
       .attr("class", "label-value")
@@ -186,7 +186,9 @@ export function createDetailOpener(deps) {
       })
       .attr("data-full", d => d.description || "")
       .style("color", d => (d.description?.length > 80 ? "#1e90ff" : null))
+      .style("font-size", "18px")
       .style("cursor", d => (d.description?.length > 80 ? "pointer" : null));
+      
     // const rightCard = html`<div class="card">
     //   <h3 class="right-title">Rate over time</h3>
     //   <div class="right-body"></div>
