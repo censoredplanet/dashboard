@@ -77,7 +77,7 @@ export function createDetailOpener(deps) {
       // ensure it's inside the summaryWrap
       summaryWrap.append(bottomDesc);
     }
-    const r = window.matchMedia("(max-width: 768px)").matches ? 68 : 36;
+    const r = window.matchMedia("(max-width: 768px)").matches ? 80 : 50;
     const margin = { top: 24, right: 10, bottom: 24, left: 20 };
     const laneX = 70;
     const width = 540;
