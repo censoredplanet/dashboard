@@ -88,7 +88,7 @@ export function createDetailOpener(deps) {
 
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
     const VISIBLE_ROWS = isMobile ? 2 : 5;
-    const viewHeight = VISIBLE_ROWS * baseMinRow;
+    const viewHeight = VISIBLE_ROWS * 90;
     summaryWrap.style.height = `${viewHeight}px`;
     summaryWrap.style.overflowY = "auto";
     const svg = d3.create("svg")
@@ -218,7 +218,7 @@ export function createDetailOpener(deps) {
       if (!selectedEvent) {
         const chart = resize((width) =>
           Plot.plot({
-            height: (margin.top + margin.bottom + VISIBLE_ROWS * baseMinRow) + PX_PADDING + mobileExtra + 9,
+            height: (margin.top + margin.bottom + baseMinRow) + PX_PADDING + mobileExtra + 9,
             y: { grid: true, label: "" },
             marks: [Plot.lineY(seriesFiltered, { x: "date", y: "rate", curve: "step", tip: true })],
           })
@@ -255,7 +255,7 @@ export function createDetailOpener(deps) {
 
       const chart = resize((width) =>
         Plot.plot({
-          height: (margin.top + margin.bottom + VISIBLE_ROWS * baseMinRow) + PX_PADDING + mobileExtra,
+          height: (margin.top + margin.bottom + VISIBLE_ROWS * 90) + PX_PADDING + mobileExtra,
           y: { grid: true, label: "" },
           x: { domain: [x0, x1], nice: false },
           marks,
@@ -285,14 +285,14 @@ export function createDetailOpener(deps) {
         foEl.attr("height", rowH);
       });
 
-      let yCursor = margin.top + r;
+      let yCursor = margin.top + 40;
       node.each(function (d) {
         d.__y = yCursor;
         d3.select(this).attr("transform", `translate(${laneX}, ${d.__y})`);
         yCursor += d.__rowH + nodeGap;
       });
 
-      const newBase = yCursor + r + margin.bottom;
+      const newBase = yCursor;
       height = newBase + extraLastGap;
       svg.attr("viewBox", `0 0 ${width} ${height}`);
 
@@ -315,7 +315,7 @@ export function createDetailOpener(deps) {
     const onResize = () => {
       const nowMobile = window.matchMedia("(max-width: 768px)").matches;
       const rows = nowMobile ? 4 : 5;
-      const newViewHeight = margin.top + margin.bottom + rows * baseMinRow;
+      const newViewHeight = margin.top + margin.bottom + rows * 50;
       scroller.style.height = `${newViewHeight}px`;
       computeLabelWidth();
       requestAnimationFrame(() => {
