@@ -149,14 +149,6 @@ export function createDetailOpener(deps) {
       g.selectAll(".node").classed("active", false).select("circle").attr("stroke", "#444").attr("stroke-width", 1.5);
       if (!isActive) self.classed("active", true).select("circle").attr("stroke", "#1e90ff").attr("stroke-width", 2.5);
       renderRight(d);
-      // const descBox = document.getElementById("bottom-desc");
-      // if (d.description && d.description.length > 0) {
-      //   descBox.textContent = d.description;
-      //   descBox.classList.remove("hidden");
-      // } else {
-      //   descBox.textContent = "";
-      //   descBox.classList.add("hidden");
-      // }
       const summaryBody = document.getElementById("summary-body");
       if (summaryBody) {
         summaryBody.innerHTML = `
@@ -347,10 +339,10 @@ export function createDetailOpener(deps) {
     window.addEventListener("resize", onResize, { passive: true });
   }
 
-  function openDetail(code, name, seriesForSelectedCountry) {
+  function openDetail(code, name, fullseries, timeseries, countryHasAnyEvents) {
     const fmtYMDdots = d3.utcFormat("%Y.%m.%d");
-    const startDate = d3.min(seriesForSelectedCountry, d => d.date);
-    const endDate = d3.max(seriesForSelectedCountry, d => d.date);
+    const startDate = d3.min(timeseries, d => d.date);
+    const endDate = d3.max(timeseries, d => d.date);
     const countryEvents = events
       .filter((d) => String(d.country).toUpperCase() === code)
       .map((d) => {
@@ -383,8 +375,10 @@ export function createDetailOpener(deps) {
       })
       .sort((a, b) => b.date - a.date || a.title.localeCompare(b.title));
 
-    deps.seriesForSelectedCountry = seriesForSelectedCountry;
-    renderDetail(code, name, countryEvents, seriesForSelectedCountry);
+    // deps.seriesForSelectedCountry = seriesForSelectedCountry;
+    deps.seriesForSelectedCountry = fullseries; 
+    deps.seriesVisibleRange = timeseries;
+    renderDetail(code, name, countryEvents, countryHasAnyEvents);
     gridSection.hidden = true;
     detailSection.hidden = false;
     window.scrollTo({ top: detailSection.offsetTop, behavior: "smooth" });

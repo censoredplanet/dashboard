@@ -465,12 +465,16 @@ const openDetail = createDetailOpener({
 });
 
 async function showCountryDetail(code, name) {
-  // const series = await getTimeseriesForCountry(code);
-  const fullSeries = await getTimeseriesForCountry(code);
-  const hasAnyEvents = Array.isArray(fullSeries) && fullSeries.length > 0;
+ const fullSeries = (await getTimeseriesForCountry(countryCode))
+  .map(d => ({
+    ...d,
+    topic: "vpn"
+  }))
+  .sort((a, b) => a.date - b.date);
+  const hasAnyEvents = Array.isArray(timeseries) && timeseries.length > 0;
 
   const scrollY = window.scrollY;
-  openDetail(code, name, timeseries, hasAnyEvents);
+  openDetail(code, name, fullSeries, timeseries, hasAnyEvents);
   window.scrollTo(0, scrollY);
 }
 const scrollY = window.scrollY;
