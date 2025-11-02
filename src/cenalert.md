@@ -183,6 +183,7 @@ const openDetail = createDetailOpener({
 });
 
 showCountryDetail(countryCode, countryGenerator);
+const showHighlight = true;
 ```
 ```js
 function eventsCard(
@@ -344,24 +345,58 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
 </div>
 <div class="grid">
   <div class="card">
-    <h2>Search volume  (${
-    d3.extent(timeseries, d => d.date)
-    .map(d3.utcFormat("%b %d, %Y")) // use UTC to avoid time zone offset
-    .join(" – ")
+    <h2>Search volume (${
+      d3.extent(timeseries, d => d.date)
+      .map(d3.utcFormat("%b %d, %Y"))
+      .join(" – ")
     })</h2>
     ${resize((width) =>
       Plot.plot({
         width,
-        y: {grid: true, label: ""},
+        y: { grid: true, label: "" },
         color,
         marks: [
-        Plot.ruleY([0]),
-        Plot.lineY(timeseries, {x: "date", y: "rate", stroke: "topic", tip: true})
+          Plot.ruleY([0]),
+          Plot.lineY(timeseries, {
+            x: "date",
+            y: "rate",
+            stroke: "topic",
+            tip: true
+          }),
+          // --- subtle anomaly highlights ---
+          Plot.rectY(zoomedAnomalies, {
+            x1: d => d.s,
+            x2: d => d.e,
+            y1: d3.min(timeseries, d => d.rate),
+            y2: d3.max(timeseries, d => d.rate),
+            fill: "#f87171",      
+            fillOpacity: 0.4,    
+            stroke: "#f56363ff",   
+            strokeWidth: 0.7,
+            strokeOpacity: 0.6,
+            tip: true,
+            title: d =>
+              `Cause: ${d.cause}\n` +
+              `Duration: ${fmtDMY(d.s)} – ${fmtDMY(d.e)}\n` +
+              (d.impact ? `Impact: ${(+d.impact).toFixed(2)}` : "")
+          }),
+          Plot.ruleX(zoomedAnomalies.map(d => d.s), {
+            stroke: "#ef4444",
+            strokeOpacity: 0.6,
+            strokeWidth: 0.7
+          }),
+          Plot.ruleX(zoomedAnomalies.map(d => d.e), {
+            stroke: "#ef4444",
+            strokeOpacity: 0.6,
+            strokeWidth: 0.7
+          })
         ]
       })
     )}
   </div>
 </div>
+
+
 
 ```js
 let _tip = document.getElementById("table-tooltip");
