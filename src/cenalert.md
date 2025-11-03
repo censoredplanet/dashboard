@@ -36,7 +36,22 @@ if (countries.includes(countryParam)) {
   defaultCountry = countryParam;
 }
 ```
+```js
+function updateURL(paramsObj) {
+  const urlParams = new URLSearchParams(window.location.search);
 
+  Object.entries(paramsObj).forEach(([key, value]) => {
+    if (value === null || value === undefined || value === "") {
+      urlParams.delete(key);
+    } else {
+      urlParams.set(key, value);
+    }
+  });
+
+  const newURL = `${window.location.pathname}?${urlParams.toString()}`;
+  history.replaceState(null, "", newURL);
+}
+```
 ```js
 const countryInput = Inputs.select(countries, {
   label: "Country",
@@ -455,6 +470,14 @@ if (!window._tableTooltipBound) {
     }
   });
 }
+countryInput.addEventListener("change", () => {
+  const country = countryInput.value;
+  updateURL({ country });
+});
+dateRangeInput.addEventListener("change", () => {
+  const range = dateRangeInput.value.value; // e.g., "present", "year", "custom", "all"
+  updateURL({ range });
+});
 ```
 
 ```js
