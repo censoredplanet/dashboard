@@ -339,7 +339,7 @@ export function createDetailOpener(deps) {
     window.addEventListener("resize", onResize, { passive: true });
   }
 
-  function openDetail(code, name, fullseries, timeseries, countryHasAnyEvents) {
+  function openDetail(code, name, fullseries, timeseries, countryHasAnyEvents, selectedEventKey) {
     const fmtYMDdots = d3.utcFormat("%Y.%m.%d");
     const startDate = d3.min(timeseries, d => d.date);
     const endDate = d3.max(timeseries, d => d.date);
@@ -365,6 +365,7 @@ export function createDetailOpener(deps) {
           impact: nImpact,
           impactQuartile: Math.floor(Math.random() * 4),
           description: softBreakLongTokens(d.description || "unknown", 16),
+          __matchKey: d.startDate ? String(d.startDate) : (d.peak ? String(d.peak) : dateLabel)
         };
       })
       .filter((d) => {
@@ -382,8 +383,51 @@ export function createDetailOpener(deps) {
     gridSection.hidden = true;
     detailSection.hidden = false;
     window.scrollTo({ top: detailSection.offsetTop, behavior: "smooth" });
+    
+    if (selectedEventKey) {
+      setTimeout(() => {
+        try {
+          const nodes = Array.from(detailSection.querySelectorAll(".node"));
+          // find node whose __matchKey matches
+          let targetNode = null;
+          for (const n of nodes) {
+            const d = d3.select(n).datum();
+            if (!d) continue;
+            if (d.__matchKey && String(d.__matchKey) === String(selectedEventKey)) {
+              targetNode = n;
+              break;
+            }
+            // fallback: match by dateLabel
+            if (d.dateLabel && d.dateLabel === selectedEventKey) {
+              targetNode = n;
+              break;
+            }
+          }
+          if (targetNode) {
+            // ensure it's visible in the scroller and animate to center
+            const scroller = detailSection.querySelector(".events-scroller");
+            if (scroller && typeof targetNode.scrollIntoView === "function") {
+              // center it visually
+              targetNode.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+            // emulate click so the right panel updates
+            targetNode.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+          } else {
+            // fallback: select first
+            const first = detailSection.querySelector(".node");
+            if (first) first.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+          }
+        } catch (err) {
+          console.warn("auto-select event failed", err);
+        }
+      }, 300);
+    } else {
+      setTimeout(() => {
+        const first = detailSection.querySelector(".node");
+        if (first) first.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      }, 150);
+    }
   }
-
   return openDetail;
 }
 

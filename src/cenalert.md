@@ -182,7 +182,7 @@ const openDetail = createDetailOpener({
   endDate,
 });
 
-showCountryDetail(countryCode, countryGenerator);
+showCountryDetail(countryCode, countryGenerator, null);
 const showHighlight = true;
 ```
 ```js
@@ -278,7 +278,13 @@ const zoomedAnomalies = events
   .map((d) => {
     const s = parseISO(String(d.startDate)) ?? new Date(d.startDate);
     const e = parseISO(String(d.endDate)) ?? new Date(d.endDate ?? d.startDate);
-    return { ...d, s, e };
+    return {
+      ...d,
+      s,
+      e,
+      country: d.country || countryCode,  // ensure country present
+      id: d.id || `${d.country}-${s}-${e}`
+    };
   })
   .filter((d) => d.s && d.e && !(d.e < startEnd[0] || d.s > startEnd[1]));
 
@@ -363,7 +369,6 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
             stroke: "topic",
             tip: true
           }),
-          // --- subtle anomaly highlights ---
           Plot.rectY(zoomedAnomalies, {
             x1: d => d.s,
             x2: d => d.e,
@@ -396,7 +401,24 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
   </div>
 </div>
 
+```js
+setTimeout(() => {
+  const svg = document.querySelector(".card .plot svg");
+  if (!svg) return;
 
+  svg.querySelectorAll("rect").forEach(rect => {
+    const datum = d3.select(rect).datum();
+    if (!datum || !datum.country) return;
+    rect.style.cursor = "pointer";
+
+    rect.addEventListener("click", e => {
+      e.stopPropagation();
+      const matchKey = datum.id || (datum.s ? new Date(datum.s).getTime() : undefined);
+      showCountryDetail(countryCode, countryGenerator, matchKey);
+    });
+  });
+}, 0);
+```
 
 ```js
 let _tip = document.getElementById("table-tooltip");
@@ -405,6 +427,7 @@ if (!_tip) {
   _tip.id = "table-tooltip";
   document.body.appendChild(_tip);
 }
+// let checkbox = document.getElementById("toggleHighlight");
 
 if (!window._tableTooltipBound) {
   window._tableTooltipBound = true;
@@ -499,7 +522,7 @@ const openDetail = createDetailOpener({
   formatDMYdots,
 });
 
-async function showCountryDetail(code, name) {
+async function showCountryDetail(code, name, selectedEventKey) {
  const fullSeries = (await getTimeseriesForCountry(countryCode))
   .map(d => ({
     ...d,
@@ -509,7 +532,7 @@ async function showCountryDetail(code, name) {
   const hasAnyEvents = Array.isArray(timeseries) && timeseries.length > 0;
 
   const scrollY = window.scrollY;
-  openDetail(code, name, fullSeries, timeseries, hasAnyEvents);
+  openDetail(code, name, fullSeries, timeseries, hasAnyEvents, selectedEventKey);
   window.scrollTo(0, scrollY);
 }
 const scrollY = window.scrollY;
