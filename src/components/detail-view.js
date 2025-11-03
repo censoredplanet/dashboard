@@ -78,7 +78,7 @@ export function createDetailOpener(deps) {
       summaryWrap.append(bottomDesc);
     }
     const r = window.matchMedia("(max-width: 768px)").matches ? 110 : 70;
-    const margin = { top: r * 0.6, right: 10, bottom: r * 0.6, left: r * 0.6 };
+    const margin = { top: 24, right: 10, bottom: 24, left: 20 };
     const laneX = margin.left + r;
     const width = 540;
     const baseMinRow = 110;
@@ -88,11 +88,11 @@ export function createDetailOpener(deps) {
 
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
     const VISIBLE_ROWS = isMobile ? 2 : 5;
-    const viewHeight = VISIBLE_ROWS * 110;
+    const viewHeight = VISIBLE_ROWS * 90;
     summaryWrap.style.height = `${viewHeight}px`;
     summaryWrap.style.overflowY = "auto";
     const svg = d3.create("svg")
-      .attr("viewBox", `-${r} -${r} ${width + r * 2} ${height + r * 2}`)
+      .attr("viewBox", `0 0 ${width} ${height}`)
       .attr("preserveAspectRatio", "xMinYMin meet")
       .style("width", "100%")
       .style("height", "auto")
@@ -161,7 +161,7 @@ export function createDetailOpener(deps) {
     });
     
 
-    const labelDx = r + 16;
+    const labelDx = r + 12;
     let labelWidth = 0;
 
     function computeLabelWidth() {
@@ -295,7 +295,7 @@ export function createDetailOpener(deps) {
         foEl.attr("height", rowH);
       });
 
-      let yCursor = margin.top + 40;
+      let yCursor = r * 0.6 + 40;
       node.each(function (d) {
         d.__y = yCursor;
         d3.select(this).attr("transform", `translate(${laneX}, ${d.__y})`);
