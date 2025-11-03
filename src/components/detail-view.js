@@ -376,7 +376,6 @@ export function createDetailOpener(deps) {
       })
       .sort((a, b) => b.date - a.date || a.title.localeCompare(b.title));
 
-    // deps.seriesForSelectedCountry = seriesForSelectedCountry;
     deps.seriesForSelectedCountry = fullseries; 
     deps.seriesVisibleRange = timeseries;
     renderDetail(code, name, countryEvents, countryHasAnyEvents);
@@ -388,7 +387,6 @@ export function createDetailOpener(deps) {
       setTimeout(() => {
         try {
           const nodes = Array.from(detailSection.querySelectorAll(".node"));
-          // find node whose __matchKey matches
           let targetNode = null;
           for (const n of nodes) {
             const d = d3.select(n).datum();
@@ -397,23 +395,19 @@ export function createDetailOpener(deps) {
               targetNode = n;
               break;
             }
-            // fallback: match by dateLabel
             if (d.dateLabel && d.dateLabel === selectedEventKey) {
               targetNode = n;
               break;
             }
           }
           if (targetNode) {
-            // ensure it's visible in the scroller and animate to center
             const scroller = detailSection.querySelector(".events-scroller");
             if (scroller && typeof targetNode.scrollIntoView === "function") {
               // center it visually
               targetNode.scrollIntoView({ behavior: "smooth", block: "center" });
             }
-            // emulate click so the right panel updates
             targetNode.dispatchEvent(new MouseEvent("click", { bubbles: true }));
           } else {
-            // fallback: select first
             const first = detailSection.querySelector(".node");
             if (first) first.dispatchEvent(new MouseEvent("click", { bubbles: true }));
           }

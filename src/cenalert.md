@@ -403,21 +403,21 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
 
 ```js
 setTimeout(() => {
-  const svg = document.querySelector(".card .plot svg");
-  if (!svg) return;
+  document.querySelectorAll(".card svg").forEach(svg => {
+    svg.querySelectorAll("rect").forEach(rect => {
+      const datum = d3.select(rect).datum();
+      if (!datum || !datum.s) return; 
+      rect.style.cursor = "pointer";
 
-  svg.querySelectorAll("rect").forEach(rect => {
-    const datum = d3.select(rect).datum();
-    if (!datum || !datum.country) return;
-    rect.style.cursor = "pointer";
-
-    rect.addEventListener("click", e => {
-      e.stopPropagation();
-      const matchKey = datum.id || (datum.s ? new Date(datum.s).getTime() : undefined);
-      showCountryDetail(countryCode, countryGenerator, matchKey);
+      rect.addEventListener("click", e => {
+        e.stopPropagation();
+        const matchKey = String(datum.s || datum.startDate || datum.date);
+        showCountryDetail(countryCode, countryGenerator, matchKey);
+      });
     });
   });
-}, 0);
+}, 500);
+
 ```
 
 ```js
@@ -523,7 +523,7 @@ const openDetail = createDetailOpener({
 });
 
 async function showCountryDetail(code, name, selectedEventKey) {
- const fullSeries = (await getTimeseriesForCountry(countryCode))
+ const fullSeries = (await getTimeseriesForCountry(code))
   .map(d => ({
     ...d,
     topic: "vpn"
