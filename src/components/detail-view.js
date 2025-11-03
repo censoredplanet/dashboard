@@ -123,7 +123,7 @@ export function createDetailOpener(deps) {
       const luminance = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
       return luminance < 140 ? "#fff" : "#000"; // lower threshold = darker color
     }
-
+    
     node.append("circle").attr("r", r).attr("fill",  d => impactColors[d.impactQuartile ?? Math.floor(Math.random() * 4)]).attr("stroke", "#444").attr("stroke-width", 1.5);
     node.append("text").attr("text-anchor", "middle").attr("dy", "-0.25em").style("font-size", "22px").text((d) => d.code).attr("fill", d => {
     const c = impactColors[d.impactQuartile ?? 0];
@@ -151,11 +151,14 @@ export function createDetailOpener(deps) {
       renderRight(d);
       const summaryBody = document.getElementById("summary-body");
       if (summaryBody) {
+        const impactLabels = ["Low", "Moderate", "High", "Severe"];
+        const impactLevel = impactLabels[d.impactQuartile ?? 0];
+        const impactScore = d.title || "—";
         summaryBody.innerHTML = `
-          <div><strong>${d.dateLabel}</strong></div>
-          <div style="margin-top:.5rem"><em>${d.title}</em></div>
-          
-          <div style="margin-top:.75rem">${(d.description && d.description.length > 0) ? d.description : "No additional explanation."}</div>
+          <div style="margin-bottom: .4rem;"><strong>${d.dateLabel}</strong></div>
+          <div style="margin-bottom: .4rem;"><strong>Impact score:</strong> ${impactScore}</div>
+          <div style="margin-bottom: .4rem;"><strong>Level:</strong> ${impactLevel}</div>
+          <div><strong>Context:</strong> ${(d.description && d.description.length > 0) ? d.description : "No additional explanation."}</div>
         `;
       }
     });
