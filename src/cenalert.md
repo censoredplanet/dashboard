@@ -324,8 +324,6 @@ const filteredEventsNum = events.map((d) => {
   return {
     ...d,
     impact: +d.impact,
-    reportedBy: isUnknown ? "CenAlert" : (d.reportedBy ?? ""),
-    description: isUnknown ? "unknown" : (d.description ?? ""),
   };
 });
 
