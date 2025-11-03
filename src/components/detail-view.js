@@ -7,6 +7,14 @@ export function createDetailOpener(deps) {
     gridSection, detailSection,
     startDate, endDate,
   } = deps;
+  function updateEventUrl(selectedEvent) {
+    if (!selectedEvent) return;
+
+    const params = new URLSearchParams(window.location.search);
+    params.set("event", selectedEvent.__matchKey || selectedEvent.dateLabel || "");
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.replaceState({}, "", newUrl);
+  }
 
   function renderDetail(code, name, countryEvents, countryHasAnyEvents) {
     const rangeStart = d3.min(countryEvents, d => d.date);
@@ -161,6 +169,7 @@ export function createDetailOpener(deps) {
           <div><strong>Context:</strong> ${(d.description && d.description.length > 0) ? d.description : "No additional explanation."}</div>
         `;
       }
+      updateEventUrl(d);
     });
     
 
