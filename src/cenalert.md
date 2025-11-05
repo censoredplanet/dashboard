@@ -293,15 +293,12 @@ const zoomedAnomalies = events
   .map((d) => {
     const s = parseISO(String(d.startDate)) ?? new Date(d.startDate);
     const e = parseISO(String(d.endDate)) ?? new Date(d.endDate ?? d.startDate);
-    return {
-      ...d,
-      s,
-      e,
-      country: d.country || countryCode,  // ensure country present
-      id: d.id || `${d.country}-${s}-${e}`
-    };
+    return { ...d, s, e, id: `${d.country}-${s}-${e}` };
   })
-  .filter((d) => d.s && d.e && !(d.e < startEnd[0] || d.s > startEnd[1]));
+  .filter((d) => {
+    if (dateRangeGenerator.value.value === "all") return true;
+    return !(d.e < startDate || d.s > endDate);
+  });
 
 const [yMin, yMax] = d3.extent(
   timeseries.filter(
