@@ -163,7 +163,7 @@ export function createDetailOpener(deps) {
         const impactLevel = impactLabels[d.impactQuartile ?? 0];
         const impactScore = d.title || "—";
         summaryBody.innerHTML = `
-          <div style="margin-bottom: .4rem;"><strong>${d.dateLabel}</strong></div>
+          <div style="margin-bottom: .4rem;"><strong>Date: </strong>${d.dateLabel}</div>
           <div style="margin-bottom: .4rem;"><strong>Impact score:</strong> ${impactScore}</div>
           <div style="margin-bottom: .4rem;"><strong>Level:</strong> ${impactLevel}</div>
           <div><strong>Context:</strong> ${(d.description && d.description.length > 0) ? d.description : "No additional explanation."}</div>
@@ -186,7 +186,7 @@ export function createDetailOpener(deps) {
 
     const label = node.append("g").attr("transform", `translate(${labelDx}, 0)`);
     label.append("line").attr("x1", -8).attr("x2", 0).attr("y1", 0).attr("y2", 0).attr("stroke", "#ccc");
-    label.append("text").attr("font-weight", 600).attr("y", r * 0.1).text((d) => `${d.dateLabel}`).style("font-size", "22px");
+    label.append("text").attr("font-weight", 500).attr("y", r * 0.1).text((d) => `${d.dateLabel}`).style("font-size", "24px");
 
     const fo = node.append("foreignObject").attr("x", labelDx).attr("y", r*0.1).attr("width", 320).attr("height", 10);
     const htmlBox = fo.append("xhtml:div").attr("class", "label-html");
@@ -348,6 +348,23 @@ export function createDetailOpener(deps) {
         }
       });
     };
+    function syncColumnHeights() {
+    // Use the visible scroller height (already set by viewHeight)
+    const baseH = scroller.clientHeight || scroller.scrollHeight;
+
+    graphWrap.style.height = `${baseH}px`;
+    summaryWrap.style.height = `${baseH}px`;
+  }
+
+  // Run once after layout
+  requestAnimationFrame(syncColumnHeights);
+
+  // Reapply on window resize (throttled)
+  let resizeTimeout;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(syncColumnHeights, 150);
+  }, { passive: true });
     window.addEventListener("resize", onResize, { passive: true });
   }
 
@@ -439,6 +456,27 @@ export function createDetailOpener(deps) {
 
 const style = document.createElement("style");
 style.textContent = `
+  .detail-grid .summary-wrap .summary-title {
+    font-size: 1.1rem !important;
+    font-weight: 50 !important;
+    margin-bottom: 0.75rem !important;
+    color: #111 !important;
+    line-height: 1;
+  }
+
+  .detail-grid .summary-wrap .summary-body {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #333;
+  }
+
+  .detail-grid .right-title {
+    font-size: 1.1rem !important;
+    font-weight: 50;
+    margin-bottom: 0.5rem;
+    color: #111;
+  }
+
   .detail-grid {
     display: flex;
     gap: 1.5rem;
@@ -446,51 +484,15 @@ style.textContent = `
     margin-top: 1rem;
   }
 
-  .left-col {
-    flex: 0 0 240px;   /* fixed width */
-    max-width: 240px;
-    display: flex;
-    flex-direction: column;
+  .left-col, .center-col, .right-col {
     border: 1px solid #ddd;
     border-radius: 0.5rem;
     padding: 0.5rem;
   }
 
-  .center-col {
-    flex: 1 1 auto; 
-    min-width: 400px;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #ddd;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
-  }
-
-  .right-col {
-    flex: 0 0 280px; /* fixed width */
-    max-width: 280px;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #ddd;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
-  }
-
-  .events-scroller {
-    border: none;
-    padding: 0;
-    background: transparent;
-    overflow-y: auto;
-  }
-  .graph-wrap {
-    border: none;
-    padding: 0;
-  }
-  .summary-wrap {
-    border: none;
-    padding: 0;
-    overflow-y: auto;
-  }
+  .left-col { flex: 0 0 240px; max-width: 240px; }
+  .center-col { flex: 1 1 auto; min-width: 400px; }
+  .right-col { flex: 0 0 280px; max-width: 280px; }
 
   @media (max-width: 900px) {
     .detail-grid {
@@ -500,10 +502,6 @@ style.textContent = `
     .right-col {
       flex: 1 1 auto;
       max-width: 100%;
-    }
-    .events-scroller {
-      height: auto;
-      max-height: 400px;
     }
   }
 `;

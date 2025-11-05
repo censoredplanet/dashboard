@@ -345,25 +345,21 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
 <div class="card-big" style="display:flex; flex-direction:column;">
       CenAlert is an open-source, data-driven alert system that leverages Google Trends to pinpoint where and when global Internet censorship spikes, amplifying user voices even in hard-to-monitor regions. By detecting surges in searches for circumvention tools, CenAlert provides timely, prioritized insights and notifications to empower advocacy and response, bridging critical gaps left as traditional reporting channels face increasing threats.
 </div>
-<div class="card" style="display:flex; flex-direction:column;">
-  <div class="filters-row">
+<div class="card modern-card">
+  <div class="filters-row modern-filters">
     ${countryInput}
     ${Inputs.select(["VPN"], { label: "Search Term", value: "VPN" })}
     ${dateRangeInput}
     ${dateRangeInput.value.value === "custom"
-    ? html`<div style="display:flex; gap:0.5rem;">
-        ${customStartDateInput}
-        ${customEndDateInput}
-      </div>`
-    : ""
-  }
+      ? html`<div class="date-range-custom">${customStartDateInput}${customEndDateInput}</div>`
+      : ""}
   </div>
 </div>
 <div class="grid">
-  <div class="card">
+  <div class="card modern-card">
     <h2>Search volume (${
       d3.extent(timeseries, d => d.date)
-      .map(d3.utcFormat("%b %d, %Y"))
+      .map(d3.utcFormat("%Y.%m.%d"))
       .join(" – ")
     })</h2>
     ${resize((width) =>
@@ -518,7 +514,7 @@ const softBreakLongTokens = (s, every = 16) =>
   String(s).replace(new RegExp(`(\\S{${every}})(?=\\S)`, "g"), "$1 ");
 
 const gridSection = html`<div class="card card-with-search" style="display:none"></div>`;
-const detailSection = html`<div class="card detail-view"></div>`;
+const detailSection = html`<div class="card detail-view modern-card"></div>`;
 
 const gridHeader = html`<div class="card-header"></div>`;
 
@@ -569,6 +565,15 @@ display(detailSection);
 ```
 
 <style>
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    color: #222;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
 .filters-row {
   display: flex;
   gap: 1rem;
@@ -594,7 +599,44 @@ display(detailSection);
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   text-align: center;
 }
+.modern-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+  background: linear-gradient(145deg, #f9f9fb, #ffffff);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
 
+.modern-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  align-items: flex-end;
+}
+
+.modern-filters label {
+  font-weight: 500;
+  margin-right: 0.25rem;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.modern-filters input, 
+.modern-filters select {
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.date-range-custom {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
 .events-scroll {
   flex: 1;
   min-height: 0;
@@ -608,6 +650,9 @@ display(detailSection);
   gap: 0.25rem 0.5rem;
   align-items: center;
   justify-items: left;
+  border-radius: 1rem;
+  background: linear-gradient(145deg, #f9f9fb, #ffffff);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .events-grid > .r {
@@ -618,6 +663,11 @@ display(detailSection);
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
+}
+
+.detail-view.modern-card {
+  gap: 0; /* remove spacing between header + grid */
+  padding: 1rem; /* optional: adjust overall padding */
 }
 
 @media (min-width: 560px) {
