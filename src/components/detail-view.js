@@ -456,53 +456,78 @@ export function createDetailOpener(deps) {
 
 const style = document.createElement("style");
 style.textContent = `
-  .detail-grid .summary-wrap .summary-title {
-    font-size: 1.1rem !important;
-    font-weight: 50 !important;
-    margin-bottom: 0.75rem !important;
-    color: #111 !important;
-    line-height: 1;
-  }
-
-  .detail-grid .summary-wrap .summary-body {
-    font-size: 0.95rem;
-    line-height: 1.5;
-    color: #333;
-  }
-
-  .detail-grid .right-title {
-    font-size: 1.1rem !important;
-    font-weight: 50;
-    margin-bottom: 0.5rem;
-    color: #111;
-  }
-
   .detail-grid {
-    display: flex;
-    gap: 1.5rem;
-    align-items: flex-start;
-    margin-top: 1rem;
+  display: flex;
+  gap: 1.5rem;
+  align-items: stretch; /* ensures all columns stay equal height */
+  margin-top: 1rem;
+}
+
+.left-col,
+.center-col,
+.right-col {
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Maintain fixed column widths */
+.left-col { flex: 0 0 240px; max-width: 240px; }
+.center-col { flex: 1 1 auto; min-width: 400px; }
+.right-col { flex: 0 0 280px; max-width: 280px; }
+
+/* Modern typography for summary column only */
+.detail-grid .summary-wrap .summary-title {
+  font-size: 1.15rem !important;
+  font-weight: 600 !important;
+  color: #222 !important;
+  margin-bottom: 0.5rem !important;
+  letter-spacing: -0.01em;
+}
+
+.detail-grid .summary-body {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #333;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 0.5rem;
+  flex-grow: 1; /* ensures it fills column height evenly */
+}
+
+.detail-grid .summary-body div {
+  margin-bottom: 0.4rem;
+}
+
+.detail-grid .summary-body strong {
+  color: #111;
+  font-weight: 600;
+}
+
+#bottom-desc {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 0.75rem;
+  line-height: 1.5;
+  border-top: 1px dashed #ddd;
+  padding-top: 0.75rem;
+}
+
+/* Responsive stack for narrow viewports */
+@media (max-width: 900px) {
+  .detail-grid {
+    flex-direction: column;
   }
 
-  .left-col, .center-col, .right-col {
-    border: 1px solid #ddd;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
+  .left-col,
+  .right-col {
+    flex: 1 1 auto;
+    max-width: 100%;
   }
+}
 
-  .left-col { flex: 0 0 240px; max-width: 240px; }
-  .center-col { flex: 1 1 auto; min-width: 400px; }
-  .right-col { flex: 0 0 280px; max-width: 280px; }
-
-  @media (max-width: 900px) {
-    .detail-grid {
-      flex-direction: column;
-    }
-    .left-col,
-    .right-col {
-      flex: 1 1 auto;
-      max-width: 100%;
-    }
-  }
 `;
 document.head.appendChild(style);

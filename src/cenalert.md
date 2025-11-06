@@ -608,19 +608,25 @@ body {
   background: linear-gradient(145deg, #f9f9fb, #ffffff);
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
-
 .modern-filters {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem 1.5rem;
-  align-items: flex-end;
+  align-items: flex-start; /* ensure labels and inputs stack cleanly */
+}
+
+.modern-filters .filter-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 220px;
 }
 
 .modern-filters label {
   font-weight: 500;
-  margin-right: 0.25rem;
   font-size: 0.9rem;
   color: #333;
+  text-align: center; /* center label above input */
+  margin-bottom: 0.25rem;
 }
 
 .modern-filters input, 
@@ -630,6 +636,22 @@ body {
   padding: 0.35rem 0.6rem;
   font-size: 0.95rem;
   font-family: inherit;
+  width: 100%;
+}
+
+.modern-filters input[type="date"] {
+  min-width: 140px; /* make oblong shape a bit longer */
+  height: 2rem;  /* ensure consistent vertical space */
+  padding: 0.45rem 0.75rem;
+}
+.date-range-custom {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center; /* keeps start/end date visually balanced */
+}
+
+.date-range-custom .filter-group {
+  flex: 1;
 }
 
 .date-range-custom {
