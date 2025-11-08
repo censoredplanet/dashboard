@@ -37,20 +37,22 @@ if (countries.includes(countryParam)) {
 }
 ```
 ```js
-function updateURL(paramsObj) {
-  const urlParams = new URLSearchParams(window.location.search);
+function updateURL(paramsObj = {}, clearEvent = false) {
+  const currentParams = new URLSearchParams(location.search);
 
-  Object.entries(paramsObj).forEach(([key, value]) => {
-    if (value === null || value === undefined || value === "") {
-      urlParams.delete(key);
-    } else {
-      urlParams.set(key, value);
-    }
-  });
+  for (const [key, val] of Object.entries(paramsObj)) {
+    if (val === null || val === undefined || val === "") currentParams.delete(key);
+    else currentParams.set(key, val);
+  }
 
-  const newURL = `${window.location.pathname}?${urlParams.toString()}`;
-  history.replaceState(null, "", newURL);
+  if (clearEvent) currentParams.delete("event");
+
+  const query = currentParams.toString();
+  const newURL = query ? `${location.pathname}?${query}` : location.pathname;
+
+  history.pushState({}, "", newURL);
 }
+
 ```
 ```js
 const countryInput = Inputs.select(countries, {
@@ -131,13 +133,13 @@ customEndDateInput.addEventListener?.("input", e => {
 const customStartDate = Generators.input(customStartDateInput);
 const customEndDate = Generators.input(customEndDateInput);
 
-dateRangeGenerator; // still needed to re-run this cell on range change
+dateRangeGenerator;
 customStartDate;
 customEndDate;
 ```
 
 ```js
-dateRangeGenerator; // still needed to re-run this cell on range change
+dateRangeGenerator;
 customStartDate;
 customEndDate;
 const now = new Date();
@@ -412,17 +414,31 @@ setTimeout(() => {
   document.querySelectorAll(".card svg").forEach(svg => {
     svg.querySelectorAll("rect").forEach(rect => {
       const datum = d3.select(rect).datum();
-      if (!datum || !datum.s) return; 
+      if (!datum || !datum.s) return;
+
       rect.style.cursor = "pointer";
 
       rect.addEventListener("click", e => {
         e.stopPropagation();
-        const matchKey = String(datum.s || datum.startDate || datum.date);
-        showCountryDetail(countryCode, countryGenerator, matchKey);
+        const clicked = datum.s;
+        const selectedEvent = events.find(ev => {
+          const evStart = parseISO(ev.startDate) ?? new Date(ev.startDate);
+          const evEnd = parseISO(ev.endDate) ?? new Date(ev.endDate ?? ev.startDate);
+          return +evStart <= +clicked && +clicked <= +evEnd + 24 * 3600 * 1000;
+        });
+
+        if (selectedEvent) {
+          showCountryDetail(
+            countryNameToCode[countryInput],
+            countryInput,
+            String(selectedEvent.startDate)
+          );
+          // updateURL({ countryInput.value }, !hasEvents);
+        }
       });
     });
   });
-}, 500);
+}, 800);
 
 ```
 
@@ -463,13 +479,25 @@ if (!window._tableTooltipBound) {
     }
   });
 }
-countryInput.addEventListener("change", () => {
+countryInput.addEventListener("change", async () => {
   const country = countryInput.value;
-  updateURL({ country });
+  const newCode = countryNameToCode[country];
+  const newEvents = await fetchCenalertEvents({ country: newCode });
+
+  const hasEvents = Array.isArray(newEvents) && newEvents.length > 0;
+  updateURL({ country }, !hasEvents);
+
+  if (!hasEvents) showCountryDetail(newCode, country, null);
 });
-dateRangeInput.addEventListener("change", () => {
-  const range = dateRangeInput.value.value; // e.g., "present", "year", "custom", "all"
-  updateURL({ range });
+
+dateRangeInput.addEventListener("change", async () => {
+  const range = dateRangeInput.value.value;
+  const country = countryInput.value;
+  const newCode = countryNameToCode[country];
+  const newEvents = await fetchCenalertEvents({ country: newCode });
+  const hasEvents = Array.isArray(newEvents) && newEvents.length > 0;
+  updateURL({ range }, !hasEvents);
+  if (!hasEvents) showCountryDetail(newCode, country, null);
 });
 ```
 

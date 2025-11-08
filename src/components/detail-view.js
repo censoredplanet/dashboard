@@ -191,31 +191,6 @@ export function createDetailOpener(deps) {
     const fo = node.append("foreignObject").attr("x", labelDx).attr("y", r*0.1).attr("width", 320).attr("height", 10);
     const htmlBox = fo.append("xhtml:div").attr("class", "label-html");
 
-    // const rowWho = htmlBox.append("xhtml:div").attr("class", "label-row who-row");
-    // rowWho.append("xhtml:span").attr("class", "label-key").text("Reported By:").style("font-size", "18px");
-    // rowWho.append("xhtml:span").attr("class", "label-value").text((d) => d.who || "—").style("font-size", "18px");
-    // rowWho.style("display", (d) => (d.who ? null : "none"));
-
-    // const rowDesc = htmlBox.append("xhtml:div").attr("class", "label-row desc-row");
-
-    // rowDesc.append("xhtml:span").attr("class", "label-key").style("font-size", "18px").text("Cause:");
-
-    // rowDesc.append("xhtml:span")
-    //   .attr("class", "label-value")
-    //   .text(d => {
-    //     const desc = d.description || "—";
-    //     return desc.length > 80 ? "Click to read more" : desc;
-    //   })
-    //   .attr("data-full", d => d.description || "")
-    //   .style("color", d => (d.description?.length > 80 ? "#1e90ff" : null))
-    //   .style("font-size", "18px")
-    //   .style("cursor", d => (d.description?.length > 80 ? "pointer" : null));
-      
-    // const rightCard = html`<div class="card">
-    //   <h3 class="right-title">Rate over time</h3>
-    //   <div class="right-body"></div>
-    // </div>`;
-
     function renderRight(selectedEvent = null) {
       const titleEl = graphWrap.querySelector(".right-title");
       const bodyEl = graphWrap.querySelector(".right-body");
@@ -293,7 +268,6 @@ export function createDetailOpener(deps) {
     scroller.style.overflowY = "auto";
     scroller.append(svg.node());
 
-    // Append the container (which already has the three columns)
     detailSection.append(detailHeader, container);
     // const bottomDesc = html`<div id="bottom-desc" class="bottom-desc hidden"></div>`;
     // detailSection.append(detailHeader, layout, bottomDesc);
@@ -349,17 +323,14 @@ export function createDetailOpener(deps) {
       });
     };
     function syncColumnHeights() {
-    // Use the visible scroller height (already set by viewHeight)
     const baseH = scroller.clientHeight || scroller.scrollHeight;
 
     graphWrap.style.height = `${baseH}px`;
     summaryWrap.style.height = `${baseH}px`;
   }
 
-  // Run once after layout
   requestAnimationFrame(syncColumnHeights);
 
-  // Reapply on window resize (throttled)
   let resizeTimeout;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimeout);
@@ -413,26 +384,57 @@ export function createDetailOpener(deps) {
     window.scrollTo({ top: detailSection.offsetTop, behavior: "smooth" });
     
     if (selectedEventKey) {
-      setTimeout(() => {
-        try {
-          const nodes = Array.from(detailSection.querySelectorAll(".node"));
+      const nodes = Array.from(detailSection.querySelectorAll(".node"));
           let targetNode = null;
           for (const n of nodes) {
             const d = d3.select(n).datum();
             if (!d) continue;
-            if (d.__matchKey && String(d.__matchKey) === String(selectedEventKey)) {
+            if (d.__matchKey || String(d.__matchKey) === selectedEventKey) {
               targetNode = n;
               break;
             }
-            if (d.dateLabel && d.dateLabel === selectedEventKey) {
+            if (d.dateLabel || d.dateLabel === selectedEventKey) {
               targetNode = n;
               break;
             }
+            
           }
+          if (targetNode) {
+              const d = d3.select(targetNode).datum();
+
+              const g = d3.select(targetNode.parentNode);
+              g.selectAll(".node")
+                .classed("active", false)
+                .select("circle")
+                .attr("stroke", "#444")
+                .attr("stroke-width", 1.5);
+
+              d3.select(targetNode)
+                .classed("active", true)
+                .select("circle")
+                .attr("stroke", "#1e90ff")
+                .attr("stroke-width", 2.5);
+
+              renderRight(d);
+
+              const summaryBody = document.getElementById("summary-body");
+              if (summaryBody) {
+                const impactLabels = ["Low", "Moderate", "High", "Severe"];
+                const impactLevel = impactLabels[d.impactQuartile ?? 0];
+                const impactScore = d.title || "—";
+                summaryBody.innerHTML = `
+                  <div><strong>Date:</strong> ${d.dateLabel}</div>
+                  <div><strong>Impact score:</strong> ${impactScore}</div>
+                  <div><strong>Level:</strong> ${impactLevel}</div>
+                  <div><strong>Context:</strong> ${d.description || "No additional explanation."}</div>
+                `;
+              }
+
+              updateEventUrl(d);
+            }
           if (targetNode) {
             const scroller = detailSection.querySelector(".events-scroller");
             if (scroller && typeof targetNode.scrollIntoView === "function") {
-              // center it visually
               targetNode.scrollIntoView({ behavior: "smooth", block: "center" });
             }
             targetNode.dispatchEvent(new MouseEvent("click", { bubbles: true }));
@@ -440,15 +442,7 @@ export function createDetailOpener(deps) {
             const first = detailSection.querySelector(".node");
             if (first) first.dispatchEvent(new MouseEvent("click", { bubbles: true }));
           }
-        } catch (err) {
-          console.warn("auto-select event failed", err);
-        }
-      }, 300);
-    } else {
-      setTimeout(() => {
-        const first = detailSection.querySelector(".node");
-        if (first) first.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-      }, 150);
+        
     }
   }
   return openDetail;
