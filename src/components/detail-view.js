@@ -8,9 +8,17 @@ export function createDetailOpener(deps) {
     startDate, endDate,
   } = deps;
   function updateEventUrl(selectedEvent) {
-    if (!selectedEvent) return;
-
     const params = new URLSearchParams(window.location.search);
+
+    if (!selectedEvent) {
+      if (params.has("event")) {
+        params.delete("event");
+        const newUrl = params.toString() ? `${window.location.pathname}?${params.toString()}` : window.location.pathname;
+        window.history.replaceState({}, "", newUrl);
+      }
+      return;
+    }
+
     params.set("event", selectedEvent.__matchKey || selectedEvent.dateLabel || "");
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.replaceState({}, "", newUrl);
@@ -34,14 +42,11 @@ export function createDetailOpener(deps) {
     </h2>`;
      const detailHeader = html`<div class="detail-header">${heading}</div>`;
 
-    // Always append the header (keeps "Events in ..." visible)
     detailSection.append(detailHeader);
     if (!countryEvents.length) {
       if (!countryHasAnyEvents) {
-        // Country truly has no events at all
         detailSection.append(html`<div class="empty">No events.</div>`);
       } else {
-        // Country has events overall, but none matching the current filters
         detailSection.append(html`
           <div class="empty">
             No events within the selected time range. Try expanding the date range or changing filters.

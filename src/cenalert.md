@@ -479,26 +479,55 @@ if (!window._tableTooltipBound) {
     }
   });
 }
+
 countryInput.addEventListener("change", async () => {
   const country = countryInput.value;
   const newCode = countryNameToCode[country];
-  const newEvents = await fetchCenalertEvents({ country: newCode });
+
+  updateURL({ country: newCode }, true);
+
+  const range = dateRangeInput?.value?.value;
+  const newEvents = await fetchCenalertEvents({ country: newCode, range });
 
   const hasEvents = Array.isArray(newEvents) && newEvents.length > 0;
-  updateURL({ country }, !hasEvents);
+  if (hasEvents) {
+    const first = newEvents[0];
+    const firstKey = first.__matchKey || first.dateLabel || null;
+    if (firstKey) {
+      updateURL({ country: newCode, ...(range ? { range } : {}), event: firstKey }, false);
+      showCountryDetail(newCode, country, firstKey);
+      return;
+    }
+  }
 
-  if (!hasEvents) showCountryDetail(newCode, country, null);
+  updateURL({ country: newCode, ...(range ? { range } : {}) }, true);
+  showCountryDetail(newCode, country, null);
 });
 
 dateRangeInput.addEventListener("change", async () => {
   const range = dateRangeInput.value.value;
   const country = countryInput.value;
   const newCode = countryNameToCode[country];
-  const newEvents = await fetchCenalertEvents({ country: newCode });
+
+  updateURL({ range }, true);
+
+  const newEvents = await fetchCenalertEvents({ country: newCode, range });
+
   const hasEvents = Array.isArray(newEvents) && newEvents.length > 0;
-  updateURL({ range }, !hasEvents);
-  if (!hasEvents) showCountryDetail(newCode, country, null);
+  if (hasEvents) {
+    const first = newEvents[0];
+    const firstKey = first.__matchKey || first.dateLabel || null;
+    if (firstKey) {
+      updateURL({ country: newCode, range, event: firstKey }, false);
+      showCountryDetail(newCode, country, firstKey);
+      return;
+    }
+  }
+
+  updateURL({ country: newCode, range }, true);
+  showCountryDetail(newCode, country, null);
 });
+
 ```
 
 ```js
