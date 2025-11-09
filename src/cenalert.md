@@ -342,6 +342,7 @@ const filteredEventsNum = events.map((d) => {
 });
 
 const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
+const fmtYMD = d3.utcFormat("%Y.%m.%d");
 ```
 
 <div class="card-big" style="display:flex; flex-direction:column;">
@@ -375,7 +376,11 @@ const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
             x: "date",
             y: "rate",
             stroke: "topic",
-            tip: true
+            tip: true,
+            title: d =>
+              `Topic: ${d.topic || "Unknown topic"}\n` +
+              `Date: ${fmtYMD(d.date)}\n` +
+              `Rate: ${d.rate != null ? d.rate.toFixed(2) : "N/A"}`
           }),
           Plot.rectY(zoomedAnomalies, {
             x1: d => d.s,

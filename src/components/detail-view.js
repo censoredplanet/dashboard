@@ -197,6 +197,7 @@ export function createDetailOpener(deps) {
     const htmlBox = fo.append("xhtml:div").attr("class", "label-html");
 
     function renderRight(selectedEvent = null) {
+      const fmtYMD = d3.utcFormat("%Y.%m.%d");
       const titleEl = graphWrap.querySelector(".right-title");
       const bodyEl = graphWrap.querySelector(".right-body");
       const mobileExtra = window.matchMedia("(max-width: 768px)").matches ? 380 : 0;
@@ -222,7 +223,9 @@ export function createDetailOpener(deps) {
           Plot.plot({
             height: (margin.top + margin.bottom + baseMinRow) + PX_PADDING + mobileExtra + 9,
             y: { grid: true, label: "" },
-            marks: [Plot.lineY(seriesFiltered, { x: "date", y: "rate", curve: "step", tip: true })],
+            marks: [Plot.lineY(seriesFiltered, { x: "date", y: "rate", curve: "step", tip: true, title: d =>
+    `Date: ${fmtYMD(d.date)}\n` +
+    `Value: ${d.rate != null ? d.rate.toFixed(2) : "N/A"}` })],
           })
         );
         bodyEl.append(chart);
@@ -245,7 +248,9 @@ export function createDetailOpener(deps) {
       const yMax = d3.max(series, (d) => d.rate);
 
       const marks = [
-        Plot.lineY(series, { x: "date", y: "rate", curve: "step", tip: true }),
+        Plot.lineY(series, { x: "date", y: "rate", curve: "step", tip: true, title: d =>
+    `Date: ${fmtYMD(d.date)}\n` +
+    `Value: ${d.rate != null ? d.rate.toFixed(2) : "N/A"}` }),
         Plot.rectY([{ s, e }], {
           x1: (d) => d.s, x2: (d) => d.e, y1: yMin, y2: yMax,
           fill: "#d33", fillOpacity: 0.15,
