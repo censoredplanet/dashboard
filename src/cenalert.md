@@ -484,17 +484,17 @@ countryInput.addEventListener("change", async () => {
   const country = countryInput.value;
   const newCode = countryNameToCode[country];
 
-  updateURL({ country: newCode }, true);
+  updateURL({ country }, true);
 
   const range = dateRangeInput?.value?.value;
-  const newEvents = await fetchCenalertEvents({ country: newCode, range });
+  const newEvents = await fetchCenalertEvents({ country, range });
 
   const hasEvents = Array.isArray(newEvents) && newEvents.length > 0;
   if (hasEvents) {
     const first = newEvents[0];
     const firstKey = first.__matchKey || first.dateLabel || null;
     if (firstKey) {
-      updateURL({ country: newCode, ...(range ? { range } : {}), event: firstKey }, false);
+      updateURL({ country, ...(range ? { range } : {}), event: firstKey }, false);
       showCountryDetail(newCode, country, firstKey);
       return;
     }
