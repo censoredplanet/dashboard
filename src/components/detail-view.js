@@ -279,8 +279,7 @@ export function createDetailOpener(deps) {
     scroller.append(svg.node());
 
     detailSection.append(detailHeader, container);
-    // const bottomDesc = html`<div id="bottom-desc" class="bottom-desc hidden"></div>`;
-    // detailSection.append(detailHeader, layout, bottomDesc);
+    
     function layoutNodes() {
       node.each(function (d) {
         const foEl = d3.select(this).select("foreignObject");

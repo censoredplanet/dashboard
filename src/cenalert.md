@@ -278,10 +278,10 @@ function eventsCard(
 const color = Plot.scale({ color: { domain: ["vpn"] } });
 const defaultStartEnd = (() => {
   const lastIndex = timeseries.length - 1;
-  const firstIndex = Math.max(0, lastIndex - 364); // use first element if < 365
+  const firstIndex = Math.max(0, lastIndex - 364);
   return [
-    timeseries[firstIndex]?.date ?? new Date(),  // fallback if empty
-    timeseries[lastIndex]?.date ?? new Date(),   // fallback if empty
+    timeseries[firstIndex]?.date ?? new Date(),
+    timeseries[lastIndex]?.date ?? new Date(),   
   ];
 })();
 
@@ -365,33 +365,53 @@ const fmtYMD = d3.utcFormat("%Y.%m.%d");
       .map(d3.utcFormat("%Y.%m.%d"))
       .join(" – ")
     })</h2>
-    ${searchVolumePlot}
+    ${highlightToggle}
+    ${searchVolumeContainer}
   </div>
 </div>
 
 ```js
-const searchVolumePlot = resize((width) => {
-  const svg = Plot.plot({
-    width,
-    y: { grid: true, label: "" },
-    color,
-    marks: [
-      Plot.ruleY([0]),
-      Plot.lineY(timeseries, {
-        x: "date",
-        y: "rate",
-        stroke: "topic",
-        tip: true,
-        title: d =>
-          `Topic: ${d.topic || "Unknown topic"}\n` +
-          `Date: ${fmtYMD(d.date)}\n` +
-          `Rate: ${d.rate != null ? d.rate.toFixed(2) : "N/A"}`
-      }),
+const highlightToggle = Inputs.toggle({
+  label: "Show event highlights",
+  value: true,
+});
+
+const searchVolumeContainer = document.createElement("div");
+searchVolumeContainer.id = "search-volume-container";
+searchVolumeContainer.style.minHeight = "60px"; 
+```
+
+```js
+function renderSearchVolumePlot() {
+  searchVolumeContainer.innerHTML = "";
+
+  const width = Math.max(600, Math.min(window.innerWidth - 80, 1200)); 
+  const showHighlight = Boolean(highlightToggle.value);
+
+  const y1 = d3.min(timeseries, d => d.rate);
+  const y2 = d3.max(timeseries, d => d.rate);
+
+  const marks = [
+    Plot.ruleY([0]),
+    Plot.lineY(timeseries, {
+      x: "date",
+      y: "rate",
+      stroke: "topic",
+      tip: true,
+      title: d =>
+        `Topic: ${d.topic || "Unknown topic"}\n` +
+        `Date: ${fmtYMD(d.date)}\n` +
+        `Rate: ${d.rate != null ? d.rate.toFixed(2) : "N/A"}`
+    }),
+  ];
+
+  if (showHighlight && Array.isArray(zoomedAnomalies) && zoomedAnomalies.length) {
+    marks.push(
       Plot.rectY(zoomedAnomalies, {
         x1: d => d.s,
         x2: d => d.e,
-        y1: d3.min(timeseries, d => d.rate),
-        y2: d3.max(timeseries, d => d.rate),
+        y1: y1,
+        y2: y2,
         fill: "#f87171",
         fillOpacity: 0.4,
         stroke: "#f56363ff",
@@ -403,6 +423,9 @@ const searchVolumePlot = resize((width) => {
           `Duration: ${fmtDMY(d.s)} – ${fmtDMY(d.e)}\n` +
           (d.impact ? `Impact: ${(+d.impact).toFixed(2)}` : "")
       }),
+    );
+
+    marks.push(
       Plot.ruleX(zoomedAnomalies.map(d => d.s), {
         stroke: "#ef4444",
         strokeOpacity: 0.6,
@@ -413,16 +436,24 @@ const searchVolumePlot = resize((width) => {
         strokeOpacity: 0.6,
         strokeWidth: 0.7
       })
-    ]
+    );
+  }
+
+  const plotSvg = Plot.plot({
+    width,
+    y: { grid: true, label: "" },
+    color,
+    marks
   });
-  svg.addEventListener("click", () => {
-    const v = svg.value;
+
+  plotSvg.addEventListener("click", () => {
+    const v = plotSvg.value;
     if (!v || !v.date) return;
     const clicked = v.date;
     const selectedEvent = events.find(ev => {
       const evStart = parseISO(ev.startDate) ?? new Date(ev.startDate);
       const evEnd = parseISO(ev.endDate) ?? new Date(ev.endDate ?? ev.startDate);
-      return +evStart <= +clicked && +clicked <= +evEnd + 24 * 3600 * 1000;
+      return +evStart <= +clicked && +clicked <= +evEnd + DAY;
     });
 
     if (selectedEvent) {
@@ -432,20 +463,24 @@ const searchVolumePlot = resize((width) => {
     }
   });
 
-  return svg;
-});
-
-
+  // append to container
+  searchVolumeContainer.appendChild(plotSvg);
+}
 ```
 
 ```js
+renderSearchVolumePlot();
+
+["input", "change"].forEach(ev =>
+  highlightToggle.addEventListener?.(ev, renderSearchVolumePlot)
+);
+
 let _tip = document.getElementById("table-tooltip");
 if (!_tip) {
   _tip = document.createElement("div");
   _tip.id = "table-tooltip";
   document.body.appendChild(_tip);
 }
-// let checkbox = document.getElementById("toggleHighlight");
 
 if (!window._tableTooltipBound) {
   window._tableTooltipBound = true;
@@ -498,6 +533,7 @@ countryInput.addEventListener("change", async () => {
 
   updateURL({ country: newCode, ...(range ? { range } : {}) }, true);
   showCountryDetail(newCode, country, null);
+  renderSearchVolumePlot();
 });
 
 dateRangeInput.addEventListener("change", async () => {
@@ -522,6 +558,7 @@ dateRangeInput.addEventListener("change", async () => {
 
   updateURL({ country: newCode, range }, true);
   showCountryDetail(newCode, country, null);
+  renderSearchVolumePlot();
 });
 
 ```
@@ -665,7 +702,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem 1.5rem;
-  align-items: flex-start; /* ensure labels and inputs stack cleanly */
+  align-items: flex-start; 
 }
 
 .modern-filters .filter-group {
@@ -678,7 +715,7 @@ body {
   font-weight: 500;
   font-size: 0.9rem;
   color: #333;
-  text-align: center; /* center label above input */
+  text-align: center; 
   margin-bottom: 0.25rem;
 }
 
@@ -693,14 +730,14 @@ body {
 }
 
 .modern-filters input[type="date"] {
-  min-width: 140px; /* make oblong shape a bit longer */
-  height: 2rem;  /* ensure consistent vertical space */
+  min-width: 140px; 
+  height: 2rem;  
   padding: 0.45rem 0.75rem;
 }
 .date-range-custom {
   display: flex;
   gap: 0.5rem;
-  justify-content: center; /* keeps start/end date visually balanced */
+  justify-content: center; 
 }
 
 .date-range-custom .filter-group {
@@ -741,8 +778,8 @@ body {
 }
 
 .detail-view.modern-card {
-  gap: 0; /* remove spacing between header + grid */
-  padding: 1rem; /* optional: adjust overall padding */
+  gap: 0; 
+  padding: 1rem; 
 }
 
 @media (min-width: 560px) {
