@@ -459,11 +459,11 @@ function renderSearchVolumePlot() {
     if (selectedEvent) {
       const name = countryInput.value;
       const code = countryNameToCode[name] ?? countryCode;
+
       showCountryDetail(code, name, selectedEvent.startDate);
     }
   });
 
-  // append to container
   searchVolumeContainer.appendChild(plotSvg);
 }
 ```
@@ -635,13 +635,11 @@ async function showCountryDetail(code, name, selectedEventKey) {
   .sort((a, b) => a.date - b.date);
   const hasAnyEvents = Array.isArray(timeseries) && timeseries.length > 0;
 
-  const scrollY = window.scrollY;
+  // const scrollY = window.scrollY;
   openDetail(code, name, fullSeries, timeseries, hasAnyEvents, selectedEventKey);
-  window.scrollTo(0, scrollY);
 }
-const scrollY = window.scrollY;
+// const scrollY = window.scrollY;
 const renderGrid = createGridRenderer({ html, parseISO, openDetail });
-window.scrollTo(0, scrollY);
 
 renderGrid(
   grid,
