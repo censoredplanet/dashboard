@@ -395,65 +395,33 @@ export function createDetailOpener(deps) {
     
     if (selectedEventKey) {
       const nodes = Array.from(detailSection.querySelectorAll(".node"));
-          let targetNode = null;
-          for (const n of nodes) {
-            const d = d3.select(n).datum();
-            if (!d) continue;
-            if (d.__matchKey || String(d.__matchKey) === selectedEventKey) {
-              targetNode = n;
-              break;
-            }
-            if (d.dateLabel || d.dateLabel === selectedEventKey) {
-              targetNode = n;
-              break;
-            }
-            
-          }
-          if (targetNode) {
-              const d = d3.select(targetNode).datum();
+      let targetNode = null;
 
-              const g = d3.select(targetNode.parentNode);
-              g.selectAll(".node")
-                .classed("active", false)
-                .select("circle")
-                .attr("stroke", "#444")
-                .attr("stroke-width", 1.5);
+      for (const n of nodes) {
+        const d = d3.select(n).datum();
+        if (!d) continue;
+        if (d.__matchKey && String(d.__matchKey) === String(selectedEventKey)) {
+          targetNode = n;
+          break;
+        }
+        if (d.dateLabel && d.dateLabel === selectedEventKey) {
+          targetNode = n;
+          break;
+        }
+      }
 
-              d3.select(targetNode)
-                .classed("active", true)
-                .select("circle")
-                .attr("stroke", "#1e90ff")
-                .attr("stroke-width", 2.5);
-
-              renderRight(d);
-
-              const summaryBody = document.getElementById("summary-body");
-              if (summaryBody) {
-                const impactLabels = ["Low", "Moderate", "High", "Severe"];
-                const impactLevel = impactLabels[d.impactQuartile ?? 0];
-                const impactScore = d.title || "—";
-                summaryBody.innerHTML = `
-                  <div><strong>Date:</strong> ${d.dateLabel}</div>
-                  <div><strong>Impact score:</strong> ${impactScore}</div>
-                  <div><strong>Level:</strong> ${impactLevel}</div>
-                  <div><strong>Context:</strong> ${d.description || "No additional explanation."}</div>
-                `;
-              }
-
-              updateEventUrl(d);
-            }
-          if (targetNode) {
-            const scroller = detailSection.querySelector(".events-scroller");
-            if (scroller && typeof targetNode.scrollIntoView === "function") {
-              targetNode.scrollIntoView({ behavior: "smooth", block: "center" });
-            }
-            targetNode.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-          } else {
-            const first = detailSection.querySelector(".node");
-            if (first) first.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-          }
-        
+      if (targetNode) {
+        const scroller = detailSection.querySelector(".events-scroller");
+        if (scroller && typeof targetNode.scrollIntoView === "function") {
+          targetNode.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        targetNode.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      } else {
+        const first = detailSection.querySelector(".node");
+        if (first) first.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      }
     }
+
   }
   return openDetail;
 }

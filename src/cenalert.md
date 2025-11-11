@@ -365,85 +365,76 @@ const fmtYMD = d3.utcFormat("%Y.%m.%d");
       .map(d3.utcFormat("%Y.%m.%d"))
       .join(" – ")
     })</h2>
-    ${resize((width) =>
-      Plot.plot({
-        width,
-        y: { grid: true, label: "" },
-        color,
-        marks: [
-          Plot.ruleY([0]),
-          Plot.lineY(timeseries, {
-            x: "date",
-            y: "rate",
-            stroke: "topic",
-            tip: true,
-            title: d =>
-              `Topic: ${d.topic || "Unknown topic"}\n` +
-              `Date: ${fmtYMD(d.date)}\n` +
-              `Rate: ${d.rate != null ? d.rate.toFixed(2) : "N/A"}`
-          }),
-          Plot.rectY(zoomedAnomalies, {
-            x1: d => d.s,
-            x2: d => d.e,
-            y1: d3.min(timeseries, d => d.rate),
-            y2: d3.max(timeseries, d => d.rate),
-            fill: "#f87171",      
-            fillOpacity: 0.4,    
-            stroke: "#f56363ff",   
-            strokeWidth: 0.7,
-            strokeOpacity: 0.6,
-            tip: true,
-            title: d =>
-              `Cause: ${d.cause}\n` +
-              `Duration: ${fmtDMY(d.s)} – ${fmtDMY(d.e)}\n` +
-              (d.impact ? `Impact: ${(+d.impact).toFixed(2)}` : "")
-          }),
-          Plot.ruleX(zoomedAnomalies.map(d => d.s), {
-            stroke: "#ef4444",
-            strokeOpacity: 0.6,
-            strokeWidth: 0.7
-          }),
-          Plot.ruleX(zoomedAnomalies.map(d => d.e), {
-            stroke: "#ef4444",
-            strokeOpacity: 0.6,
-            strokeWidth: 0.7
-          })
-        ]
-      })
-    )}
+    ${searchVolumePlot}
   </div>
 </div>
 
 ```js
-setTimeout(() => {
-  document.querySelectorAll(".card svg").forEach(svg => {
-    svg.querySelectorAll("rect").forEach(rect => {
-      const datum = d3.select(rect).datum();
-      if (!datum || !datum.s) return;
-
-      rect.style.cursor = "pointer";
-
-      rect.addEventListener("click", e => {
-        e.stopPropagation();
-        const clicked = datum.s;
-        const selectedEvent = events.find(ev => {
-          const evStart = parseISO(ev.startDate) ?? new Date(ev.startDate);
-          const evEnd = parseISO(ev.endDate) ?? new Date(ev.endDate ?? ev.startDate);
-          return +evStart <= +clicked && +clicked <= +evEnd + 24 * 3600 * 1000;
-        });
-
-        if (selectedEvent) {
-          showCountryDetail(
-            countryNameToCode[countryInput],
-            countryInput,
-            String(selectedEvent.startDate)
-          );
-          // updateURL({ countryInput.value }, !hasEvents);
-        }
-      });
-    });
+const searchVolumePlot = resize((width) => {
+  const svg = Plot.plot({
+    width,
+    y: { grid: true, label: "" },
+    color,
+    marks: [
+      Plot.ruleY([0]),
+      Plot.lineY(timeseries, {
+        x: "date",
+        y: "rate",
+        stroke: "topic",
+        tip: true,
+        title: d =>
+          `Topic: ${d.topic || "Unknown topic"}\n` +
+          `Date: ${fmtYMD(d.date)}\n` +
+          `Rate: ${d.rate != null ? d.rate.toFixed(2) : "N/A"}`
+      }),
+      Plot.rectY(zoomedAnomalies, {
+        x1: d => d.s,
+        x2: d => d.e,
+        y1: d3.min(timeseries, d => d.rate),
+        y2: d3.max(timeseries, d => d.rate),
+        fill: "#f87171",
+        fillOpacity: 0.4,
+        stroke: "#f56363ff",
+        strokeWidth: 0.7,
+        strokeOpacity: 0.6,
+        tip: true,
+        title: d =>
+          `Cause: ${d.cause}\n` +
+          `Duration: ${fmtDMY(d.s)} – ${fmtDMY(d.e)}\n` +
+          (d.impact ? `Impact: ${(+d.impact).toFixed(2)}` : "")
+      }),
+      Plot.ruleX(zoomedAnomalies.map(d => d.s), {
+        stroke: "#ef4444",
+        strokeOpacity: 0.6,
+        strokeWidth: 0.7
+      }),
+      Plot.ruleX(zoomedAnomalies.map(d => d.e), {
+        stroke: "#ef4444",
+        strokeOpacity: 0.6,
+        strokeWidth: 0.7
+      })
+    ]
   });
-}, 800);
+  svg.addEventListener("click", () => {
+    const v = svg.value;
+    if (!v || !v.date) return;
+    const clicked = v.date;
+    const selectedEvent = events.find(ev => {
+      const evStart = parseISO(ev.startDate) ?? new Date(ev.startDate);
+      const evEnd = parseISO(ev.endDate) ?? new Date(ev.endDate ?? ev.startDate);
+      return +evStart <= +clicked && +clicked <= +evEnd + 24 * 3600 * 1000;
+    });
+
+    if (selectedEvent) {
+      const name = countryInput.value;
+      const code = countryNameToCode[name] ?? countryCode;
+      showCountryDetail(code, name, selectedEvent.startDate);
+    }
+  });
+
+  return svg;
+});
+
 
 ```
 
