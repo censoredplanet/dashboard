@@ -199,7 +199,7 @@ const openDetail = createDetailOpener({
   endDate,
 });
 
-showCountryDetail(countryCode, countryGenerator, null);
+showCountryDetail(countryCode, countryGenerator, null, { scrollIntoView: true });
 const showHighlight = true;
 ```
 ```js
@@ -360,12 +360,16 @@ const fmtYMD = d3.utcFormat("%Y.%m.%d");
 </div>
 <div class="grid">
   <div class="card modern-card">
-    <h2>Search volume (${
-      d3.extent(timeseries, d => d.date)
-      .map(d3.utcFormat("%Y.%m.%d"))
-      .join(" – ")
-    })</h2>
-    ${highlightToggle}
+    <div class="search-volume-header">
+      <h2>Search volume (${
+        d3.extent(timeseries, d => d.date)
+          .map(d3.utcFormat("%Y.%m.%d"))
+          .join(" – ")
+      })</h2>
+      <div class="highlight-toggle-wrapper">
+        ${highlightToggle}
+      </div>
+    </div>
     ${searchVolumeContainer}
   </div>
 </div>
@@ -375,6 +379,7 @@ const highlightToggle = Inputs.toggle({
   label: "Show event highlights",
   value: true,
 });
+
 
 const searchVolumeContainer = document.createElement("div");
 searchVolumeContainer.id = "search-volume-container";
@@ -460,7 +465,7 @@ function renderSearchVolumePlot() {
       const name = countryInput.value;
       const code = countryNameToCode[name] ?? countryCode;
 
-      showCountryDetail(code, name, selectedEvent.startDate);
+      showCountryDetail(code, name, selectedEvent.startDate, { scrollIntoView: true });
     }
   });
 
@@ -526,13 +531,13 @@ countryInput.addEventListener("change", async () => {
     const firstKey = first.__matchKey || first.dateLabel || null;
     if (firstKey) {
       updateURL({ country, ...(range ? { range } : {}), event: firstKey }, false);
-      showCountryDetail(newCode, country, firstKey);
+      showCountryDetail(newCode, country, firstKey, { scrollIntoView: false });
       return;
     }
   }
 
   updateURL({ country: newCode, ...(range ? { range } : {}) }, true);
-  showCountryDetail(newCode, country, null);
+  showCountryDetail(newCode, country, null, { scrollIntoView: false });
   renderSearchVolumePlot();
 });
 
@@ -551,14 +556,30 @@ dateRangeInput.addEventListener("change", async () => {
     const firstKey = first.__matchKey || first.dateLabel || null;
     if (firstKey) {
       updateURL({ country: newCode, range, event: firstKey }, false);
-      showCountryDetail(newCode, country, firstKey);
+      showCountryDetail(newCode, country, firstKey, { scrollIntoView: false });
       return;
     }
   }
 
   updateURL({ country: newCode, range }, true);
-  showCountryDetail(newCode, country, null);
+  showCountryDetail(newCode, country, null, { scrollIntoView: false });
   renderSearchVolumePlot();
+});
+
+window.addEventListener("DOMContentLoaded", async () => {
+  const params = new URLSearchParams(window.location.search);
+  const country = params.get("country");
+  const eventKey = params.get("event");
+  const range = params.get("range");
+
+  if (country && eventKey) {
+    const code = countryNameToCode[country] ?? country;
+    const events = await fetchCenalertEvents({ country: code, range });
+    const matched = events.find(ev =>
+      ev.__matchKey === eventKey || ev.dateLabel === eventKey || ev.startDate === eventKey
+    );
+    showCountryDetail(code, country, matched ? matched.startDate : null);
+  }
 });
 
 ```
@@ -626,7 +647,7 @@ const openDetail = createDetailOpener({
   formatDMYdots,
 });
 
-async function showCountryDetail(code, name, selectedEventKey) {
+async function showCountryDetail(code, name, selectedEventKey, opts = { scrollIntoView: true }) {
  const fullSeries = (await getTimeseriesForCountry(code))
   .map(d => ({
     ...d,
@@ -637,6 +658,9 @@ async function showCountryDetail(code, name, selectedEventKey) {
 
   // const scrollY = window.scrollY;
   openDetail(code, name, fullSeries, timeseries, hasAnyEvents, selectedEventKey);
+  if (opts.scrollIntoView) {
+    detailSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 }
 // const scrollY = window.scrollY;
 const renderGrid = createGridRenderer({ html, parseISO, openDetail });
@@ -880,13 +904,59 @@ body {
   user-select: none;
   transition: transform .05s ease, box-shadow .15s ease, border-color .15s ease;
 }
+.search-volume-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 115%;
+}
+
+
+.highlight-toggle-wrapper label {
+  display: flex !important;    
+  align-items: center;       
+  gap: 5rem;
+  white-space: nowrap;  
+  font-size: 0.8rem;   
+}
+
+.highlight-toggle-wrapper input[type="checkbox"] {
+  appearance: none;  /* remove default checkbox */
+  -webkit-appearance: none;
+  width: 32px;
+  height: 16px;
+  background: #ddd;
+  border-radius: 16px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.highlight-toggle-wrapper input[type="checkbox"]:checked {
+  background: #4f46e5;
+}
+
+.highlight-toggle-wrapper input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.highlight-toggle-wrapper input[type="checkbox"]:checked::after {
+  transform: translateX(16px); 
+}
 
 .tile.card:hover {
   transform: translateY(-2px);
   border-color: #cbd5e1;
   box-shadow: 0 6px 14px rgba(0,0,0,.06);
 }
-
 .tile.card.selected {
   border-color: #1e90ff;
   box-shadow: 0 0 0 3px rgba(30,144,255,.15);

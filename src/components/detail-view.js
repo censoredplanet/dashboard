@@ -129,6 +129,7 @@ export function createDetailOpener(deps) {
     const colorScale = d3.scaleSequential(d3.interpolateReds)
       .domain([0, 3]);
 
+    
     const impactColors = ["#fee5d9", "#fcae91", "#fb6a4a", "#cb181d"];
     function getContrastColor(color) {
       const rgb = d3.color(color);
@@ -290,6 +291,7 @@ export function createDetailOpener(deps) {
         foEl.attr("height", rowH);
       });
 
+      // svg.selectAll(".event-band").remove();
       let yCursor = r * 0.6 + 40;
       node.each(function (d) {
         d.__y = yCursor;
@@ -486,6 +488,22 @@ style.textContent = `
   border-top: 1px dashed #ddd;
   padding-top: 0.75rem;
 }
+
+.graph-wrap svg {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  display: block;
+}
+
+.node rect {
+  fill: transparent;
+  rx: 8px;
+  ry: 8px;
+}
+
+
+
 
 /* Responsive stack for narrow viewports */
 @media (max-width: 900px) {
