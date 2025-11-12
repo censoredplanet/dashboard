@@ -215,12 +215,11 @@ if (urlEvent) {
   if (matched) selectedEventKey = matched.__matchKey || matched.dateLabel || matched.startDate;
 }
 
-// fallback to first event if none matched
 if (!selectedEventKey && events.length > 0) {
   selectedEventKey = events[0].__matchKey || events[0].dateLabel || events[0].startDate;
 }
 
-showCountryDetail(countryCode, countryGenerator, selectedEventKey, { scrollIntoView: false });
+showCountryDetail(countryCode, countryInput.value, selectedEventKey, { scrollIntoView: false });
 const showHighlight = true;
 ```
 ```js
@@ -601,7 +600,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     const matched = events.find(ev =>
       ev.__matchKey === eventKey || ev.dateLabel === eventKey || ev.startDate === eventKey
     );
-    showCountryDetail(code, country, matched ? matched.startDate : null);
+    showCountryDetail(code, country, matched ? matched.startDate : null, { scrollIntoView: false });
   }
 });
 
@@ -671,6 +670,9 @@ const openDetail = createDetailOpener({
 });
 
 async function showCountryDetail(code, name, selectedEventKey, opts = { scrollIntoView: false }) {
+  const displayName = typeof name === "string" ? name : (countryInput?.value || String(code));
+
+  const prevScrollY = window.scroll
  const fullSeries = (await getTimeseriesForCountry(code))
   .map(d => ({
     ...d,
@@ -679,11 +681,12 @@ async function showCountryDetail(code, name, selectedEventKey, opts = { scrollIn
   .sort((a, b) => a.date - b.date);
   const hasAnyEvents = Array.isArray(timeseries) && timeseries.length > 0;
 
-  // const scrollY = window.scrollY;
   openDetail(code, name, fullSeries, timeseries, hasAnyEvents, selectedEventKey);
   if (opts.scrollIntoView) {
     detailSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
   }
+  window.scrollTo(0, scrollY);
 }
 // const scrollY = window.scrollY;
 const renderGrid = createGridRenderer({ html, parseISO, openDetail });
