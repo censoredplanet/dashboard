@@ -248,7 +248,7 @@ export function createDetailOpener(deps) {
         const chart = resize((width) =>
           Plot.plot({
             height: (margin.top + margin.bottom + baseMinRow) + PX_PADDING + mobileExtra + 9,
-            y: { grid: true, label: "" },
+            y: { grid: true, label: "" , domain: [0, yMax] },
             marks: [Plot.lineY(seriesFiltered, { x: "date", y: "rate", curve: "step", tip: true, title: d =>
     `Date: ${fmtYMD(d.date)}\n` +
     `Value: ${d.rate != null ? d.rate.toFixed(2) : "N/A"}` })],
@@ -279,17 +279,17 @@ export function createDetailOpener(deps) {
     `Value: ${d.rate != null ? d.rate.toFixed(2) : "N/A"}` }),
         Plot.rectY([{ s, e }], {
           x1: (d) => d.s, x2: (d) => d.e, y1: yMin, y2: yMax,
-          fill: "#d33", fillOpacity: 0.15,
+          fill: "#ef4444", fillOpacity: 0.15,
           title: `${selectedEvent.dateLabel}\n${selectedEvent.who || ""}\n${selectedEvent.description || ""}`,
         }),
-        Plot.ruleX([s], { stroke: "#d33", strokeOpacity: 0.9, strokeWidth: 2 }),
+        Plot.ruleX([s], { stroke: "#ef4444", strokeOpacity: 0.9, strokeWidth: 2 }),
       ];
-      if (+e !== +s) marks.push(Plot.ruleX([e], { stroke: "#d33", strokeOpacity: 0.9, strokeWidth: 2 }));
+      if (+e !== +s) marks.push(Plot.ruleX([e], { stroke: "#ef4444", strokeOpacity: 0.9, strokeWidth: 2 }));
 
       const chart = resize((width) =>
         Plot.plot({
           height: (margin.top + margin.bottom + VISIBLE_ROWS * 90) + PX_PADDING + mobileExtra,
-          y: { grid: true, label: "" },
+          y: { grid: true, label: "", domain: [0, yMax] },
           x: { domain: [x0, x1], nice: false },
           marks,
         })
@@ -461,54 +461,124 @@ export function createDetailOpener(deps) {
 
 const style = document.createElement("style");
 style.textContent = `
-  .detail-grid {
+:root {
+  --font-sans: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #444;
+  --color-accent: #1e90ff;
+}
+
+/* Layout */
+.detail-grid {
   display: flex;
   gap: 1.5rem;
-  align-items: stretch; /* ensures all columns stay equal height */
-  margin-top: 1rem;
+  align-items: stretch;
+  margin-top: 1.25rem;
+  font-family: var(--font-sans);
+  color: var(--color-text-primary);
 }
 
 .left-col,
 .center-col,
 .right-col {
-  border: 1px solid #ddd;
-  border-radius: 0.5rem;
-  padding: 0.75rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
   background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
   justify-content: flex-start;
 }
 
-/* Maintain fixed column widths */
+/* Column widths */
 .left-col { flex: 0 0 240px; max-width: 240px; }
-.center-col { flex: 1 1 auto; min-width: 400px; }
+.center-col { flex: 1 1 auto; min-width: 420px; }
 .right-col { flex: 0 0 280px; max-width: 280px; }
 
-/* Modern typography for summary column only */
-.detail-grid .summary-wrap .summary-title {
-  font-size: 1.15rem !important;
-  font-weight: 600 !important;
-  color: #222 !important;
-  margin-bottom: 0.5rem !important;
+/* === Title === */
+.detail-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 1.7rem;
   letter-spacing: -0.01em;
+  color: var(--color-text-primary);
+  margin-bottom: 0.01rem;
 }
 
-.detail-grid .summary-body {
+.detail-title .country-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 1.1rem !important;
+  letter-spacing: -0.01em;
+  color: var(--color-text-primary);
+}
+
+.detail-title .flag {
+  font-size: 1.6rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+}
+
+.detail-title .date-range {
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+}
+
+/* === Section subtitles === */
+.right-title {
+  font-family: var(--font-sans);
+  font-size: 1rem !important;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+  margin-bottom: 0.7rem;
+}
+
+.summary-title {
+  font-family: var(--font-sans);
+  font-size: 1rem !important;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+  margin-bottom: 0.7rem;
+}
+
+/* === Graph text === */
+.graph-wrap text, 
+.graph-wrap svg text {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  fill: var(--color-text-secondary);
+}
+
+/* === Summary === */
+.summary-body {
   font-size: 0.95rem;
   line-height: 1.55;
-  color: #333;
-  border-top: 1px solid #e0e0e0;
+  color: var(--color-text-secondary);
+  border-top: 1px solid #e6e6e6;
   padding-top: 0.5rem;
-  flex-grow: 1; /* ensures it fills column height evenly */
+  flex-grow: 1;
 }
 
-.detail-grid .summary-body div {
-  margin-bottom: 0.4rem;
+.summary-body div {
+  margin-bottom: 0.5rem;
 }
 
-.detail-grid .summary-body strong {
-  color: #111;
+.summary-body strong {
+  color: var(--color-text-primary);
   font-weight: 600;
 }
 
@@ -517,53 +587,56 @@ style.textContent = `
   color: #555;
   margin-top: 0.75rem;
   line-height: 1.5;
-  border-top: 1px dashed #ddd;
   padding-top: 0.75rem;
+  font-style: italic;
 }
 
+/* === Graph appearance === */
 .graph-wrap svg {
   width: 100%;
   height: auto;
-  overflow: hidden;
+  max-width: 100%;
+  transform-origin: top left;
+  overflow: visible;
   display: block;
+  margin-bottom: 0.1rem;
 }
 
-.node rect {
-  fill: transparent;
-  rx: 8px;
-  ry: 8px;
+/* === Event Nodes === */
+.node text {
+  font-family: var(--font-sans);
+  font-weight: 500; /* was 700 — now subtler */
+  letter-spacing: -0.01em;
 }
-
 
 .node .event-tile {
   transition: fill 140ms ease, stroke 140ms ease, transform 140ms ease;
-  pointer-events: all;
-  /* slightly off-white default but transparent to keep layout */
   fill: transparent;
   stroke: transparent;
+  cursor: pointer;
 }
 
 .node:hover .event-tile {
-  stroke: rgba(30, 144, 255, 0.4);
-  fill: rgba(30, 144, 255, 0.05);
+  stroke: rgba(30,144,255,0.4);
+  fill: rgba(30,144,255,0.05);
 }
-
 
 .node.active .event-tile {
-  stroke: rgba(30, 144, 255, 0.8);
-  fill: rgba(30, 144, 255, 0.08);
+  stroke: var(--color-accent);
+  fill: rgba(30,144,255,0.08);
 }
 
-/* Responsive stack for narrow viewports */
+/* === Responsive === */
 @media (max-width: 900px) {
   .detail-grid {
     flex-direction: column;
   }
-
-  .left-col,
-  .right-col {
+  .left-col, .right-col {
     flex: 1 1 auto;
     max-width: 100%;
+  }
+  .detail-title {
+    font-size: 1.4rem;
   }
 }
 

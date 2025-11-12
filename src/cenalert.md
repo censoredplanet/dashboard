@@ -712,6 +712,13 @@ body {
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
   }
+:root {
+  --font-sans: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #444;
+  --color-accent: #1e90ff;
+}
 
 .filters-row {
   display: flex;
@@ -762,8 +769,9 @@ body {
 
 .modern-filters label {
   font-weight: 500;
-  font-size: 0.9rem;
-  color: #333;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  color: var(--color-text-primary);
   text-align: center; 
   margin-bottom: 0.25rem;
 }
@@ -773,8 +781,9 @@ body {
   border-radius: 0.5rem;
   border: 1px solid #ccc;
   padding: 0.35rem 0.6rem;
-  font-size: 0.95rem;
-  font-family: inherit;
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  font-family: var(--font-sans);
   width: 100%;
 }
 
@@ -851,6 +860,7 @@ body {
 .card-big {
     display: flex;
     flex-wrap: wrap;
+    font-family: var(--font-sans);
   }
 
 .card-side h2 {
@@ -938,9 +948,19 @@ body {
   width: 115%;
 }
 
+.search-volume-header h2 {
+  font-family: var(--font-sans);
+  font-size: 1.1rem !important;
+  font-weight: 500;
+  display: flex;
+  color: var(--color-text-secondary);
+  justify-content: space-between;
+  align-items: center;
+}
 
 .highlight-toggle-wrapper label {
-  display: flex !important;    
+  display: flex !important; 
+  font-family: var(--font-sans);   
   align-items: center;       
   gap: 5rem;
   white-space: nowrap;  
