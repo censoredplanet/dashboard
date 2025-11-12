@@ -89,6 +89,7 @@ export function createDetailOpener(deps) {
     } else {
       summaryWrap.append(bottomDesc);
     }
+    
     const r = window.matchMedia("(max-width: 768px)").matches ? 110 : 70;
     const margin = { top: 24, right: 10, bottom: 24, left: 20 };
     const laneX = margin.left + r;
@@ -546,6 +547,7 @@ style.textContent = `
   stroke: rgba(30, 144, 255, 0.4);
   fill: rgba(30, 144, 255, 0.05);
 }
+
 
 .node.active .event-tile {
   stroke: rgba(30, 144, 255, 0.8);

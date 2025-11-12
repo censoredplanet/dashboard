@@ -421,7 +421,7 @@ function renderSearchVolumePlot() {
     Plot.lineY(timeseries, {
       x: "date",
       y: "rate",
-      stroke: "topic",
+      stroke: "#000000ff",
       tip: true,
       title: d =>
         `Topic: ${d.topic || "Unknown topic"}\n` +
@@ -437,7 +437,7 @@ function renderSearchVolumePlot() {
         x2: d => d.e,
         y1: y1,
         y2: y2,
-        fill: "#f87171",
+        fill: "#df9d81ff",
         fillOpacity: 0.4,
         stroke: "#f56363ff",
         strokeWidth: 0.7,
@@ -465,9 +465,10 @@ function renderSearchVolumePlot() {
   }
 
   const plotSvg = Plot.plot({
+    style: { background: "transparent", color: "#333" },
     width,
     y: { grid: true, label: "" },
-    color,
+    color: { legend: false },
     marks
   });
 
