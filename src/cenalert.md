@@ -921,7 +921,7 @@ body {
 }
 
 .highlight-toggle-wrapper input[type="checkbox"] {
-  appearance: none;  /* remove default checkbox */
+  appearance: none; 
   -webkit-appearance: none;
   width: 32px;
   height: 16px;

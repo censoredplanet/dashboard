@@ -87,7 +87,6 @@ export function createDetailOpener(deps) {
       bottomDesc = html`<div id="bottom-desc" class="bottom-desc hidden"></div>`;
       summaryWrap.append(bottomDesc);
     } else {
-      // ensure it's inside the summaryWrap
       summaryWrap.append(bottomDesc);
     }
     const r = window.matchMedia("(max-width: 768px)").matches ? 110 : 70;
@@ -130,12 +129,12 @@ export function createDetailOpener(deps) {
       .domain([0, 3]);
 
     
-    const impactColors = ["#fee5d9", "#fcae91", "#fb6a4a", "#cb181d"];
+    const impactColors = ["#f7f7f7", "#fddbc7", "#f4a582", "#d6604d"];
     function getContrastColor(color) {
       const rgb = d3.color(color);
       if (!rgb) return "#000";
       const luminance = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
-      return luminance < 140 ? "#fff" : "#000"; // lower threshold = darker color
+      return luminance < 140 ? "#fff" : "#000"; 
     }
     
     node.append("circle").attr("r", r).attr("fill",  d => impactColors[d.impactQuartile ?? Math.floor(Math.random() * 4)]).attr("stroke", "#444").attr("stroke-width", 1.5);
@@ -150,18 +149,30 @@ export function createDetailOpener(deps) {
   });
 
     node.on("mouseenter", function () {
-      d3.select(this).select("circle").attr("stroke", "#1e90ff").attr("stroke-width", 2);
+      const tile = d3.select(this).select(".event-tile");
+      tile.transition()
+          .duration(120)
+          .attr("stroke", "rgba(30,144,255,0.4)")
+          .attr("fill", "rgba(30,144,255,0.05)");
     })
     .on("mouseleave", function () {
-      if (!d3.select(this).classed("active")) {
-        d3.select(this).select("circle").attr("stroke", "#444").attr("stroke-width", 1.5);
+      const self = d3.select(this);
+      const tile = self.select(".event-tile");
+      if (!self.classed("active")) {
+        tile.transition()
+            .duration(120)
+            .attr("stroke", "transparent")
+            .attr("fill", "transparent");
       }
     })
     .on("click", function (event, d) {
       const self = d3.select(this);
       const isActive = self.classed("active");
       g.selectAll(".node").classed("active", false).select("circle").attr("stroke", "#444").attr("stroke-width", 1.5);
-      if (!isActive) self.classed("active", true).select("circle").attr("stroke", "#1e90ff").attr("stroke-width", 2.5);
+      if (!isActive) {
+        self.classed("active", true).select("circle").attr("stroke", "#1e90ff").attr("stroke-width", 2.5);
+        self.select(".event-tile").attr("stroke", "#1e90ff").attr("fill", "#1e90ff");
+      }
       renderRight(d);
       const summaryBody = document.getElementById("summary-body");
       if (summaryBody) {
@@ -188,6 +199,8 @@ export function createDetailOpener(deps) {
       const svgPx = rectW || el.clientWidth || width;
       labelWidth = Math.max(380, svgPx - (laneX + labelDx) - margin.right);
       g.selectAll("foreignObject").attr("width", labelWidth);
+      g.selectAll(".event-tile")
+        .attr("width", labelDx + labelWidth + 24);
     }
 
     const label = node.append("g").attr("transform", `translate(${labelDx}, 0)`);
@@ -196,6 +209,17 @@ export function createDetailOpener(deps) {
 
     const fo = node.append("foreignObject").attr("x", labelDx).attr("y", r*0.1).attr("width", 320).attr("height", 10);
     const htmlBox = fo.append("xhtml:div").attr("class", "label-html");
+
+    const tile = node.insert("rect", ":first-child")
+      .attr("class", "event-tile")
+      .attr("x", -r - 12)
+      .attr("y", -r - nodeGap / 2)
+      .attr("width", labelDx + 320 + 24) 
+      .attr("height", Math.max(baseMinRow, 10) + r * 1.1 + nodeGap) 
+      .attr("rx", 8).attr("ry", 8)
+      .attr("fill", "transparent")
+      .attr("stroke", "transparent")
+      .attr("pointer-events", "all"); 
 
     function renderRight(selectedEvent = null) {
       const fmtYMD = d3.utcFormat("%Y.%m.%d");
@@ -291,11 +315,18 @@ export function createDetailOpener(deps) {
         foEl.attr("height", rowH);
       });
 
-      // svg.selectAll(".event-band").remove();
       let yCursor = r * 0.6 + 40;
       node.each(function (d) {
         d.__y = yCursor;
         d3.select(this).attr("transform", `translate(${laneX}, ${d.__y})`);
+        const tileTop = -r - nodeGap / 2;
+        const foTop = r * 0.1;
+        const tileHeight = (foTop + d.__rowH + nodeGap / 2) + 19
+        d3.select(this).select(".event-tile")
+          .attr("x", -r - 24)
+          .attr("y", tileTop + 15)
+          .attr("width", labelDx + labelWidth + 90)
+          .attr("height", tileHeight);
         yCursor += d.__rowH + nodeGap;
       });
 
@@ -503,7 +534,23 @@ style.textContent = `
 }
 
 
+.node .event-tile {
+  transition: fill 140ms ease, stroke 140ms ease, transform 140ms ease;
+  pointer-events: all;
+  /* slightly off-white default but transparent to keep layout */
+  fill: transparent;
+  stroke: transparent;
+}
 
+.node:hover .event-tile {
+  stroke: rgba(30, 144, 255, 0.4);
+  fill: rgba(30, 144, 255, 0.05);
+}
+
+.node.active .event-tile {
+  stroke: rgba(30, 144, 255, 0.8);
+  fill: rgba(30, 144, 255, 0.08);
+}
 
 /* Responsive stack for narrow viewports */
 @media (max-width: 900px) {
