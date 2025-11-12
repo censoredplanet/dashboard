@@ -14,6 +14,8 @@ import { createDetailOpener } from "./components/detail-view.js";
 
 const params = new URLSearchParams(window.location.search);
 const countryParam = (params.get("country") ?? "").trim();
+const urlEvent = params.get("event");
+const urlRange = params.get("range") ?? "present";
 const parseDate = utcParse("%m/%d/%Y");
 const parseISO = utcParse("%Y-%m-%d");
 const fmtDMY = utcFormat("%d.%m.%Y");
@@ -69,10 +71,16 @@ const dateRangeOptions = [
   { label: "Custom range", value: "custom" },
 ];
 
+const urlRange = params.get("range") ?? "present";
+
+const initialRange =
+  dateRangeOptions.find(o => o.value === urlRange) ??
+  dateRangeOptions[0]; 
+
 const dateRangeInput = Inputs.select(dateRangeOptions, {
   label: "Date range",
   format: d => d.label,
-  value: dateRangeOptions[0],
+  value: initialRange,
   onchange: () => {}
 });
 const dateRangeGenerator = Generators.input(dateRangeInput);
@@ -199,7 +207,20 @@ const openDetail = createDetailOpener({
   endDate,
 });
 
-showCountryDetail(countryCode, countryGenerator, null, { scrollIntoView: true });
+let selectedEventKey = null;
+if (urlEvent) {
+  const matched = events.find(ev =>
+    ev.__matchKey === urlEvent || ev.dateLabel === urlEvent || ev.startDate === urlEvent
+  );
+  if (matched) selectedEventKey = matched.__matchKey || matched.dateLabel || matched.startDate;
+}
+
+// fallback to first event if none matched
+if (!selectedEventKey && events.length > 0) {
+  selectedEventKey = events[0].__matchKey || events[0].dateLabel || events[0].startDate;
+}
+
+showCountryDetail(countryCode, countryGenerator, selectedEventKey, { scrollIntoView: false });
 const showHighlight = true;
 ```
 ```js
@@ -545,6 +566,7 @@ dateRangeInput.addEventListener("change", async () => {
   const range = dateRangeInput.value.value;
   const country = countryInput.value;
   const newCode = countryNameToCode[country];
+  const scrollY = window.scrollY;
 
   updateURL({ range }, true);
 
@@ -556,6 +578,7 @@ dateRangeInput.addEventListener("change", async () => {
     const firstKey = first.__matchKey || first.dateLabel || null;
     if (firstKey) {
       updateURL({ country: newCode, range, event: firstKey }, false);
+      
       showCountryDetail(newCode, country, firstKey, { scrollIntoView: false });
       return;
     }
@@ -647,7 +670,7 @@ const openDetail = createDetailOpener({
   formatDMYdots,
 });
 
-async function showCountryDetail(code, name, selectedEventKey, opts = { scrollIntoView: true }) {
+async function showCountryDetail(code, name, selectedEventKey, opts = { scrollIntoView: false }) {
  const fullSeries = (await getTimeseriesForCountry(code))
   .map(d => ({
     ...d,

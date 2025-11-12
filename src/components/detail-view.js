@@ -79,7 +79,7 @@ export function createDetailOpener(deps) {
     graphWrap.append(rightTitle, rightBody);
 
     // Summary (right column)
-    const summaryTitle = html`<h3 class="summary-title">Event summary</h3>`;
+    const summaryTitle = html`<h3 class="summary-title">Event Summary</h3>`;
     const summaryBody = html`<div id="summary-body" class="summary-body">Select an event to see details.</div>`;
     summaryWrap.append(summaryTitle, summaryBody);
     let bottomDesc = document.getElementById("bottom-desc");
