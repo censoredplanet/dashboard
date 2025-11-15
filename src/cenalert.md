@@ -781,10 +781,9 @@ body {
 .modern-filters select {
   border-radius: 0.5rem;
   border: 1px solid #ccc;
-  padding: 0.4rem 0.1rem;
+  padding: 0.4rem 0.4rem;
   color: var(--color-text-primary);
   font-size: 0.9rem;
-  text-align: center; 
   justify-content: center; 
   font-family: var(--font-sans);
   width: 100%;
