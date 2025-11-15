@@ -780,9 +780,11 @@ body {
 .modern-filters select {
   border-radius: 0.5rem;
   border: 1px solid #ccc;
-  padding: 0.35rem 0.6rem;
+  padding: 0.4rem 0.1rem;
   color: var(--color-text-primary);
   font-size: 0.9rem;
+  text-align: center; 
+  justify-content: center; 
   font-family: var(--font-sans);
   width: 100%;
 }
@@ -790,6 +792,7 @@ body {
 .modern-filters input[type="date"] {
   min-width: 140px; 
   height: 2rem;  
+  justify-content: center; 
   padding: 0.45rem 0.75rem;
 }
 .date-range-custom {

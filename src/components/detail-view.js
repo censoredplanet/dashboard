@@ -93,11 +93,11 @@ export function createDetailOpener(deps) {
     const r = window.matchMedia("(max-width: 768px)").matches ? 110 : 70;
     const margin = { top: 24, right: 10, bottom: 24, left: 20 };
     const laneX = margin.left + r;
-    const width = 540;
+    const width = graphWrap.clientWidth;
     const baseMinRow = 110;
     const nodeGap = 50;
     const extraLastGap = 0;
-    let height = 600;
+    let height = graphWrap.clientHeight;
 
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
     const VISIBLE_ROWS = isMobile ? 2 : 5;
@@ -365,19 +365,20 @@ export function createDetailOpener(deps) {
         }
       });
     };
-    function syncColumnHeights() {
-    const baseH = scroller.clientHeight || scroller.scrollHeight;
+  //   function syncColumnHeights() {
+  //   const baseH = scroller.clientHeight || scroller.scrollHeight;
 
-    graphWrap.style.height = `${baseH}px`;
-    summaryWrap.style.height = `${baseH}px`;
-  }
+  //   graphWrap.style.height = `${baseH}px`;
+  //   summaryWrap.style.height = `${baseH}px`;
+  // }
 
-  requestAnimationFrame(syncColumnHeights);
+  // requestAnimationFrame(syncColumnHeights);
 
   let resizeTimeout;
   window.addEventListener("resize", () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(syncColumnHeights, 150);
+    // clearTimeout(resizeTimeout);
+    renderDetail(code, name, countryEvents, countryHasAnyEvents);
+    // resizeTimeout = setTimeout(syncColumnHeights, 150);
   }, { passive: true });
     window.addEventListener("resize", onResize, { passive: true });
   }
@@ -488,6 +489,8 @@ style.textContent = `
   background: #fff;
   box-shadow: 0 2px 6px rgba(0,0,0,0.04);
   display: flex;
+  height: auto;
+  align-self: stretch;
   flex-direction: column;
   flex: 1 1 auto;
   min-width: 0;
@@ -556,6 +559,11 @@ style.textContent = `
 }
 
 /* === Graph text === */
+.graph-wrap {
+  width: 100%;
+  min-width: 0;  /* IMPORTANT for CSS grid shrink */
+}
+
 .graph-wrap text, 
 .graph-wrap svg text {
   font-family: var(--font-sans);
