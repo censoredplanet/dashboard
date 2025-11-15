@@ -1,4 +1,11 @@
 // components/detail-view.js
+document.head.appendChild(
+  Object.assign(document.createElement("link"), {
+    rel: "stylesheet",
+    href: "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/emoji.css"
+  })
+);
+
 export function createDetailOpener(deps) {
   const {
     html, d3, Plot, resize,
@@ -25,18 +32,29 @@ export function createDetailOpener(deps) {
   }
 
   function renderDetail(code, name, countryEvents, countryHasAnyEvents) {
+    function twemojiFlagCode(code) {
+      return [...code.toUpperCase()]
+        .map(c => (c.codePointAt(0) - 0x41 + 0x1F1E6).toString(16))
+        .join("-");
+    }
+
+    const flag = html`
+      <img
+        src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${twemojiFlagCode(code)}.svg"
+        style="width: 1.6rem; height: 1.6rem; vertical-align: middle;"
+      />
+    `;
+
     const rangeStart = d3.min(countryEvents, d => d.date);
     const rangeEnd = d3.max(countryEvents, d => d.date);
     detailSection.innerHTML = "";
-    const flag = (code) =>
-      code.toUpperCase().replace(/./g, (c) => String.fromCodePoint(c.charCodeAt(0) + 127397));
     const fmtYMDdots = d3.utcFormat("%Y.%m.%d");
     const dateRangeLabel =
       rangeStart && rangeEnd
         ? `${fmtYMDdots(rangeStart)} - ${fmtYMDdots(rangeEnd)}`
         : "";
     const heading = html`<h2 class="detail-title">
-      <span class="flag">${flag(code)}</span>
+      <span class="flag">${flag}</span>
       <span class="country-name">Events in ${name}</span>
       ${dateRangeLabel ? html`<span class="date-range">(${dateRangeLabel})</span>` : ""}
     </h2>`;
