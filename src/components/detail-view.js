@@ -108,25 +108,41 @@ export function createDetailOpener(deps) {
       summaryWrap.append(bottomDesc);
     }
     
-    const r = window.matchMedia("(max-width: 768px)").matches ? 110 : 70;
+    // initial sizes (will be recomputed immediately below)
+    let { widthNow: currentWidth, r, baseMinRow, nodeGap } = computeSizes();
+    // const r = window.matchMedia("(max-width: 768px)").matches ? 110 : 70;
     const margin = { top: 24, right: 10, bottom: 24, left: 20 };
     const laneX = margin.left + r;
     const width = graphWrap.clientWidth;
-    const baseMinRow = 110;
-    const nodeGap = 50;
-    const extraLastGap = 0;
-    let height = graphWrap.clientHeight;
+    // const baseMinRow = 110;
+    // const nodeGap = 50;
+    // const extraLastGap = 0;
+    // let height = graphWrap.clientHeight;
 
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
     const VISIBLE_ROWS = isMobile ? 2 : 5;
     const viewHeight = VISIBLE_ROWS * 90;
     summaryWrap.style.height = `${viewHeight}px`;
     summaryWrap.style.overflowY = "auto";
+    function computeSizes() {
+      const widthNow = Math.max(280, graphWrap.clientWidth || width || 480);
+      // radius scales roughly with width; clamp so nodes don't become tiny/huge
+      // tweak multipliers to taste (0.07 gives good results for many layouts)
+      const computedR = Math.round(Math.max(40, Math.min(140, widthNow * 0.13)));
+      // base minimum row, gaps scaled a bit with r
+      const computedBaseMinRow = Math.max(80, Math.round(0.9 * computedR + 40));
+      const computedNodeGap = Math.max(24, Math.round(computedR * 0.8));
+      return { widthNow, r: computedR, baseMinRow: computedBaseMinRow, nodeGap: computedNodeGap };
+    }
+
+    const extraLastGap = 0;
+    let height = graphWrap.clientHeight || 600;
+
     const svg = d3.create("svg")
       .attr("viewBox", `0 0 ${width} ${height}`)
       .attr("preserveAspectRatio", "xMinYMin meet")
       .style("width", "100%")
-      .style("height", "auto")
+      .style("height", `${height}px`)
       .style("display", "block");
 
     svg.append("line")
@@ -157,12 +173,14 @@ export function createDetailOpener(deps) {
     }
     
     node.append("circle").attr("r", r).attr("fill",  d => impactColors[d.impactQuartile ?? Math.floor(Math.random() * 4)]).attr("stroke", "#444").attr("stroke-width", 1.5);
-    node.append("text").attr("text-anchor", "middle").attr("dy", "-0.25em").style("font-size", "22px").text((d) => d.code).attr("fill", d => {
+    //word impact
+    node.append("text").attr("text-anchor", "middle").attr("dy", "-0.25em").style("font-size", `${Math.round(r * 0.35)}px`).text((d) => d.code).attr("fill", d => {
     const c = impactColors[d.impactQuartile ?? 0];
     return getContrastColor(c);
   });
 ;
-    node.append("text").attr("text-anchor", "middle").attr("dy", "1.2em").style("font-size", "20px").attr("fill", "#555").attr("font-weight", 700).text((d) => d.title).attr("fill", d => {
+    // impact score
+    node.append("text").attr("text-anchor", "middle").attr("dy", "1.2em").style("font-size", `${Math.round(r * 0.35)}px`).attr("fill", "#555").attr("font-weight", 700).text((d) => d.title).attr("fill", d => {
     const c = impactColors[d.impactQuartile ?? 0];
     return getContrastColor(c);
   });
@@ -209,7 +227,7 @@ export function createDetailOpener(deps) {
     });
     
 
-    const labelDx = r + 12;
+    let labelDx = r + 12;
     let labelWidth = 0;
 
     function computeLabelWidth() {
@@ -221,14 +239,10 @@ export function createDetailOpener(deps) {
       g.selectAll(".event-tile")
         .attr("width", labelDx + labelWidth + 24);
     }
-
+    
     const label = node.append("g").attr("transform", `translate(${labelDx}, 0)`);
     label.append("line").attr("x1", -8).attr("x2", 0).attr("y1", 0).attr("y2", 0).attr("stroke", "#ccc");
-    label.append("text").attr("font-weight", 500).attr("y", r * 0.1).text((d) => `${d.dateLabel}`).style("font-size", "24px");
-
-    const fo = node.append("foreignObject").attr("x", labelDx).attr("y", r*0.1).attr("width", 320).attr("height", 10);
-    const htmlBox = fo.append("xhtml:div").attr("class", "label-html");
-
+    label.append("text").attr("font-weight", 500).attr("y", r * 0.1).text((d) => `${d.dateLabel}`).style("font-size", `${Math.round(r * 0.35)}px`)
     const tile = node.insert("rect", ":first-child")
       .attr("class", "event-tile")
       .attr("x", -r - 12)
@@ -238,7 +252,11 @@ export function createDetailOpener(deps) {
       .attr("rx", 8).attr("ry", 8)
       .attr("fill", "transparent")
       .attr("stroke", "transparent")
-      .attr("pointer-events", "all"); 
+      .attr("pointer-events", "all");
+    const fo = node.append("foreignObject").attr("x", labelDx).attr("y", r*0.1).attr("width", d => d.tileWidth).attr("height", 10);
+    const htmlBox = fo.append("xhtml:div").attr("class", "label-html");
+
+     
 
     function renderRight(selectedEvent = null) {
       const fmtYMD = d3.utcFormat("%Y.%m.%d");
@@ -263,6 +281,7 @@ export function createDetailOpener(deps) {
         });
       }
       if (!selectedEvent) {
+        const yMax = d3.max(series, (d) => d.rate);
         const chart = resize((width) =>
           Plot.plot({
             height: (margin.top + margin.bottom + baseMinRow) + PX_PADDING + mobileExtra + 9,
@@ -318,11 +337,10 @@ export function createDetailOpener(deps) {
     }
 
     renderRight(countryEvents.length ? countryEvents[0] : null);
-    scroller.style.height = `${viewHeight}px`;
     scroller.style.overflowY = "auto";
     scroller.append(svg.node());
 
-    detailSection.append(detailHeader, container);
+    // detailSection.append(detailHeader, container);
     
     function layoutNodes() {
       node.each(function (d) {
@@ -350,8 +368,9 @@ export function createDetailOpener(deps) {
       });
 
       const newBase = yCursor;
-      height = newBase + extraLastGap;
+      height = newBase + r * 0.6;
       svg.attr("viewBox", `0 0 ${width} ${height}`);
+      svg.style("height", `${height}px`);
 
       const dataWithY = node.data();
       const firstY = d3.min(dataWithY, (d) => d.__y) ?? (margin.top + r);
@@ -359,7 +378,53 @@ export function createDetailOpener(deps) {
 
       svg.select(".lane").attr("y1", firstY - r).attr("y2", lastY + r);
     }
+    function doResizeLayout() {
+      // recompute base width and sizes
+      currentWidth = graphWrap.clientWidth || currentWidth;
+      const sizes = computeSizes();
+      r = sizes.r;
+      baseMinRow = sizes.baseMinRow;
+      nodeGap = sizes.nodeGap;
 
+      width = graphWrap.clientWidth || width || 800;
+      svg.attr("viewBox", `0 0 ${width} ${height}`);
+
+      // update pixel height to match new viewBox height (prevents CSS scaling)
+      // svg.style("height", `${height}px`);
+
+      // recompute labelDx with new r and apply
+      labelDx = r + 12;
+      label.attr("transform", `translate(${labelDx}, 0)`);
+      fo.attr("x", labelDx);
+
+      // Update circle radii and adjust text sizes to match new r
+      node.select("circle").attr("r", r);
+      // first text (code)
+      node.selectAll("text").nodes().forEach((t, idx) => {
+        // idx 0 -> date/code text, idx 1 -> title text (order as appended)
+        const sel = d3.select(t);
+        if (idx % 2 === 0) {
+          sel.style("font-size", `${Math.round(r * 0.45)}px`);
+        } else {
+          sel.style("font-size", `${Math.round(r * 0.36)}px`);
+        }
+      });
+
+      // update foreignObject y because r changed (fo was created with r*0.1 initially)
+      fo.attr("y", r * 0.1);
+
+      // recompute label width now that svg width changed
+      computeLabelWidth();
+
+      requestAnimationFrame(() => {
+        layoutNodes();
+        // if labelWidth still small, try recompute once more (text measurement race)
+        if (labelWidth <= 220) {
+          computeLabelWidth();
+          requestAnimationFrame(layoutNodes);
+        }
+      });
+    }
     computeLabelWidth();
     requestAnimationFrame(() => {
       layoutNodes();
@@ -370,34 +435,16 @@ export function createDetailOpener(deps) {
     });
 
     const onResize = () => {
-      const nowMobile = window.matchMedia("(max-width: 768px)").matches;
-      const rows = nowMobile ? 4 : 5;
-      const newViewHeight = margin.top + margin.bottom + rows * 50;
-      scroller.style.height = `${newViewHeight}px`;
-      computeLabelWidth();
-      requestAnimationFrame(() => {
-        layoutNodes();
-        if (labelWidth <= 200) {
-          computeLabelWidth();
-          requestAnimationFrame(layoutNodes);
-        }
-      });
+      // call the in-place resize/layout routine
+      doResizeLayout();
+      // also update right and summary columns heights to match scroller to avoid float issues
+      const baseH = scroller.clientHeight || scroller.scrollHeight;
+      // graphWrap.style.height = `${baseH}px`;
+      // summaryWrap.style.height = `${baseH}px`;
     };
-  //   function syncColumnHeights() {
-  //   const baseH = scroller.clientHeight || scroller.scrollHeight;
 
-  //   graphWrap.style.height = `${baseH}px`;
-  //   summaryWrap.style.height = `${baseH}px`;
-  // }
-
-  // requestAnimationFrame(syncColumnHeights);
-
-  let resizeTimeout;
-  window.addEventListener("resize", () => {
-    // clearTimeout(resizeTimeout);
-    renderDetail(code, name, countryEvents, countryHasAnyEvents);
-    // resizeTimeout = setTimeout(syncColumnHeights, 150);
-  }, { passive: true });
+    // wire the resize handler (remove duplicate full render)
+    window.removeEventListener("resize", onResize); // safe no-op if not previously attached
     window.addEventListener("resize", onResize, { passive: true });
   }
 
@@ -510,15 +557,21 @@ style.textContent = `
   height: auto;
   align-self: stretch;
   flex-direction: column;
-  flex: 1 1 auto;
-  min-width: 0;
+  /* changed: allow proper shrinking in flex container */
+  flex: 1 1 0%;
+  min-width: 0; /* IMPORTANT: allow children to shrink */
   justify-content: flex-start;
 }
+.left-col {
+  max-height: 70vh;   /* or whatever height you want */
+  overflow-y: hidden; /* so only the scroller scrolls */
+}
 
-/* Column widths */
-.left-col { flex: 0 0 240px; max-width: 240px; }
-.center-col { flex: 1 1 auto; min-width: 420px; }
-.right-col { flex: 0 0 280px; max-width: 280px; }
+/* Column preferred widths but flexible */
+.left-col { flex: 0 0 clamp(160px, 18%, 260px); }
+.center-col { flex: 1 1 0%; }
+.right-col { flex: 0 0 clamp(160px, 20%, 320px); max-width: 360px; }
+
 
 /* === Title === */
 .detail-title {
@@ -531,6 +584,11 @@ style.textContent = `
   letter-spacing: -0.01em;
   color: var(--color-text-primary);
   margin-bottom: 0.01rem;
+}
+.events-scroller {
+  flex: 1 1 auto;
+  min-height: 0; /* critical for scrollable flex child */
+  overflow-y: auto;
 }
 
 .detail-title .country-name {
@@ -576,10 +634,22 @@ style.textContent = `
   margin-bottom: 0.7rem;
 }
 
-/* === Graph text === */
 .graph-wrap {
   width: 100%;
-  min-width: 0;  /* IMPORTANT for CSS grid shrink */
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* keep svg responsive */
+.graph-wrap svg {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  transform-origin: top left;
+  overflow: visible;
+  display: block;
+  margin-bottom: 0.1rem;
+  box-sizing: border-box;
 }
 
 .graph-wrap text, 
@@ -617,16 +687,7 @@ style.textContent = `
   font-style: italic;
 }
 
-/* === Graph appearance === */
-.graph-wrap svg {
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  transform-origin: top left;
-  overflow: visible;
-  display: block;
-  margin-bottom: 0.1rem;
-}
+
 
 /* === Event Nodes === */
 .node text {

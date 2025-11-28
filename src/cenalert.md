@@ -810,12 +810,6 @@ body {
   gap: 0.5rem;
   align-items: flex-end;
 }
-.events-scroll {
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-  position: relative;
-}
 
 .events-grid {
   display: grid;
