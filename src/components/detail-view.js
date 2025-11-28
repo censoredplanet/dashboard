@@ -542,7 +542,6 @@ style.textContent = `
   display: flex;
   gap: 1.5rem;
   align-items: stretch;
-  height: 82vh;
   min-height: 0;
   margin-top: 1.25rem;
   font-family: var(--font-sans);
