@@ -370,7 +370,9 @@ export function createDetailOpener(deps) {
       const newBase = yCursor;
       height = newBase + r * 0.6;
       svg.attr("viewBox", `0 0 ${width} ${height}`);
-      svg.style("height", `${height}px`);
+      svg.style("height", "auto");
+      svg.attr("height", null);
+      
 
       const dataWithY = node.data();
       const firstY = d3.min(dataWithY, (d) => d.__y) ?? (margin.top + r);
@@ -540,6 +542,8 @@ style.textContent = `
   display: flex;
   gap: 1.5rem;
   align-items: stretch;
+  height: 82vh;
+  min-height: 0;
   margin-top: 1.25rem;
   font-family: var(--font-sans);
   color: var(--color-text-primary);
@@ -554,16 +558,15 @@ style.textContent = `
   background: #fff;
   box-shadow: 0 2px 6px rgba(0,0,0,0.04);
   display: flex;
-  height: auto;
+  height: 100%;
   align-self: stretch;
   flex-direction: column;
-  /* changed: allow proper shrinking in flex container */
   flex: 1 1 0%;
-  min-width: 0; /* IMPORTANT: allow children to shrink */
+  min-width: 0; 
   justify-content: flex-start;
 }
 .left-col {
-  max-height: 70vh;   /* or whatever height you want */
+  max-height: 82vh;   /* or whatever height you want */
   overflow-y: hidden; /* so only the scroller scrolls */
 }
 
@@ -586,9 +589,10 @@ style.textContent = `
   margin-bottom: 0.01rem;
 }
 .events-scroller {
-  flex: 1 1 auto;
-  min-height: 0; /* critical for scrollable flex child */
+  flex: 0 1 auto;
   overflow-y: auto;
+  max-height: none;
+  min-height: 0;
 }
 
 .detail-title .country-name {

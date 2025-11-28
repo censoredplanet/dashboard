@@ -912,6 +912,10 @@ body {
   display: flex;
   align-items: center;
   gap: .75rem;
+  overflow: hidden;
+  height: 100%;
+  max-height: 78vh; 
+  min-height: 0;
   margin-bottom: .5rem;
 }
 
