@@ -122,7 +122,7 @@ export function createDetailOpener(deps) {
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
     const VISIBLE_ROWS = isMobile ? 2 : 5;
     const viewHeight = VISIBLE_ROWS * 90;
-    summaryWrap.style.height = `${viewHeight}px`;
+    // summaryWrap.style.height = `${viewHeight}px`;
     summaryWrap.style.overflowY = "auto";
     function computeSizes() {
       const widthNow = Math.max(280, graphWrap.clientWidth || width || 480);
@@ -574,6 +574,19 @@ style.textContent = `
 .center-col { flex: 1 1 0%; }
 .right-col { flex: 0 0 clamp(160px, 20%, 320px); max-width: 360px; }
 
+.right-col {
+  display: flex;
+  max-height: 82vh;
+  overflow-y: hidden;
+  flex-direction: column;
+  height: auto;     /* let flexbox stretch it */
+  min-height: 0;    /* REQUIRED for flex children */
+}
+.summary-wrap {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  min-height: 0;     /* REQUIRED for scrollable flex children */
+}
 
 /* === Title === */
 .detail-title {
