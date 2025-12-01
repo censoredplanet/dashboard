@@ -372,7 +372,8 @@ export function createDetailOpener(deps) {
       height = newBase + r * 0.6;
       // const ripScrollHeight = newBase + r * 0.6;
       svg.attr("viewBox", `0 0 ${width} ${height}`);
-      svg.style("height", `${height}px`);
+      svg.style("height", "auto");   // let browser size
+      svg.style("max-height", "none");
       // scroller.style.height = `${ripScrollHeight}px`;
       // summaryWrap.style.height = `${ripScrollHeight}px`;
       
