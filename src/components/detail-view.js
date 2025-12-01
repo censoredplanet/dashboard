@@ -368,10 +368,13 @@ export function createDetailOpener(deps) {
       });
 
       const newBase = yCursor;
+      //  newBase +
       height = newBase + r * 0.6;
+      // const ripScrollHeight = newBase + r * 0.6;
       svg.attr("viewBox", `0 0 ${width} ${height}`);
-      svg.style("height", "auto");
-      svg.attr("height", null);
+      svg.style("height", `${height}px`);
+      // scroller.style.height = `${ripScrollHeight}px`;
+      // summaryWrap.style.height = `${ripScrollHeight}px`;
       
 
       const dataWithY = node.data();
@@ -536,16 +539,24 @@ style.textContent = `
   --color-text-secondary: #444;
   --color-accent: #1e90ff;
 }
+.detail-section {
+  height: calc(100vh - 120px); /* subtract header size */
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
 
 /* Layout */
 .detail-grid {
-  display: flex;
   gap: 1.5rem;
-  align-items: stretch;
   min-height: 0;
   margin-top: 1.25rem;
   font-family: var(--font-sans);
   color: var(--color-text-primary);
+  flex: 1 1 auto;
+  display: flex;
+  align-items: stretch;   /* <-- equal heights */
+  min-height: 0;
 }
 
 .left-col,
@@ -557,35 +568,28 @@ style.textContent = `
   background: #fff;
   box-shadow: 0 2px 6px rgba(0,0,0,0.04);
   display: flex;
-  height: 100%;
   align-self: stretch;
   flex-direction: column;
-  flex: 1 1 0%;
+  flex: 1 1 0;
+  min-height: 0;      /* <-- REQUIRED */
   min-width: 0; 
+  
   justify-content: flex-start;
 }
-.left-col {
-  max-height: 82vh;   /* or whatever height you want */
-  overflow-y: hidden; /* so only the scroller scrolls */
-}
+
 
 /* Column preferred widths but flexible */
 .left-col { flex: 0 0 clamp(160px, 18%, 260px); }
 .center-col { flex: 1 1 0%; }
 .right-col { flex: 0 0 clamp(160px, 20%, 320px); max-width: 360px; }
 
-.right-col {
-  display: flex;
-  max-height: 82vh;
-  overflow-y: hidden;
-  flex-direction: column;
-  height: auto;     /* let flexbox stretch it */
-  min-height: 0;    /* REQUIRED for flex children */
-}
-.summary-wrap {
-  flex: 1 1 auto;
+
+.events-scroller,
+.summary-wrap,
+.graph-wrap {
   overflow-y: auto;
-  min-height: 0;     /* REQUIRED for scrollable flex children */
+  flex: 1 1 0;
+  min-height: 0;
 }
 
 /* === Title === */
@@ -599,12 +603,6 @@ style.textContent = `
   letter-spacing: -0.01em;
   color: var(--color-text-primary);
   margin-bottom: 0.01rem;
-}
-.events-scroller {
-  flex: 0 1 auto;
-  overflow-y: auto;
-  max-height: none;
-  min-height: 0;
 }
 
 .detail-title .country-name {
@@ -652,6 +650,8 @@ style.textContent = `
 
 .graph-wrap {
   width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
   min-width: 0;
   overflow: hidden;
 }
@@ -659,10 +659,12 @@ style.textContent = `
 /* keep svg responsive */
 .graph-wrap svg {
   width: 100%;
-  height: auto;
+  height: auto;     /* key */
+  max-height: none;
+  display: block;
+  overflow: visible;
   max-width: 100%;
   transform-origin: top left;
-  overflow: visible;
   display: block;
   margin-bottom: 0.1rem;
   box-sizing: border-box;
