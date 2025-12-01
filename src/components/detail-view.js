@@ -128,7 +128,7 @@ export function createDetailOpener(deps) {
       const widthNow = Math.max(280, graphWrap.clientWidth || width || 480);
       // radius scales roughly with width; clamp so nodes don't become tiny/huge
       // tweak multipliers to taste (0.07 gives good results for many layouts)
-      const computedR = Math.round(Math.max(40, Math.min(140, widthNow * 0.13)));
+      const computedR = Math.round(Math.max(40, Math.min(140, widthNow * 0.15)));
       // base minimum row, gaps scaled a bit with r
       const computedBaseMinRow = Math.max(80, Math.round(0.9 * computedR + 40));
       const computedNodeGap = Math.max(24, Math.round(computedR * 0.8));
@@ -249,7 +249,7 @@ export function createDetailOpener(deps) {
       .attr("y", -r - nodeGap / 2)
       .attr("width", labelDx + 320 + 24) 
       .attr("height", Math.max(baseMinRow, 10) + r * 1.1 + nodeGap) 
-      .attr("rx", 8).attr("ry", 8)
+      .attr("rx", 0).attr("ry", 0)
       .attr("fill", "transparent")
       .attr("stroke", "transparent")
       .attr("pointer-events", "all");
@@ -356,13 +356,15 @@ export function createDetailOpener(deps) {
       node.each(function (d) {
         d.__y = yCursor;
         d3.select(this).attr("transform", `translate(${laneX}, ${d.__y})`);
-        const tileTop = -r - nodeGap / 2;
-        const foTop = r * 0.1;
-        const tileHeight = (foTop + d.__rowH + nodeGap / 2) + 19
+        const halfGap = nodeGap / 2;
+        const tileTop = -r - halfGap / 4;
+
+        const tileHeight = 2 * r + halfGap / 2 - 1;
+
         d3.select(this).select(".event-tile")
-          .attr("x", -r - 24)
-          .attr("y", tileTop + 15)
-          .attr("width", labelDx + labelWidth + 90)
+          .attr("x", -r - 20)
+          .attr("y", tileTop)
+          .attr("width", labelDx + 1.2 * labelWidth)
           .attr("height", tileHeight);
         yCursor += d.__rowH + nodeGap;
       });
