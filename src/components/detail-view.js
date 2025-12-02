@@ -6,6 +6,19 @@ document.head.appendChild(
   })
 );
 
+const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+function applyTheme() {
+  if (prefersDark.matches) {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+}
+
+prefersDark.addEventListener("change", applyTheme);
+applyTheme();
+
 export function createDetailOpener(deps) {
   const {
     html, d3, Plot, resize,
@@ -239,10 +252,14 @@ export function createDetailOpener(deps) {
       g.selectAll(".event-tile")
         .attr("width", labelDx + labelWidth + 24);
     }
+    function labelThemeColor() {
+      const isDark = document.documentElement.classList.contains("dark");
+      return isDark ? "#e5e5e5" : "#333";
+    }
     
     const label = node.append("g").attr("transform", `translate(${labelDx}, 0)`);
-    label.append("line").attr("x1", -8).attr("x2", 0).attr("y1", 0).attr("y2", 0).attr("stroke", "#ccc");
-    label.append("text").attr("font-weight", 500).attr("y", r * 0.1).text((d) => `${d.dateLabel}`).style("font-size", `${Math.round(r * 0.35)}px`)
+    label.append("line").attr("x1", -8).attr("x2", 0).attr("y1", 0).attr("y2", 0).attr("stroke", labelThemeColor());
+    label.append("text").attr("font-weight", 500).attr("y", r * 0.1).attr("fill", labelThemeColor()).text((d) => `${d.dateLabel}`).style("font-size", `${Math.round(r * 0.35)}px`)
     const tile = node.insert("rect", ":first-child")
       .attr("class", "event-tile")
       .attr("x", -r - 12)
@@ -541,6 +558,140 @@ style.textContent = `
   --color-text-primary: #1a1a1a;
   --color-text-secondary: #444;
   --color-accent: #1e90ff;
+  --font-sans: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #444;
+  --color-accent: #1e90ff;
+  --bg: #ffffff;
+  --bg-alt: #f5f5f7;
+  --text: #222222;
+  --text-light: #555555;
+  --border: #e5e5e5;
+  --card-bg: #ffffff;
+  --plot-text: var(--text);        /* usually #222 */
+  --plot-line: var(--text);        /* lines follow theme text */
+  --plot-grid: var(--text-light);  /* subtle grid */
+  --plot-bg: transparent;
+}
+:root.dark {
+  --bg: #121212;
+  --bg-alt: #1c1c1c;
+  --text: #e6e6e6;
+  --text-light: #bbbbbb;
+  --border: #444444;
+  --card-bg: #1a1a1a;
+  --plot-text: var(--text);        /* usually #e6e6e6 */
+  --plot-line: var(--text);
+  --plot-grid: var(--text-light);  /* usually #bbbbbb */
+  --plot-bg: transparent;
+}
+
+:root.dark body,
+:root.dark .detail-section {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Column backgrounds + borders */
+:root.dark .left-col,
+:root.dark .center-col,
+:root.dark .right-col {
+  background: var(--card-bg);
+  border-color: var(--border);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* Titles and labels */
+:root.dark .detail-title,
+:root.dark .right-title,
+:root.dark .summary-title {
+  color: var(--text);
+}
+
+:root.dark .summary-body,
+:root.dark .summary-body strong,
+:root.dark .detail-title .date-range,
+:root.dark .detail-title .country-name {
+  color: var(--text-light);
+}
+
+/* Bottom description */
+:root.dark #bottom-desc {
+  color: var(--text-light);
+}
+
+/* SCROLLERS */
+:root.dark .events-scroller,
+:root.dark .graph-wrap,
+:root.dark .summary-wrap {
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+/* ================================
+   DARK MODE FOR D3 SVG (left graph)
+   ================================ */
+:root.dark .graph-wrap svg,
+:root.dark .events-scroller svg {
+  background: transparent !important;
+  color: var(--text) !important;
+}
+
+/* Lane line */
+:root.dark .lane {
+  stroke: var(--text-light) !important;
+}
+
+/* Event tiles */
+:root.dark .node .event-tile {
+  stroke: var(--border) !important;
+}
+
+
+/* Node circle outline */
+:root.dark .node circle {
+  stroke: var(--border) !important;
+}
+
+/* ================================
+   DARK MODE FOR PLOT (right graph)
+   ================================ */
+:root.dark .plot text {
+  fill: var(--text) !important;
+}
+
+:root.dark .plot .tick text {
+  fill: var(--text-light) !important;
+}
+
+:root.dark .plot .axis line,
+:root.dark .plot .axis path {
+  stroke: var(--text-light) !important;
+}
+
+:root.dark .plot .grid line {
+  stroke: var(--text-light) !important;
+  stroke-opacity: 0.25 !important;
+}
+
+:root.dark .plot line,
+:root.dark .plot path {
+  stroke: var(--plot-line) !important;
+}
+
+/* Tooltip */
+:root.dark .plot-tip {
+  background: var(--card-bg) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+/* ================================
+   DARK MODE FOR INLINE HTML LABELS
+   ================================ */
+:root.dark .label-html {
+  color: var(--text) !important;
 }
 .detail-section {
   height: calc(100vh - 120px); /* subtract header size */

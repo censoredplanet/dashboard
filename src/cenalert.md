@@ -39,6 +39,20 @@ if (countries.includes(countryParam)) {
 }
 ```
 ```js
+const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+function applyTheme() {
+  if (prefersDark.matches) {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+}
+
+prefersDark.addEventListener("change", applyTheme);
+applyTheme();
+```
+```js
 function updateURL(paramsObj = {}, clearEvent = false) {
   const currentParams = new URLSearchParams(location.search);
 
@@ -417,12 +431,18 @@ function renderSearchVolumePlot() {
   const y1 = d3.min(timeseries, d => d.rate);
   const y2 = d3.max(timeseries, d => d.rate);
 
+  const plotColors = {
+    text: getComputedStyle(document.documentElement).getPropertyValue("--plot-text").trim(),
+    line: getComputedStyle(document.documentElement).getPropertyValue("--plot-line").trim(),
+    grid: getComputedStyle(document.documentElement).getPropertyValue("--plot-grid").trim(),
+    bg:   getComputedStyle(document.documentElement).getPropertyValue("--plot-bg").trim()
+  };
   const marks = [
-    Plot.ruleY([0]),
+    Plot.ruleY([0], { stroke: plotColors.grid }),
     Plot.lineY(timeseries, {
       x: "date",
       y: "rate",
-      stroke: "#000000ff",
+      stroke: plotColors.line,
       tip: true,
       title: d =>
         `Topic: ${d.topic || "Unknown topic"}\n` +
@@ -438,18 +458,51 @@ function renderSearchVolumePlot() {
         x2: d => d.e,
         y1: y1,
         y2: y2,
-        fill: "#df9d81ff",
-        fillOpacity: 0.4,
-        stroke: "#f56363ff",
-        strokeWidth: 0.7,
+        fill: "#df9d81",
+        fillOpacity: 0.35,
+        stroke: "#f56363",
         strokeOpacity: 0.6,
-        tip: true,
-        title: d =>
-          `Cause: ${d.cause}\n` +
-          `Duration: ${fmtDMY(d.s)} – ${fmtDMY(d.e)}\n` +
-          (d.impact ? `Impact: ${(+d.impact).toFixed(2)}` : "")
+        strokeWidth: 0.7
       }),
     );
+    
+    let plotTooltip = document.getElementById("plot-tooltip");
+    if (!plotTooltip) {
+      plotTooltip = document.createElement("div");
+      plotTooltip.id = "plot-tooltip";
+      plotTooltip.style.position = "absolute";
+      plotTooltip.style.pointerEvents = "none";
+      plotTooltip.style.padding = "6px 8px";
+      plotTooltip.style.borderRadius = "6px";
+      plotTooltip.style.background = "var(--card-bg)";
+      plotTooltip.style.color = "var(--text)";
+      plotTooltip.style.fontFamily = "var(--font-sans)";
+      plotTooltip.style.fontSize = "13px";
+      plotTooltip.style.lineHeight = "1.4";
+      plotTooltip.style.boxShadow = "0 4px 12px rgba(0,0,0,.15)";
+      plotTooltip.style.opacity = "0";
+      plotTooltip.style.transition = "opacity 0.1s ease-out";
+      document.body.appendChild(plotTooltip);
+    }
+
+    // show tooltip on hover
+    plotSvg.addEventListener("mousemove", (event) => {
+      const el = event.target.closest("rect"); // zoomed anomaly rectangles
+      if (!el) {
+        plotTooltip.style.opacity = "0";
+        return;
+      }
+      const datum = el.__data__; // Plot stores original datum here
+      plotTooltip.style.opacity = "1";
+      plotTooltip.style.left = event.pageX + 12 + "px";
+      plotTooltip.style.top = event.pageY + 12 + "px";
+      plotTooltip.innerHTML = `
+        <strong>Cause:</strong> ${datum.cause}<br>
+        <strong>Duration:</strong> ${fmtDMY(datum.s)} – ${fmtDMY(datum.e)}<br>
+        ${datum.impact ? `<strong>Impact:</strong> ${(+datum.impact).toFixed(2)}` : ""}
+      `;
+    });
+
 
     marks.push(
       Plot.ruleX(zoomedAnomalies.map(d => d.s), {
@@ -466,10 +519,15 @@ function renderSearchVolumePlot() {
   }
 
   const plotSvg = Plot.plot({
-    style: { background: "transparent", color: "#333" },
+    style: {
+      background: plotColors.bg,
+      color: plotColors.text,
+      fontSize: "13px"
+    },
     width,
-    y: { grid: true, label: "" },
-    color: { legend: false },
+    grid: true,
+    y: { grid: true, label: "", stroke: plotColors.grid },
+    x: { label: "", stroke: plotColors.grid },
     marks
   });
 
@@ -490,7 +548,10 @@ function renderSearchVolumePlot() {
       showCountryDetail(code, name, selectedEvent.startDate, { scrollIntoView: true });
     }
   });
-
+  
+  plotSvg.addEventListener("mouseleave", () => {
+    plotTooltip.style.opacity = "0";
+  });
   searchVolumeContainer.appendChild(plotSvg);
 }
 ```
@@ -719,6 +780,41 @@ body {
   --color-text-primary: #1a1a1a;
   --color-text-secondary: #444;
   --color-accent: #1e90ff;
+  --bg: #ffffff;
+  --bg-alt: #f5f5f7;
+  --text: #222222;
+  --text-light: #555555;
+  --border: #e5e5e5;
+  --card-bg: #ffffff;
+  --plot-text: var(--text);        /* usually #222 */
+  --plot-line: var(--text);        /* lines follow theme text */
+  --plot-grid: var(--text-light);  /* subtle grid */
+  --plot-bg: transparent;
+}
+:root.dark {
+  --bg: #121212;
+  --bg-alt: #1c1c1c;
+  --text: #e6e6e6;
+  --text-light: #bbbbbb;
+  --border: #444444;
+  --card-bg: #1a1a1a;
+  --plot-text: var(--text);        /* usually #e6e6e6 */
+  --plot-line: var(--text);
+  --plot-grid: var(--text-light);  /* usually #bbbbbb */
+  --plot-bg: transparent;
+}
+
+:root.dark .plot text {
+  fill: var(--text) !important;
+}
+
+:root.dark .plot .tick text {
+  fill: var(--text) !important;
+}
+
+:root.dark .plot .axis line,
+:root.dark .plot .axis path {
+  stroke: var(--text-light) !important;
 }
 
 .filters-row {
@@ -857,6 +953,7 @@ body {
 .card-big {
     display: flex;
     flex-wrap: wrap;
+    color: var(--color-text-primary);
     font-family: var(--font-sans);
   }
 
@@ -887,12 +984,9 @@ body {
   position: fixed;
   z-index: 99999;
   max-width: min(60vw, 520px);
-  background: rgba(121, 116, 116, 0.88);
-  color: #fff;
   padding: 6px 8px;
   border-radius: 6px;
   font: 12px/1.35 var(--sans-serif, system-ui, sans-serif);
-  box-shadow: 0 4px 14px rgba(0,0,0,.3);
   pointer-events: none;
   transform: translate(8px, 12px);
   opacity: 0;
@@ -1029,4 +1123,43 @@ body {
   overscroll-behavior: contain;
 }
 
+:root.dark {
+  --color-text-primary: #eee;
+  --color-text-secondary: #bbb;
+  --color-accent: #60a5fa;
+
+  background: #111;
+  color: #eee;
+}
+
+:root.dark .modern-card {
+  background: linear-gradient(145deg, #1a1a1a, #111);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+:root.dark .events-grid,
+:root.dark .modern-filters input,
+:root.dark .modern-filters select {
+  background: #1a1a1a !important;
+  color: #eee !important;
+  border-color: #444 !important;
+}
+
+.plot-tooltip {
+  font-family: var(--font-sans) !important;
+  font-size: 13px !important;
+  line-height: 1.4;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text);
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+:root.dark .plot-tooltip {
+  background: #1e1e1e !important;
+  color: #eaeaea !important;
+  border-color: #444 !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,.4);
+}
 </style>
