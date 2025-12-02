@@ -462,48 +462,15 @@ function renderSearchVolumePlot() {
         fillOpacity: 0.35,
         stroke: "#f56363",
         strokeOpacity: 0.6,
-        strokeWidth: 0.7
+        strokeWidth: 0.7,
+        tip: true,
+        title: d =>
+          `Cause: ${d.cause}\n` +
+          `Duration: ${fmtDMY(d.s)} – ${fmtDMY(d.e)}\n` +
+          (d.impact ? `Impact: ${(+d.impact).toFixed(2)}` : "")
       }),
     );
     
-    let plotTooltip = document.getElementById("plot-tooltip");
-    if (!plotTooltip) {
-      plotTooltip = document.createElement("div");
-      plotTooltip.id = "plot-tooltip";
-      plotTooltip.style.position = "absolute";
-      plotTooltip.style.pointerEvents = "none";
-      plotTooltip.style.padding = "6px 8px";
-      plotTooltip.style.borderRadius = "6px";
-      plotTooltip.style.background = "var(--card-bg)";
-      plotTooltip.style.color = "var(--text)";
-      plotTooltip.style.fontFamily = "var(--font-sans)";
-      plotTooltip.style.fontSize = "13px";
-      plotTooltip.style.lineHeight = "1.4";
-      plotTooltip.style.boxShadow = "0 4px 12px rgba(0,0,0,.15)";
-      plotTooltip.style.opacity = "0";
-      plotTooltip.style.transition = "opacity 0.1s ease-out";
-      document.body.appendChild(plotTooltip);
-    }
-
-    // show tooltip on hover
-    plotSvg.addEventListener("mousemove", (event) => {
-      const el = event.target.closest("rect"); // zoomed anomaly rectangles
-      if (!el) {
-        plotTooltip.style.opacity = "0";
-        return;
-      }
-      const datum = el.__data__; // Plot stores original datum here
-      plotTooltip.style.opacity = "1";
-      plotTooltip.style.left = event.pageX + 12 + "px";
-      plotTooltip.style.top = event.pageY + 12 + "px";
-      plotTooltip.innerHTML = `
-        <strong>Cause:</strong> ${datum.cause}<br>
-        <strong>Duration:</strong> ${fmtDMY(datum.s)} – ${fmtDMY(datum.e)}<br>
-        ${datum.impact ? `<strong>Impact:</strong> ${(+datum.impact).toFixed(2)}` : ""}
-      `;
-    });
-
-
     marks.push(
       Plot.ruleX(zoomedAnomalies.map(d => d.s), {
         stroke: "#ef4444",
@@ -548,10 +515,7 @@ function renderSearchVolumePlot() {
       showCountryDetail(code, name, selectedEvent.startDate, { scrollIntoView: true });
     }
   });
-  
-  plotSvg.addEventListener("mouseleave", () => {
-    plotTooltip.style.opacity = "0";
-  });
+
   searchVolumeContainer.appendChild(plotSvg);
 }
 ```
