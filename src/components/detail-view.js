@@ -158,11 +158,11 @@ export function createDetailOpener(deps) {
       .style("height", `${height}px`)
       .style("display", "block");
 
-    svg.append("line")
-      .attr("class", "lane")
-      .attr("x1", laneX).attr("x2", laneX)
-      .attr("y1", margin.top).attr("y2", height - margin.bottom)
-      .attr("stroke", "#bbb").attr("stroke-width", 2);
+    // svg.append("line")
+    //   .attr("class", "lane")
+    //   .attr("x1", laneX).attr("x2", laneX)
+    //   .attr("y1", margin.top).attr("y2", height - margin.bottom)
+    //   .attr("stroke", "#bbb").attr("stroke-width", 2);
 
     const g = svg.append("g");
 
@@ -264,7 +264,7 @@ export function createDetailOpener(deps) {
       .attr("class", "event-tile")
       .attr("x", -r - 12)
       .attr("y", -r - nodeGap / 2)
-      .attr("width", labelDx + 320 + 24) 
+      .attr("width", labelDx + 320) 
       .attr("height", Math.max(baseMinRow, 10) + r * 1.1 + nodeGap) 
       .attr("rx", 0).attr("ry", 0)
       .attr("fill", "transparent")
@@ -378,12 +378,12 @@ export function createDetailOpener(deps) {
         const halfGap = nodeGap / 2;
         const tileTop = -r - halfGap / 4;
 
-        const tileHeight = 2 * r + halfGap / 2 - 1;
+        const tileHeight = 2 * r + halfGap / 2 - 4;
 
         d3.select(this).select(".event-tile")
-          .attr("x", -r - 20)
-          .attr("y", tileTop)
-          .attr("width", labelDx + 1.2 * labelWidth)
+          .attr("x", -r - 30)
+          .attr("y", tileTop + 2)
+          .attr("width", labelDx + 1.5 * labelWidth)
           .attr("height", tileHeight);
         yCursor += d.__rowH + nodeGap;
       });
@@ -718,7 +718,6 @@ style.textContent = `
 .left-col,
 .center-col,
 .right-col {
-  border: 1px solid #e0e0e0;
   border-radius: 1rem;
   padding: 1rem 1.25rem;
   background: #fff;
@@ -733,6 +732,13 @@ style.textContent = `
   justify-content: flex-start;
 }
 
+.left-col {
+  padding: 0;   /* no width loss */
+}
+
+.events-scroller {
+  padding: 1rem 1.25rem; /* add internal spacing */
+}
 
 /* Column preferred widths but flexible */
 .left-col { flex: 0 0 clamp(160px, 18%, 260px); }
