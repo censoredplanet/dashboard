@@ -326,9 +326,11 @@ export function createDetailOpener(deps) {
 
       const yMin = d3.min(series, (d) => d.rate);
       const yMax = d3.max(series, (d) => d.rate);
-
+      const isDark = document.documentElement.classList.contains("dark");
+      const tooltipFill = isDark ? "black" : "white";
       const marks = [
-        Plot.lineY(series, { x: "date", y: "rate", curve: "step", tip: true, title: d =>
+        Plot.lineY(series, { x: "date", y: "rate", curve: "step", tip: {
+        fill: tooltipFill, stroke: "black"}, title: d =>
     `Date: ${fmtYMD(d.date)}\n` +
     `Value: ${d.rate != null ? d.rate.toFixed(2) : "N/A"}` }),
         Plot.rectY([{ s, e }], {
