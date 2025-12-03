@@ -437,13 +437,21 @@ function renderSearchVolumePlot() {
     grid: getComputedStyle(document.documentElement).getPropertyValue("--plot-grid").trim(),
     bg:   getComputedStyle(document.documentElement).getPropertyValue("--plot-bg").trim()
   };
+  const isDark = document.documentElement.classList.contains("dark");
+
+  const tooltipFill = isDark ? "black" : "white";
   const marks = [
     Plot.ruleY([0], { stroke: plotColors.grid }),
     Plot.lineY(timeseries, {
       x: "date",
       y: "rate",
       stroke: plotColors.line,
-      tip: true,
+      tip: {
+        fill: tooltipFill,      // tooltip background
+        stroke: "black",    // tooltip border
+        textColor: "black",
+        color: "black"      // tooltip text
+      },
       title: d =>
         `Topic: ${d.topic || "Unknown topic"}\n` +
         `Date: ${fmtYMD(d.date)}\n` +
@@ -463,7 +471,12 @@ function renderSearchVolumePlot() {
         stroke: "#f56363",
         strokeOpacity: 0.6,
         strokeWidth: 0.7,
-        tip: true,
+        tip: {
+          fill: tooltipFill,
+          stroke: "black",
+          textColor: "black",
+          color: "black"
+        },
         title: d =>
           `Cause: ${d.cause}\n` +
           `Duration: ${fmtDMY(d.s)} – ${fmtDMY(d.e)}\n` +
