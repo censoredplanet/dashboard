@@ -464,8 +464,8 @@ function renderSearchVolumePlot() {
       Plot.rectY(zoomedAnomalies, {
         x1: d => d.s,
         x2: d => d.e,
-        y1: y1,
-        y2: y2,
+        y1: y2,
+        y2: 0,
         fill: "#df9d81",
         fillOpacity: 0.35,
         stroke: "#f56363",
