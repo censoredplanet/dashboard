@@ -739,6 +739,9 @@ style.textContent = `
 .center-col { flex: 1 1 0%; }
 .right-col { flex: 0 0 clamp(160px, 20%, 320px); max-width: 360px; }
 
+.events-scroller {
+  border: none !important;
+}
 
 .events-scroller,
 .summary-wrap,
@@ -885,6 +888,58 @@ style.textContent = `
 .node.active .event-tile {
   stroke: var(--color-accent);
   fill: rgba(30,144,255,0.08);
+}
+
+.timeline-scroller::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.timeline-scroller::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.timeline-scroller::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+:root.dark .timeline-scroller::-webkit-scrollbar-thumb {
+  background: #555;
+}
+
+.events-scroller::-webkit-scrollbar {
+  width: 4px;
+}
+
+.events-scroller::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.events-scroller::-webkit-scrollbar-track {
+  background: transparent;
+}
+.summary-wrap::-webkit-scrollbar {
+  width: 4px;
+}
+
+.summary-wrap::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.summary-wrap::-webkit-scrollbar-track {
+  background: transparent;
+}
+/* Firefox */
+.timeline-scroller {
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+}
+
+:root.dark .timeline-scroller {
+  scrollbar-color: #555 transparent;
 }
 
 /* === Responsive === */

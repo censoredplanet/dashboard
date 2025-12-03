@@ -1122,6 +1122,34 @@ body {
   border-color: #444 !important;
 }
 
+.timeline-scroller::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.timeline-scroller::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.timeline-scroller::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+:root.dark .timeline-scroller::-webkit-scrollbar-thumb {
+  background: #555;
+}
+
+/* Firefox */
+.timeline-scroller {
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+}
+
+:root.dark .timeline-scroller {
+  scrollbar-color: #555 transparent;
+}
+
 .plot-tooltip {
   font-family: var(--font-sans) !important;
   font-size: 13px !important;
