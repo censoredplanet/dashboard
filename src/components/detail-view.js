@@ -737,7 +737,7 @@ style.textContent = `
 }
 
 .events-scroller {
-  padding: 1rem 1.25rem; /* add internal spacing */
+  padding: 1rem 0rem; /* add internal spacing */
 }
 
 /* Column preferred widths but flexible */

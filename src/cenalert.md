@@ -943,6 +943,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     color: var(--color-text-primary);
+    padding: 0rem 0rem;
     font-family: var(--font-sans);
   }
 
