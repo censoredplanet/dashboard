@@ -8,7 +8,7 @@ title: CenAlert Dashboard
 import { utcParse, utcFormat } from "https://esm.sh/d3-time-format@4";
 import { fetchCenalertEvents } from "./components/queries.js";
 import { fetchCenalertTimeseries } from "./components/queries.js";
-import { formatDMYdots, norm } from "./components/utils.js";
+import { formatDMYdots } from "./components/utils.js";
 import { createGridRenderer } from "./components/render-grid.js";
 import { createDetailOpener } from "./components/detail-view.js";
 
@@ -16,7 +16,6 @@ const params = new URLSearchParams(window.location.search);
 const countryParam = (params.get("country") ?? "").trim();
 const urlEvent = params.get("event");
 const urlRange = params.get("range") ?? "present";
-const parseDate = utcParse("%m/%d/%Y");
 const parseISO = utcParse("%Y-%m-%d");
 const fmtDMY = utcFormat("%d.%m.%Y");
 const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
@@ -38,20 +37,7 @@ if (countries.includes(countryParam)) {
   defaultCountry = countryParam;
 }
 ```
-```js
-const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
 
-function applyTheme() {
-  if (prefersDark.matches) {
-    document.documentElement.classList.add("dark");
-  } else {
-    document.documentElement.classList.remove("dark");
-  }
-}
-
-prefersDark.addEventListener("change", applyTheme);
-applyTheme();
-```
 ```js
 function updateURL(paramsObj = {}, clearEvent = false) {
   const currentParams = new URLSearchParams(location.search);
@@ -211,16 +197,6 @@ const timeseries = (await getTimeseriesForCountry(countryCode))
 ```
 
 ```js
-const openDetail = createDetailOpener({
-  html, d3, Plot, resize,
-  DAY, PX_PADDING,
-  events, formatImpact, softBreakLongTokens,
-  gridSection, detailSection,
-  formatDMYdots,
-  startDate,
-  endDate,
-});
-
 let selectedEventKey = null;
 if (urlEvent) {
   const matched = events.find(ev =>
@@ -234,94 +210,6 @@ if (!selectedEventKey && events.length > 0) {
 }
 
 showCountryDetail(countryCode, countryInput.value, selectedEventKey, { scrollIntoView: false });
-const showHighlight = true;
-```
-```js
-function eventsCard(
-  rows,
-  {
-    title = "Events",
-    colorHeader = "#444",
-    valueKey = "impact",
-    filterStartKey = "startDate",
-    filterEndKey = "endDate",
-    sortBy = "startDate",
-    sort = "desc",
-    useWindow = false,
-  } = {},
-) {
-  const items = rows
-    .map((r) => {
-      const startRaw = String(r[filterStartKey] ?? "").trim();
-      const endRaw = String(r[filterEndKey] ?? "").trim();
-      const sd = startRaw ? parseISO(startRaw) : null;
-      const ed = endRaw ? parseISO(endRaw) : sd;
-
-      return {
-        showStart: sd ? fmtDMY(sd) : startRaw || "unknown",
-        showEnd: ed ? fmtDMY(ed) : endRaw || "unknown",
-        val: Number(r[valueKey]),
-        sd,
-        ed,
-      };
-    })
-    .filter((r) => Number.isFinite(r.val));
-
-  const filtered = useWindow
-    ? items.filter(({ sd, ed }) => {
-        if (!sd && !ed) return false;
-        const s = sd || ed;
-        const e = ed || sd;
-        const [w0, w1] = startEnd;
-        return !(e < w0 || s > w1);
-      })
-    : items;
-
-  const key = sortBy === "end" ? "ed" : "sd";
-  filtered.sort((a, b) => {
-    const av = a[key]?.getTime?.() ?? -Infinity;
-    const bv = b[key]?.getTime?.() ?? -Infinity;
-    return sort === "asc" ? av - bv : bv - av;
-  });
-
-  const rowsShown = filtered;
-
-  return html.fragment`
-    <h2 style="color:${colorHeader}">${title}</h2>
-    <div class="events-grid-header">
-      <div class="h">Start Date</div>
-      <div class="h">End Date</div>
-      <div class="h r">Impact</div>
-    </div>
-    <div class="events-scroll">
-      <div class="events-grid">
-        ${rowsShown.flatMap((d) => [
-          html`<div>${d.showStart}</div>`,
-          html`<div>${d.showEnd}</div>`,
-          html`<div style="text-align:right; justify-self:end;">
-            ${d.val.toLocaleString("en-US")}
-          </div>`,
-        ])}
-      </div>
-    </div>
-  `;
-}
-```
-
-```js
-const color = Plot.scale({ color: { domain: ["vpn"] } });
-const defaultStartEnd = (() => {
-  const lastIndex = timeseries.length - 1;
-  const firstIndex = Math.max(0, lastIndex - 364);
-  return [
-    timeseries[firstIndex]?.date ?? new Date(),
-    timeseries[lastIndex]?.date ?? new Date(),   
-  ];
-})();
-
-const startEnd = Mutable(defaultStartEnd);
-const setStartEnd = (se) => (startEnd.value = se ?? defaultStartEnd);
-const getStartEnd = () => startEnd.value;
 ```
 
 ```js
@@ -336,46 +224,6 @@ const zoomedAnomalies = events
     return !(d.e < startDate || d.s > endDate);
   });
 
-const [yMin, yMax] = d3.extent(
-  timeseries.filter(
-    (d) => startEnd[0] <= d.date && d.date < startEnd[1],
-  ),
-  (d) => d.rate,
-);
-
-function sparkbar(max) {
-  return (x) => {
-    const v = Number(x) || 0;
-    const label = v.toLocaleString("en-US", {
-      minimumFractionDigits: 3,
-      maximumFractionDigits: 3,
-    });
-    return htl.html`<div style="
-      background: var(--theme-red);
-      color: black;
-      font: 10px/1.6 var(--sans-serif);
-      width: ${max ? (100 * v) / max : 0}%;
-      float: right;
-      padding-right: 3px;
-      box-sizing: border-box;
-      overflow: visible;
-      display: flex;
-      justify-content: end;">${label}</div>`;
-  };
-}
-
-const filteredEventsNum = events.map((d) => {
-  const isUnknown =
-    String(d.label ?? "")
-      .trim()
-      .toLowerCase() === "unknown";
-  return {
-    ...d,
-    impact: +d.impact,
-  };
-});
-
-const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
 const fmtYMD = d3.utcFormat("%Y.%m.%d");
 ```
 
@@ -450,10 +298,10 @@ function renderSearchVolumePlot() {
       y: "rate",
       stroke: plotColors.line,
       tip: {
-        fill: tooltipFill,      // tooltip background
-        stroke: "black",    // tooltip border
+        fill: tooltipFill,
+        stroke: "black",
         textColor: "black",
-        color: "black"      // tooltip text
+        color: "black"
       },
       title: d =>
         `Topic: ${d.topic || "Unknown topic"}\n` +
@@ -631,26 +479,9 @@ dateRangeInput.addEventListener("change", async () => {
   renderSearchVolumePlot();
 });
 
-window.addEventListener("DOMContentLoaded", async () => {
-  const params = new URLSearchParams(window.location.search);
-  const country = params.get("country");
-  const eventKey = params.get("event");
-  const range = params.get("range");
-
-  if (country && eventKey) {
-    const code = countryNameToCode[country] ?? country;
-    const events = await fetchCenalertEvents({ country: code, range });
-    const matched = events.find(ev =>
-      ev.__matchKey === eventKey || ev.dateLabel === eventKey || ev.startDate === eventKey
-    );
-    showCountryDetail(code, country, matched ? matched.startDate : null, { scrollIntoView: false });
-  }
-});
-
 ```
 
 ```js
-
 const DAY = 24 * 60 * 60 * 1000;
 const PX_PADDING = -20;
 
@@ -731,7 +562,6 @@ async function showCountryDetail(code, name, selectedEventKey, opts = { scrollIn
   }
   window.scrollTo(0, scrollY);
 }
-// const scrollY = window.scrollY;
 const renderGrid = createGridRenderer({ html, parseISO, openDetail });
 
 renderGrid(
@@ -766,36 +596,12 @@ body {
   --text-light: #555555;
   --border: #e5e5e5;
   --card-bg: #ffffff;
-  --plot-text: var(--text);        /* usually #222 */
-  --plot-line: var(--text);        /* lines follow theme text */
-  --plot-grid: var(--text-light);  /* subtle grid */
-  --plot-bg: transparent;
-}
-:root.dark {
-  --bg: #121212;
-  --bg-alt: #1c1c1c;
-  --text: #e6e6e6;
-  --text-light: #bbbbbb;
-  --border: #444444;
-  --card-bg: #1a1a1a;
-  --plot-text: var(--text);        /* usually #e6e6e6 */
+  --plot-text: var(--text);
   --plot-line: var(--text);
-  --plot-grid: var(--text-light);  /* usually #bbbbbb */
+  --plot-grid: var(--text-light);
   --plot-bg: transparent;
 }
 
-:root.dark .plot text {
-  fill: var(--text) !important;
-}
-
-:root.dark .plot .tick text {
-  fill: var(--text) !important;
-}
-
-:root.dark .plot .axis line,
-:root.dark .plot .axis path {
-  stroke: var(--text-light) !important;
-}
 
 .filters-row {
   display: flex;
@@ -807,19 +613,14 @@ body {
   flex: 1 1 220px;
 }
 .disclaimer-box {
-  background: #960808ff !important;     /* bright red */
-  color: white !important;            /* white text */
+  background: #960808ff !important;
+  color: white !important;
   padding: 1rem 1.25rem;
   border-radius: 0.75rem;
   font-weight: 600;
   margin: 1rem 0;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   font-family: var(--font-sans);
-}
-.card-side {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
 }
 
 .events-grid > .h {
@@ -883,17 +684,12 @@ body {
 .date-range-custom {
   display: flex;
   gap: 0.5rem;
-  justify-content: center; 
+  justify-content: center;
+  align-items: flex-end; 
 }
 
 .date-range-custom .filter-group {
   flex: 1;
-}
-
-.date-range-custom {
-  display: flex;
-  gap: 0.5rem;
-  align-items: flex-end;
 }
 
 .events-grid {
@@ -911,34 +707,11 @@ body {
   text-align: center;
 }
 
-.grid-cols-2-3 {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-}
-
 .detail-view.modern-card {
   gap: 0; 
   padding: 1rem; 
 }
 
-@media (min-width: 560px) {
-  .grid-cols-2-3 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width: 840px) {
-  .grid-cols-2-3 {
-    grid-template-columns: 2fr 1fr;
-    grid-auto-rows: 260px;
-    align-items: stretch;
-  }
-  .card-side {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-  }
-}
 .card-big {
     display: flex;
     flex-wrap: wrap;
@@ -946,10 +719,6 @@ body {
     padding: 0rem 0rem;
     font-family: var(--font-sans);
   }
-
-.card-side h2 {
-    margin-bottom: 0;
-}
 
 .events-grid-header {
   display: grid;
@@ -1098,41 +867,9 @@ body {
   font-size: 1.8rem;
 }
 
-.grid-1-2{
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-  align-items: start;
-}
-@media (max-width: 840px){
-  .grid-1-2{ grid-template-columns: 1fr; }
-}
-
 .timeline-scroller{
   overflow: auto;
   overscroll-behavior: contain;
-}
-
-:root.dark {
-  --color-text-primary: #eee;
-  --color-text-secondary: #bbb;
-  --color-accent: #60a5fa;
-
-  background: #111;
-  color: #eee;
-}
-
-:root.dark .modern-card {
-  background: linear-gradient(145deg, #1a1a1a, #111);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-}
-
-:root.dark .events-grid,
-:root.dark .modern-filters input,
-:root.dark .modern-filters select {
-  background: #1a1a1a !important;
-  color: #eee !important;
-  border-color: #444 !important;
 }
 
 .timeline-scroller::-webkit-scrollbar {
@@ -1149,18 +886,10 @@ body {
   border-radius: 4px;
 }
 
-:root.dark .timeline-scroller::-webkit-scrollbar-thumb {
-  background: #555;
-}
-
 /* Firefox */
 .timeline-scroller {
   scrollbar-width: thin;
   scrollbar-color: #888 transparent;
-}
-
-:root.dark .timeline-scroller {
-  scrollbar-color: #555 transparent;
 }
 
 .plot-tooltip {
@@ -1174,10 +903,5 @@ body {
   color: var(--text);
   box-shadow: 0 4px 12px rgba(0,0,0,.15);
 }
-:root.dark .plot-tooltip {
-  background: #1e1e1e !important;
-  color: #eaeaea !important;
-  border-color: #444 !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,.4);
-}
+
 </style>

@@ -1,24 +1,4 @@
 // components/detail-view.js
-document.head.appendChild(
-  Object.assign(document.createElement("link"), {
-    rel: "stylesheet",
-    href: "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/emoji.css"
-  })
-);
-
-const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
-
-function applyTheme() {
-  if (prefersDark.matches) {
-    document.documentElement.classList.add("dark");
-  } else {
-    document.documentElement.classList.remove("dark");
-  }
-}
-
-prefersDark.addEventListener("change", applyTheme);
-applyTheme();
-
 export function createDetailOpener(deps) {
   const {
     html, d3, Plot, resize,
@@ -27,6 +7,7 @@ export function createDetailOpener(deps) {
     gridSection, detailSection,
     startDate, endDate,
   } = deps;
+
   function updateEventUrl(selectedEvent) {
     const params = new URLSearchParams(window.location.search);
 
@@ -71,7 +52,7 @@ export function createDetailOpener(deps) {
       <span class="country-name">Events in ${name}</span>
       ${dateRangeLabel ? html`<span class="date-range">(${dateRangeLabel})</span>` : ""}
     </h2>`;
-     const detailHeader = html`<div class="detail-header">${heading}</div>`;
+    const detailHeader = html`<div class="detail-header">${heading}</div>`;
 
     detailSection.append(detailHeader);
     if (!countryEvents.length) {
@@ -85,8 +66,8 @@ export function createDetailOpener(deps) {
         `);
       }
       return;
-  }
-      const container = html`<div class="detail-grid">
+    }
+    const container = html`<div class="detail-grid">
       <div class="left-col">
         <div class="events-scroller"></div>
       </div>
@@ -113,42 +94,27 @@ export function createDetailOpener(deps) {
     const summaryTitle = html`<h3 class="summary-title">Event Summary</h3>`;
     const summaryBody = html`<div id="summary-body" class="summary-body">Select an event to see details.</div>`;
     summaryWrap.append(summaryTitle, summaryBody);
-    let bottomDesc = document.getElementById("bottom-desc");
-    if (!bottomDesc) {
-      bottomDesc = html`<div id="bottom-desc" class="bottom-desc hidden"></div>`;
-      summaryWrap.append(bottomDesc);
-    } else {
-      summaryWrap.append(bottomDesc);
-    }
-    
-    // initial sizes (will be recomputed immediately below)
+
+    // initial sizes
     let { widthNow: currentWidth, r, baseMinRow, nodeGap } = computeSizes();
-    // const r = window.matchMedia("(max-width: 768px)").matches ? 110 : 70;
     const margin = { top: 24, right: 10, bottom: 24, left: 20 };
-    const laneX = margin.left + r;
-    const width = graphWrap.clientWidth;
-    // const baseMinRow = 110;
-    // const nodeGap = 50;
-    // const extraLastGap = 0;
-    // let height = graphWrap.clientHeight;
+
+    let width = graphWrap.clientWidth;
+    let laneX = margin.left + r;
 
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
     const VISIBLE_ROWS = isMobile ? 2 : 5;
-    const viewHeight = VISIBLE_ROWS * 90;
-    // summaryWrap.style.height = `${viewHeight}px`;
+    
     summaryWrap.style.overflowY = "auto";
+    
     function computeSizes() {
       const widthNow = Math.max(280, graphWrap.clientWidth || width || 480);
-      // radius scales roughly with width; clamp so nodes don't become tiny/huge
-      // tweak multipliers to taste (0.07 gives good results for many layouts)
       const computedR = Math.round(Math.max(40, Math.min(140, widthNow * 0.15)));
-      // base minimum row, gaps scaled a bit with r
       const computedBaseMinRow = Math.max(80, Math.round(0.9 * computedR + 40));
       const computedNodeGap = Math.max(24, Math.round(computedR * 0.8));
       return { widthNow, r: computedR, baseMinRow: computedBaseMinRow, nodeGap: computedNodeGap };
     }
 
-    const extraLastGap = 0;
     let height = graphWrap.clientHeight || 600;
 
     const svg = d3.create("svg")
@@ -157,12 +123,6 @@ export function createDetailOpener(deps) {
       .style("width", "100%")
       .style("height", `${height}px`)
       .style("display", "block");
-
-    // svg.append("line")
-    //   .attr("class", "lane")
-    //   .attr("x1", laneX).attr("x2", laneX)
-    //   .attr("y1", margin.top).attr("y2", height - margin.bottom)
-    //   .attr("stroke", "#bbb").attr("stroke-width", 2);
 
     const g = svg.append("g");
 
@@ -173,10 +133,6 @@ export function createDetailOpener(deps) {
       .attr("transform", (d) => `translate(${laneX}, ${margin.top + r})`)
       .style("cursor", "pointer");
 
-    const colorScale = d3.scaleSequential(d3.interpolateReds)
-      .domain([0, 3]);
-
-    
     const impactColors = ["#f7f7f7", "#fddbc7", "#f4a582", "#d6604d"];
     function getContrastColor(color) {
       const rgb = d3.color(color);
@@ -185,18 +141,27 @@ export function createDetailOpener(deps) {
       return luminance < 140 ? "#fff" : "#000"; 
     }
     
-    node.append("circle").attr("r", r).attr("fill",  d => impactColors[d.impactQuartile ?? Math.floor(Math.random() * 4)]).attr("stroke", "#444").attr("stroke-width", 1.5);
-    //word impact
-    node.append("text").attr("text-anchor", "middle").attr("dy", "-0.25em").style("font-size", `${Math.round(r * 0.35)}px`).text((d) => d.code).attr("fill", d => {
-    const c = impactColors[d.impactQuartile ?? 0];
-    return getContrastColor(c);
-  });
-;
-    // impact score
-    node.append("text").attr("text-anchor", "middle").attr("dy", "1.2em").style("font-size", `${Math.round(r * 0.35)}px`).attr("fill", "#555").attr("font-weight", 700).text((d) => d.title).attr("fill", d => {
-    const c = impactColors[d.impactQuartile ?? 0];
-    return getContrastColor(c);
-  });
+    node.append("circle")
+      .attr("r", r)
+      .attr("fill", d => impactColors[d.impactQuartile ?? 0])
+      .attr("stroke", "#444")
+      .attr("stroke-width", 1.5);
+      
+    node.append("text")
+      .attr("text-anchor", "middle")
+      .attr("dy", "-0.25em")
+      .style("font-size", `${Math.round(r * 0.35)}px`)
+      .text((d) => d.code)
+      .attr("fill", d => getContrastColor(impactColors[d.impactQuartile ?? 0]));
+
+    // Impact Score
+    node.append("text")
+      .attr("text-anchor", "middle")
+      .attr("dy", "1.2em")
+      .style("font-size", `${Math.round(r * 0.35)}px`)
+      .attr("font-weight", 700)
+      .text((d) => d.title)
+      .attr("fill", d => getContrastColor(impactColors[d.impactQuartile ?? 0]));
 
     node.on("mouseenter", function () {
       const tile = d3.select(this).select(".event-tile");
@@ -239,7 +204,6 @@ export function createDetailOpener(deps) {
       updateEventUrl(d);
     });
     
-
     let labelDx = r + 12;
     let labelWidth = 0;
 
@@ -252,14 +216,11 @@ export function createDetailOpener(deps) {
       g.selectAll(".event-tile")
         .attr("width", labelDx + labelWidth + 24);
     }
-    function labelThemeColor() {
-      const isDark = document.documentElement.classList.contains("dark");
-      return isDark ? "#e5e5e5" : "#333";
-    }
     
     const label = node.append("g").attr("transform", `translate(${labelDx}, 0)`);
-    label.append("line").attr("x1", -8).attr("x2", 0).attr("y1", 0).attr("y2", 0).attr("stroke", labelThemeColor());
-    label.append("text").attr("font-weight", 500).attr("y", r * 0.1).attr("fill", labelThemeColor()).text((d) => `${d.dateLabel}`).style("font-size", `${Math.round(r * 0.35)}px`)
+    label.append("line").attr("x1", -8).attr("x2", 0).attr("y1", 0).attr("y2", 0).attr("stroke", "#333");
+    label.append("text").attr("font-weight", 500).attr("y", r * 0.1).attr("fill", "#333").text((d) => `${d.dateLabel}`).style("font-size", `${Math.round(r * 0.35)}px`)
+    
     const tile = node.insert("rect", ":first-child")
       .attr("class", "event-tile")
       .attr("x", -r - 12)
@@ -272,8 +233,6 @@ export function createDetailOpener(deps) {
       .attr("pointer-events", "all");
     const fo = node.append("foreignObject").attr("x", labelDx).attr("y", r*0.1).attr("width", d => d.tileWidth).attr("height", 10);
     const htmlBox = fo.append("xhtml:div").attr("class", "label-html");
-
-     
 
     function renderRight(selectedEvent = null) {
       const fmtYMD = d3.utcFormat("%Y.%m.%d");
@@ -298,7 +257,7 @@ export function createDetailOpener(deps) {
         });
       }
       if (!selectedEvent) {
-        const yMax = d3.max(series, (d) => d.rate);
+        const yMax = d3.max(seriesFiltered, (d) => d.rate);
         const chart = resize((width) =>
           Plot.plot({
             height: (margin.top + margin.bottom + baseMinRow) + PX_PADDING + mobileExtra + 9,
@@ -317,17 +276,12 @@ export function createDetailOpener(deps) {
       const x0 = new Date(s.getTime() - 60 * DAY);
       const x1 = new Date(e.getTime() + 1 * DAY);
       const slice = seriesFiltered.filter((d) => d.date >= x0 && d.date <= x1);
-      if (startDate || endDate) {
-        slice = slice.filter(d => {
-          return (!startDate || d.date >= startDate) && (!endDate || d.date <= endDate);
-        });
-      }
+      
       const series = slice.length ? slice : seriesFiltered;
 
       const yMin = d3.min(series, (d) => d.rate);
       const yMax = d3.max(series, (d) => d.rate);
-      const isDark = document.documentElement.classList.contains("dark");
-      const tooltipFill = isDark ? "black" : "white";
+      const tooltipFill = "white";
       const marks = [
         Plot.lineY(series, { x: "date", y: "rate", curve: "step", tip: {
         fill: tooltipFill, stroke: "black"}, title: d =>
@@ -359,8 +313,6 @@ export function createDetailOpener(deps) {
     scroller.style.overflowY = "auto";
     scroller.append(svg.node());
 
-    // detailSection.append(detailHeader, container);
-    
     function layoutNodes() {
       node.each(function (d) {
         const foEl = d3.select(this).select("foreignObject");
@@ -389,24 +341,17 @@ export function createDetailOpener(deps) {
       });
 
       const newBase = yCursor;
-      //  newBase +
       height = newBase + r * 0.6;
-      // const ripScrollHeight = newBase + r * 0.6;
       svg.attr("viewBox", `0 0 ${width} ${height}`);
-      svg.style("height", "auto");   // let browser size
+      svg.style("height", "auto");
       svg.style("max-height", "none");
-      // scroller.style.height = `${ripScrollHeight}px`;
-      // summaryWrap.style.height = `${ripScrollHeight}px`;
-      
 
       const dataWithY = node.data();
       const firstY = d3.min(dataWithY, (d) => d.__y) ?? (margin.top + r);
       const lastY = d3.max(dataWithY, (d) => d.__y) ?? (margin.top + r);
-
-      svg.select(".lane").attr("y1", firstY - r).attr("y2", lastY + r);
     }
+
     function doResizeLayout() {
-      // recompute base width and sizes
       currentWidth = graphWrap.clientWidth || currentWidth;
       const sizes = computeSizes();
       r = sizes.r;
@@ -414,21 +359,16 @@ export function createDetailOpener(deps) {
       nodeGap = sizes.nodeGap;
 
       width = graphWrap.clientWidth || width || 800;
+      laneX = margin.left + r;
+
       svg.attr("viewBox", `0 0 ${width} ${height}`);
 
-      // update pixel height to match new viewBox height (prevents CSS scaling)
-      // svg.style("height", `${height}px`);
-
-      // recompute labelDx with new r and apply
       labelDx = r + 12;
       label.attr("transform", `translate(${labelDx}, 0)`);
       fo.attr("x", labelDx);
 
-      // Update circle radii and adjust text sizes to match new r
       node.select("circle").attr("r", r);
-      // first text (code)
       node.selectAll("text").nodes().forEach((t, idx) => {
-        // idx 0 -> date/code text, idx 1 -> title text (order as appended)
         const sel = d3.select(t);
         if (idx % 2 === 0) {
           sel.style("font-size", `${Math.round(r * 0.45)}px`);
@@ -437,21 +377,18 @@ export function createDetailOpener(deps) {
         }
       });
 
-      // update foreignObject y because r changed (fo was created with r*0.1 initially)
       fo.attr("y", r * 0.1);
-
-      // recompute label width now that svg width changed
       computeLabelWidth();
 
       requestAnimationFrame(() => {
         layoutNodes();
-        // if labelWidth still small, try recompute once more (text measurement race)
         if (labelWidth <= 220) {
           computeLabelWidth();
           requestAnimationFrame(layoutNodes);
         }
       });
     }
+    
     computeLabelWidth();
     requestAnimationFrame(() => {
       layoutNodes();
@@ -462,16 +399,11 @@ export function createDetailOpener(deps) {
     });
 
     const onResize = () => {
-      // call the in-place resize/layout routine
       doResizeLayout();
-      // also update right and summary columns heights to match scroller to avoid float issues
       const baseH = scroller.clientHeight || scroller.scrollHeight;
-      // graphWrap.style.height = `${baseH}px`;
-      // summaryWrap.style.height = `${baseH}px`;
     };
 
-    // wire the resize handler (remove duplicate full render)
-    window.removeEventListener("resize", onResize); // safe no-op if not previously attached
+    window.removeEventListener("resize", onResize);
     window.addEventListener("resize", onResize, { passive: true });
   }
 
@@ -479,13 +411,31 @@ export function createDetailOpener(deps) {
     const fmtYMDdots = d3.utcFormat("%Y.%m.%d");
     const startDate = d3.min(timeseries, d => d.date);
     const endDate = d3.max(timeseries, d => d.date);
-    const countryEvents = events
-      .filter((d) => String(d.country).toUpperCase() === code)
+
+    const rawEvents = events.filter((d) => String(d.country).toUpperCase() === code);
+    const impacts = rawEvents
+      .map(d => Number(d.impact))
+      .filter(n => Number.isFinite(n))
+      .sort(d3.ascending);
+
+    const q1 = d3.quantile(impacts, 0.25) ?? 0;
+    const q2 = d3.quantile(impacts, 0.50) ?? 0;
+    const q3 = d3.quantile(impacts, 0.75) ?? 0;
+
+    const countryEvents = rawEvents
       .map((d) => {
         const nImpact = Number(d.impact);
         const start = d.startDate ? fmtYMDdots(new Date(d.startDate)) : null;
         const end = d.endDate ? fmtYMDdots(new Date(d.endDate)) : null;
         const dateLabel = start && end && start !== end ? `${start} - ${end}` : start || end || "—";
+
+        // Determine Quartile (0=Low, 1=Moderate, 2=High, 3=Severe)
+        let q = 0;
+        if (nImpact >= q3) q = 3;
+        else if (nImpact >= q2) q = 2;
+        else if (nImpact >= q1) q = 1;
+        else q = 0;
+
         return {
           date: new Date(d.peak || d.start),
           dateLabel,
@@ -499,7 +449,7 @@ export function createDetailOpener(deps) {
           : "—",
           who: d.reportedBy || "",
           impact: nImpact,
-          impactQuartile: Math.floor(Math.random() * 4),
+          impactQuartile: q,
           description: softBreakLongTokens(d.description || "unknown", 16),
           __matchKey: d.startDate ? String(d.startDate) : (d.peak ? String(d.peak) : dateLabel)
         };
@@ -513,7 +463,6 @@ export function createDetailOpener(deps) {
       .sort((a, b) => b.date - a.date || a.title.localeCompare(b.title));
 
     deps.seriesForSelectedCountry = fullseries; 
-    deps.seriesVisibleRange = timeseries;
     renderDetail(code, name, countryEvents, countryHasAnyEvents);
     gridSection.hidden = true;
     detailSection.hidden = false;
@@ -571,138 +520,19 @@ style.textContent = `
   --text-light: #555555;
   --border: #e5e5e5;
   --card-bg: #ffffff;
-  --plot-text: var(--text);        /* usually #222 */
-  --plot-line: var(--text);        /* lines follow theme text */
-  --plot-grid: var(--text-light);  /* subtle grid */
-  --plot-bg: transparent;
-}
-:root.dark {
-  --bg: #121212;
-  --bg-alt: #1c1c1c;
-  --text: #e6e6e6;
-  --text-light: #bbbbbb;
-  --border: #444444;
-  --card-bg: #1a1a1a;
-  --plot-text: var(--text);        /* usually #e6e6e6 */
+  --plot-text: var(--text);
   --plot-line: var(--text);
-  --plot-grid: var(--text-light);  /* usually #bbbbbb */
+  --plot-grid: var(--text-light);
   --plot-bg: transparent;
 }
 
-:root.dark body,
-:root.dark .detail-section {
-  background: var(--bg);
-  color: var(--text);
-}
-
-/* Column backgrounds + borders */
-:root.dark .left-col,
-:root.dark .center-col,
-:root.dark .right-col {
-  background: var(--card-bg);
-  border-color: var(--border);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-}
-
-/* Titles and labels */
-:root.dark .detail-title,
-:root.dark .right-title,
-:root.dark .summary-title {
-  color: var(--text);
-}
-
-:root.dark .summary-body,
-:root.dark .summary-body strong,
-:root.dark .detail-title .date-range,
-:root.dark .detail-title .country-name {
-  color: var(--text-light);
-}
-
-/* Bottom description */
-:root.dark #bottom-desc {
-  color: var(--text-light);
-}
-
-/* SCROLLERS */
-:root.dark .events-scroller,
-:root.dark .graph-wrap,
-:root.dark .summary-wrap {
-  background: var(--card-bg);
-  color: var(--text);
-}
-
-/* ================================
-   DARK MODE FOR D3 SVG (left graph)
-   ================================ */
-:root.dark .graph-wrap svg,
-:root.dark .events-scroller svg {
-  background: transparent !important;
-  color: var(--text) !important;
-}
-
-/* Lane line */
-:root.dark .lane {
-  stroke: var(--text-light) !important;
-}
-
-/* Event tiles */
-:root.dark .node .event-tile {
-  stroke: var(--border) !important;
-}
-
-
-/* Node circle outline */
-:root.dark .node circle {
-  stroke: var(--border) !important;
-}
-
-/* ================================
-   DARK MODE FOR PLOT (right graph)
-   ================================ */
-:root.dark .plot text {
-  fill: var(--text) !important;
-}
-
-:root.dark .plot .tick text {
-  fill: var(--text-light) !important;
-}
-
-:root.dark .plot .axis line,
-:root.dark .plot .axis path {
-  stroke: var(--text-light) !important;
-}
-
-:root.dark .plot .grid line {
-  stroke: var(--text-light) !important;
-  stroke-opacity: 0.25 !important;
-}
-
-:root.dark .plot line,
-:root.dark .plot path {
-  stroke: var(--plot-line) !important;
-}
-
-/* Tooltip */
-:root.dark .plot-tip {
-  background: var(--card-bg) !important;
-  color: var(--text) !important;
-  border-color: var(--border) !important;
-}
-
-/* ================================
-   DARK MODE FOR INLINE HTML LABELS
-   ================================ */
-:root.dark .label-html {
-  color: var(--text) !important;
-}
 .detail-section {
-  height: calc(100vh - 120px); /* subtract header size */
+  height: calc(100vh - 120px);
   display: flex;
   flex-direction: column;
   min-height: 0;
 }
 
-/* Layout */
 .detail-grid {
   gap: 1.5rem;
   min-height: 0;
@@ -711,7 +541,7 @@ style.textContent = `
   color: var(--color-text-primary);
   flex: 1 1 auto;
   display: flex;
-  align-items: stretch;   /* <-- equal heights */
+  align-items: stretch;
   min-height: 0;
 }
 
@@ -726,21 +556,20 @@ style.textContent = `
   align-self: stretch;
   flex-direction: column;
   flex: 1 1 0;
-  min-height: 0;      /* <-- REQUIRED */
+  min-height: 0;
   min-width: 0; 
   
   justify-content: flex-start;
 }
 
 .left-col {
-  padding: 0;   /* no width loss */
+  padding: 0;
 }
 
 .events-scroller {
-  padding: 1rem 0rem; /* add internal spacing */
+  padding: 1rem 0rem;
 }
 
-/* Column preferred widths but flexible */
 .left-col { flex: 0 0 clamp(160px, 18%, 260px); }
 .center-col { flex: 1 1 0%; }
 .right-col { flex: 0 0 clamp(160px, 20%, 320px); max-width: 360px; }
@@ -757,7 +586,6 @@ style.textContent = `
   min-height: 0;
 }
 
-/* === Title === */
 .detail-title {
   display: inline-flex;
   align-items: center;
@@ -821,10 +649,9 @@ style.textContent = `
   overflow: hidden;
 }
 
-/* keep svg responsive */
 .graph-wrap svg {
   width: 100%;
-  height: auto;     /* key */
+  height: auto;
   max-height: none;
   display: block;
   overflow: visible;
@@ -842,7 +669,6 @@ style.textContent = `
   fill: var(--color-text-secondary);
 }
 
-/* === Summary === */
 .summary-body {
   font-size: 0.95rem;
   line-height: 1.55;
@@ -870,12 +696,9 @@ style.textContent = `
   font-style: italic;
 }
 
-
-
-/* === Event Nodes === */
 .node text {
   font-family: var(--font-sans);
-  font-weight: 500; /* was 700 — now subtler */
+  font-weight: 500;
   letter-spacing: -0.01em;
 }
 
@@ -910,10 +733,6 @@ style.textContent = `
   border-radius: 4px;
 }
 
-:root.dark .timeline-scroller::-webkit-scrollbar-thumb {
-  background: #555;
-}
-
 .events-scroller::-webkit-scrollbar {
   width: 4px;
 }
@@ -944,11 +763,6 @@ style.textContent = `
   scrollbar-color: #888 transparent;
 }
 
-:root.dark .timeline-scroller {
-  scrollbar-color: #555 transparent;
-}
-
-/* === Responsive === */
 @media (max-width: 900px) {
   .detail-grid {
     flex-direction: column;

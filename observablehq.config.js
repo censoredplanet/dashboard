@@ -6,15 +6,15 @@ export default {
   // The pages and sections in the sidebar. If you don’t specify this option,
   // all pages will be listed in alphabetical order. Listing pages explicitly
   // lets you organize them into sections and have unlisted pages.
-  // pages: [
-  //   {
-  //     name: "Examples",
-  //     pages: [
-  //       {name: "Dashboard", path: "/example-dashboard"},
-  //       {name: "Report", path: "/example-report"}
-  //     ]
-  //   }
-  // ],
+  pages: [
+    {
+      name: "Dashboard",
+      pages: [
+        {name: "Observatory", path: "/observatory"},
+        {name: "CenAlert", path: "/cenalert"},
+      ]
+    }
+  ],
 
   // Content to add to the head of the page, e.g. for a favicon:
   // head: '<link rel="icon" href="observable.png" type="image/png" sizes="32x32">',
@@ -23,11 +23,11 @@ export default {
   // The path to the source root.
   root: "src",
 
-  footer: "Censored Planet 2025", // what to show in the footer (HTML)
+  footer: "Censored Planet 2026", // what to show in the footer (HTML)
   sidebar: false, // whether to show the sidebar
   toc: false, // whether to show the table of contents
   pager: false, // whether to show previous & next links in the footer
-  theme: "light",
+  theme: ["light", "alt"],
 
   // Some additional configuration options and their defaults:
   // theme: "default", // try "light", "dark", "slate", etc.
