@@ -419,7 +419,7 @@ export function createDetailOpener(deps) {
           }),
         );
 
-      const chart = resize(() =>
+      const chart = resize((_width) =>
         Plot.plot({
           height:
             margin.top +
