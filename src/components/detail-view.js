@@ -1,56 +1,73 @@
-import { DownloadLinks } from "./data-download.js";
+import { downloadLinks } from './data-download.js';
 
 export function createDetailOpener(deps) {
   const {
-    html, d3, Plot, resize,
-    DAY, PX_PADDING,
-    events, formatImpact, softBreakLongTokens,
-    detailSection, startDate, endDate,
+    html,
+    d3,
+    Plot,
+    resize,
+    DAY,
+    PX_PADDING,
+    events,
+    formatImpact,
+    softBreakLongTokens,
+    detailSection,
+    startDate,
+    endDate,
   } = deps;
 
   function updateEventUrl(selectedEvent) {
     const params = new URLSearchParams(window.location.search);
 
     if (!selectedEvent) {
-      if (params.has("event")) {
-        params.delete("event");
-        const newUrl = params.toString() ? `${window.location.pathname}?${params.toString()}` : window.location.pathname;
-        window.history.replaceState({}, "", newUrl);
+      if (params.has('event')) {
+        params.delete('event');
+        const newUrl = params.toString()
+          ? `${window.location.pathname}?${params.toString()}`
+          : window.location.pathname;
+        window.history.replaceState({}, '', newUrl);
       }
       return;
     }
 
-    params.set("event", selectedEvent.__matchKey || selectedEvent.dateLabel || "");
+    params.set(
+      'event',
+      selectedEvent.__matchKey || selectedEvent.dateLabel || '',
+    );
     const newUrl = `${window.location.pathname}?${params.toString()}`;
-    window.history.replaceState({}, "", newUrl);
+    window.history.replaceState({}, '', newUrl);
   }
 
   function renderDetail(code, name, countryEvents, countryHasAnyEvents) {
     function twemojiFlagCode(code) {
       return [...code.toUpperCase()]
-        .map(c => (c.codePointAt(0) - 0x41 + 0x1F1E6).toString(16))
-        .join("-");
+        .map((c) => (c.codePointAt(0) - 0x41 + 0x1f1e6).toString(16))
+        .join('-');
     }
 
     const flag = html`
       <img
-        src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${twemojiFlagCode(code)}.svg"
+        src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${twemojiFlagCode(
+          code,
+        )}.svg"
         style="width: 1.6rem; height: 1.6rem; vertical-align: middle;"
       />
     `;
 
-    const rangeStart = d3.min(countryEvents, d => d.date);
-    const rangeEnd = d3.max(countryEvents, d => d.date);
-    detailSection.innerHTML = "";
-    const fmtYMDdots = d3.utcFormat("%Y.%m.%d");
+    const rangeStart = d3.min(countryEvents, (d) => d.date);
+    const rangeEnd = d3.max(countryEvents, (d) => d.date);
+    detailSection.innerHTML = '';
+    const fmtYMDdots = d3.utcFormat('%Y.%m.%d');
     const dateRangeLabel =
       rangeStart && rangeEnd
         ? `${fmtYMDdots(rangeStart)} - ${fmtYMDdots(rangeEnd)}`
-        : "";
+        : '';
     const heading = html`<h2 class="detail-title">
       <span class="flag">${flag}</span>
       <span class="country-name">Events in ${name}</span>
-      ${dateRangeLabel ? html`<span class="date-range">(${dateRangeLabel})</span>` : ""}
+      ${dateRangeLabel
+        ? html`<span class="date-range">(${dateRangeLabel})</span>`
+        : ''}
     </h2>`;
     const detailHeader = html`<div class="detail-header">${heading}</div>`;
 
@@ -61,7 +78,8 @@ export function createDetailOpener(deps) {
       } else {
         detailSection.append(html`
           <div class="empty">
-            No events within the selected time range. Try expanding the date range or changing filters.
+            No events within the selected time range. Try expanding the date
+            range or changing filters.
           </div>
         `);
       }
@@ -81,9 +99,9 @@ export function createDetailOpener(deps) {
 
     detailSection.append(container);
 
-    const scroller = container.querySelector(".events-scroller");
-    const graphWrap = container.querySelector(".graph-wrap");
-    const summaryWrap = container.querySelector(".summary-wrap");
+    const scroller = container.querySelector('.events-scroller');
+    const graphWrap = container.querySelector('.graph-wrap');
+    const summaryWrap = container.querySelector('.summary-wrap');
 
     // Graph (center column)
     const rightTitle = html`<h3 class="right-title">Rate over time</h3>`;
@@ -92,27 +110,29 @@ export function createDetailOpener(deps) {
 
     // Summary (right column)
     const summaryTitle = html`<h3 class="summary-title">Event Summary</h3>`;
-    const summaryBody = html`<div id="summary-body" class="summary-body">Select an event to see details.</div>`;
+    const summaryBody = html`<div id="summary-body" class="summary-body">
+      Select an event to see details.
+    </div>`;
 
-    const cleanEvents = countryEvents.map(d => ({
+    const cleanEvents = countryEvents.map((d) => ({
       country: name,
       startDate: d.startDate,
       endDate: d.endDate,
       who: d.who,
       description: d.description,
-      impact: d.title
+      impact: d.title,
     }));
 
-    const footer = DownloadLinks(
-      cleanEvents, 
-      "cenalert", 
-      "events-list", 
-      name, 
-      rangeStart, 
-      rangeEnd
+    const footer = downloadLinks(
+      cleanEvents,
+      'cenalert',
+      'events-list',
+      name,
+      rangeStart,
+      rangeEnd,
     );
 
-    footer.style.marginTop = "1rem";
+    footer.style.marginTop = '1rem';
 
     summaryWrap.append(summaryTitle, summaryBody, footer);
 
@@ -123,108 +143,138 @@ export function createDetailOpener(deps) {
     let width = graphWrap.clientWidth;
     let laneX = margin.left + r;
 
-    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
     const VISIBLE_ROWS = isMobile ? 2 : 5;
-    
-    summaryWrap.style.overflowY = "auto";
-    
+
+    summaryWrap.style.overflowY = 'auto';
+
     function computeSizes() {
       const widthNow = Math.max(280, graphWrap.clientWidth || width || 480);
-      const computedR = Math.round(Math.max(40, Math.min(140, widthNow * 0.15)));
+      const computedR = Math.round(
+        Math.max(40, Math.min(140, widthNow * 0.15)),
+      );
       const computedBaseMinRow = Math.max(80, Math.round(0.9 * computedR + 40));
       const computedNodeGap = Math.max(24, Math.round(computedR * 0.8));
-      return { widthNow, r: computedR, baseMinRow: computedBaseMinRow, nodeGap: computedNodeGap };
+      return {
+        widthNow,
+        r: computedR,
+        baseMinRow: computedBaseMinRow,
+        nodeGap: computedNodeGap,
+      };
     }
 
     let height = graphWrap.clientHeight || 600;
 
-    const svg = d3.create("svg")
-      .attr("viewBox", `0 0 ${width} ${height}`)
-      .attr("preserveAspectRatio", "xMinYMin meet")
-      .style("width", "100%")
-      .style("height", `${height}px`)
-      .style("display", "block");
+    const svg = d3
+      .create('svg')
+      .attr('viewBox', `0 0 ${width} ${height}`)
+      .attr('preserveAspectRatio', 'xMinYMin meet')
+      .style('width', '100%')
+      .style('height', `${height}px`)
+      .style('display', 'block');
 
-    const g = svg.append("g");
+    const g = svg.append('g');
 
-    const node = g.selectAll(".node")
+    const node = g
+      .selectAll('.node')
       .data(countryEvents.map((d, i) => ({ ...d, i })))
-      .join("g")
-      .attr("class", "node")
-      .attr("transform", (d) => `translate(${laneX}, ${margin.top + r})`)
-      .style("cursor", "pointer");
+      .join('g')
+      .attr('class', 'node')
+      .attr('transform', () => `translate(${laneX}, ${margin.top + r})`)
+      .style('cursor', 'pointer');
 
-    const impactColors = ["#f7f7f7", "#fddbc7", "#f4a582", "#d6604d"];
+    const impactColors = ['#f7f7f7', '#fddbc7', '#f4a582', '#d6604d'];
     function getContrastColor(color) {
       const rgb = d3.color(color);
-      if (!rgb) return "#000";
+      if (!rgb) return '#000';
       const luminance = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
-      return luminance < 140 ? "#fff" : "#000"; 
+      return luminance < 140 ? '#fff' : '#000';
     }
-    
-    node.append("circle")
-      .attr("r", r)
-      .attr("fill", d => impactColors[d.impactQuartile ?? 0])
-      .attr("stroke", "#444")
-      .attr("stroke-width", 1.5);
-      
-    node.append("text")
-      .attr("text-anchor", "middle")
-      .attr("dy", "-0.25em")
-      .style("font-size", `${Math.round(r * 0.35)}px`)
+
+    node
+      .append('circle')
+      .attr('r', r)
+      .attr('fill', (d) => impactColors[d.impactQuartile ?? 0])
+      .attr('stroke', '#444')
+      .attr('stroke-width', 1.5);
+
+    node
+      .append('text')
+      .attr('text-anchor', 'middle')
+      .attr('dy', '-0.25em')
+      .style('font-size', `${Math.round(r * 0.35)}px`)
       .text((d) => d.code)
-      .attr("fill", d => getContrastColor(impactColors[d.impactQuartile ?? 0]));
+      .attr('fill', (d) =>
+        getContrastColor(impactColors[d.impactQuartile ?? 0]),
+      );
 
     // Impact Score
-    node.append("text")
-      .attr("text-anchor", "middle")
-      .attr("dy", "1.2em")
-      .style("font-size", `${Math.round(r * 0.35)}px`)
-      .attr("font-weight", 700)
+    node
+      .append('text')
+      .attr('text-anchor', 'middle')
+      .attr('dy', '1.2em')
+      .style('font-size', `${Math.round(r * 0.35)}px`)
+      .attr('font-weight', 700)
       .text((d) => d.title)
-      .attr("fill", d => getContrastColor(impactColors[d.impactQuartile ?? 0]));
+      .attr('fill', (d) =>
+        getContrastColor(impactColors[d.impactQuartile ?? 0]),
+      );
 
-    node.on("mouseenter", function () {
-      const tile = d3.select(this).select(".event-tile");
-      tile.transition()
+    node
+      .on('mouseenter', function () {
+        const tile = d3.select(this).select('.event-tile');
+        tile
+          .transition()
           .duration(120)
-          .attr("stroke", "rgba(30,144,255,0.4)")
-          .attr("fill", "rgba(30,144,255,0.05)");
-    })
-    .on("mouseleave", function () {
-      const self = d3.select(this);
-      const tile = self.select(".event-tile");
-      if (!self.classed("active")) {
-        tile.transition()
+          .attr('stroke', 'rgba(30,144,255,0.4)')
+          .attr('fill', 'rgba(30,144,255,0.05)');
+      })
+      .on('mouseleave', function () {
+        const self = d3.select(this);
+        const tile = self.select('.event-tile');
+        if (!self.classed('active')) {
+          tile
+            .transition()
             .duration(120)
-            .attr("stroke", "transparent")
-            .attr("fill", "transparent");
-      }
-    })
-    .on("click", function (event, d) {
-      const self = d3.select(this);
-      const isActive = self.classed("active");
-      g.selectAll(".node").classed("active", false).select("circle").attr("stroke", "#444").attr("stroke-width", 1.5);
-      if (!isActive) {
-        self.classed("active", true).select("circle").attr("stroke", "#1e90ff").attr("stroke-width", 2.5);
-        self.select(".event-tile").attr("stroke", "#1e90ff").attr("fill", "#1e90ff");
-      }
-      renderRight(d);
-      const summaryBody = document.getElementById("summary-body");
-      if (summaryBody) {
-        const impactLabels = ["Low", "Moderate", "High", "Severe"];
-        const impactLevel = impactLabels[d.impactQuartile ?? 0];
-        const impactScore = d.title || "—";
-        summaryBody.innerHTML = `
+            .attr('stroke', 'transparent')
+            .attr('fill', 'transparent');
+        }
+      })
+      .on('click', function (event, d) {
+        const self = d3.select(this);
+        const isActive = self.classed('active');
+        g.selectAll('.node')
+          .classed('active', false)
+          .select('circle')
+          .attr('stroke', '#444')
+          .attr('stroke-width', 1.5);
+        if (!isActive) {
+          self
+            .classed('active', true)
+            .select('circle')
+            .attr('stroke', '#1e90ff')
+            .attr('stroke-width', 2.5);
+          self
+            .select('.event-tile')
+            .attr('stroke', '#1e90ff')
+            .attr('fill', '#1e90ff');
+        }
+        renderRight(d);
+        const summaryBody = document.getElementById('summary-body');
+        if (summaryBody) {
+          const impactLabels = ['Low', 'Moderate', 'High', 'Severe'];
+          const impactLevel = impactLabels[d.impactQuartile ?? 0];
+          const impactScore = d.title || '—';
+          summaryBody.innerHTML = `
           <div style="margin-bottom: .4rem;"><strong>Date: </strong>${d.dateLabel}</div>
           <div style="margin-bottom: .4rem;"><strong>Impact score:</strong> ${impactScore}</div>
           <div style="margin-bottom: .4rem;"><strong>Level:</strong> ${impactLevel}</div>
-          <div><strong>Context:</strong> ${(d.description && d.description.length > 0) ? d.description : "No additional explanation."}</div>
+          <div><strong>Context:</strong> ${d.description && d.description.length > 0 ? d.description : 'No additional explanation.'}</div>
         `;
-      }
-      updateEventUrl(d);
-    });
-    
+        }
+        updateEventUrl(d);
+      });
+
     let labelDx = r + 12;
     let labelWidth = 0;
 
@@ -233,25 +283,47 @@ export function createDetailOpener(deps) {
       const rectW = el.getBoundingClientRect().width;
       const svgPx = rectW || el.clientWidth || width;
       labelWidth = Math.max(380, svgPx - (laneX + labelDx) - margin.right);
-      g.selectAll("foreignObject").attr("width", labelWidth);
-      g.selectAll(".event-tile")
-        .attr("width", labelDx + labelWidth + 24);
+      g.selectAll('foreignObject').attr('width', labelWidth);
+      g.selectAll('.event-tile').attr('width', labelDx + labelWidth + 24);
     }
-    
-    const label = node.append("g").attr("transform", `translate(${labelDx}, 0)`);
-    label.append("line").attr("x1", -8).attr("x2", 0).attr("y1", 0).attr("y2", 0).attr("stroke", "#333");
-    label.append("text").attr("font-weight", 500).attr("y", r * 0.1).attr("fill", "#333").text((d) => `${d.dateLabel}`).style("font-size", `${Math.round(r * 0.35)}px`)
-    
-    const fo = node.append("foreignObject").attr("x", labelDx).attr("y", r*0.1).attr("width", d => d.tileWidth).attr("height", 10);
+
+    const label = node
+      .append('g')
+      .attr('transform', `translate(${labelDx}, 0)`);
+    label
+      .append('line')
+      .attr('x1', -8)
+      .attr('x2', 0)
+      .attr('y1', 0)
+      .attr('y2', 0)
+      .attr('stroke', '#333');
+    label
+      .append('text')
+      .attr('font-weight', 500)
+      .attr('y', r * 0.1)
+      .attr('fill', '#333')
+      .text((d) => `${d.dateLabel}`)
+      .style('font-size', `${Math.round(r * 0.35)}px`);
+
+    const fo = node
+      .append('foreignObject')
+      .attr('x', labelDx)
+      .attr('y', r * 0.1)
+      .attr('width', (d) => d.tileWidth)
+      .attr('height', 10);
 
     function renderRight(selectedEvent = null) {
-      const fmtYMD = d3.utcFormat("%Y.%m.%d");
-      const titleEl = graphWrap.querySelector(".right-title");
-      const bodyEl = graphWrap.querySelector(".right-body");
-      const mobileExtra = window.matchMedia("(max-width: 768px)").matches ? 380 : 0;
+      const fmtYMD = d3.utcFormat('%Y.%m.%d');
+      const titleEl = graphWrap.querySelector('.right-title');
+      const bodyEl = graphWrap.querySelector('.right-body');
+      const mobileExtra = window.matchMedia('(max-width: 768px)').matches
+        ? 380
+        : 0;
 
-      titleEl.textContent = selectedEvent ? selectedEvent.dateLabel : "Rate over time";
-      bodyEl.innerHTML = "";
+      titleEl.textContent = selectedEvent
+        ? selectedEvent.dateLabel
+        : 'Rate over time';
+      bodyEl.innerHTML = '';
 
       const seriesnew = deps.seriesForSelectedCountry;
 
@@ -261,102 +333,150 @@ export function createDetailOpener(deps) {
       }
       let seriesFiltered = seriesnew;
       if (startDate || endDate) {
-        seriesFiltered = seriesnew.filter(d => {
+        seriesFiltered = seriesnew.filter((d) => {
           if (!d.date) return false;
-          return (!startDate || d.date >= startDate) && (!endDate || d.date <= endDate);
+          return (
+            (!startDate || d.date >= startDate) &&
+            (!endDate || d.date <= endDate)
+          );
         });
       }
       if (!selectedEvent) {
         const yMax = d3.max(seriesFiltered, (d) => d.rate);
-        const chart = resize((width) =>
+        const chart = resize(() =>
           Plot.plot({
-            height: (margin.top + margin.bottom + baseMinRow) + PX_PADDING + mobileExtra + 9,
-            y: { grid: true, label: "" , domain: [0, yMax] },
-            marks: [Plot.lineY(seriesFiltered, { x: "date", y: "rate", curve: "step", tip: true, title: d =>
-    `Date: ${fmtYMD(d.date)}\n` +
-    `Value: ${d.rate != null ? d.rate.toFixed(2) : "N/A"}` })],
-          })
+            height:
+              margin.top +
+              margin.bottom +
+              baseMinRow +
+              PX_PADDING +
+              mobileExtra +
+              9,
+            y: { grid: true, label: '', domain: [0, yMax] },
+            marks: [
+              Plot.lineY(seriesFiltered, {
+                x: 'date',
+                y: 'rate',
+                curve: 'step',
+                tip: true,
+                title: (d) =>
+                  `Date: ${fmtYMD(d.date)}\n` +
+                  `Value: ${d.rate != null ? d.rate.toFixed(2) : 'N/A'}`,
+              }),
+            ],
+          }),
         );
         bodyEl.append(chart);
         return;
       }
 
       const s = selectedEvent.startDate || selectedEvent.date;
-      const e = selectedEvent.endDate || selectedEvent.startDate || selectedEvent.date;
+      const e =
+        selectedEvent.endDate || selectedEvent.startDate || selectedEvent.date;
       const x0 = new Date(s.getTime() - 60 * DAY);
       const x1 = new Date(e.getTime() + 1 * DAY);
       const slice = seriesFiltered.filter((d) => d.date >= x0 && d.date <= x1);
-      
+
       const series = slice.length ? slice : seriesFiltered;
 
       const yMin = d3.min(series, (d) => d.rate);
       const yMax = d3.max(series, (d) => d.rate);
-      const tooltipFill = "white";
+      const tooltipFill = 'white';
       const marks = [
-        Plot.lineY(series, { x: "date", y: "rate", curve: "step", tip: {
-        fill: tooltipFill, stroke: "black"}, title: d =>
-    `Date: ${fmtYMD(d.date)}\n` +
-    `Value: ${d.rate != null ? d.rate.toFixed(2) : "N/A"}` }),
-        Plot.rectY([{ s, e }], {
-          x1: (d) => d.s, x2: (d) => d.e, y1: yMin, y2: yMax,
-          fill: "#ef4444", fillOpacity: 0.15,
-          title: `${selectedEvent.dateLabel}\n${selectedEvent.who || ""}\n${selectedEvent.description || ""}`,
+        Plot.lineY(series, {
+          x: 'date',
+          y: 'rate',
+          curve: 'step',
+          tip: {
+            fill: tooltipFill,
+            stroke: 'black',
+          },
+          title: (d) =>
+            `Date: ${fmtYMD(d.date)}\n` +
+            `Value: ${d.rate != null ? d.rate.toFixed(2) : 'N/A'}`,
         }),
-        Plot.ruleX([s], { stroke: "#ef4444", strokeOpacity: 0.9, strokeWidth: 2 }),
+        Plot.rectY([{ s, e }], {
+          x1: (d) => d.s,
+          x2: (d) => d.e,
+          y1: yMin,
+          y2: yMax,
+          fill: '#ef4444',
+          fillOpacity: 0.15,
+          title: `${selectedEvent.dateLabel}\n${selectedEvent.who || ''}\n${selectedEvent.description || ''}`,
+        }),
+        Plot.ruleX([s], {
+          stroke: '#ef4444',
+          strokeOpacity: 0.9,
+          strokeWidth: 2,
+        }),
       ];
-      if (+e !== +s) marks.push(Plot.ruleX([e], { stroke: "#ef4444", strokeOpacity: 0.9, strokeWidth: 2 }));
+      if (+e !== +s)
+        marks.push(
+          Plot.ruleX([e], {
+            stroke: '#ef4444',
+            strokeOpacity: 0.9,
+            strokeWidth: 2,
+          }),
+        );
 
-      const chart = resize((width) =>
+      const chart = resize(() =>
         Plot.plot({
-          height: (margin.top + margin.bottom + VISIBLE_ROWS * 90) + PX_PADDING + mobileExtra,
-          y: { grid: true, label: "", domain: [0, yMax] },
+          height:
+            margin.top +
+            margin.bottom +
+            VISIBLE_ROWS * 90 +
+            PX_PADDING +
+            mobileExtra,
+          y: { grid: true, label: '', domain: [0, yMax] },
           x: { domain: [x0, x1], nice: false },
           marks,
-        })
+        }),
       );
 
-      const meta = html`<div class="event-meta" style="margin-top:.5rem;"></div>`;
+      const meta = html`<div
+        class="event-meta"
+        style="margin-top:.5rem;"
+      ></div>`;
       bodyEl.append(chart, meta);
     }
 
     renderRight(countryEvents.length ? countryEvents[0] : null);
-    scroller.style.overflowY = "auto";
+    scroller.style.overflowY = 'auto';
     scroller.append(svg.node());
 
     function layoutNodes() {
       node.each(function (d) {
-        const foEl = d3.select(this).select("foreignObject");
-        const div = d3.select(this).select(".label-html").node();
+        const foEl = d3.select(this).select('foreignObject');
+        const div = d3.select(this).select('.label-html').node();
         const labelH = Math.ceil(div?.scrollHeight || 0);
         const rowH = Math.max(baseMinRow, labelH + 50);
         d.__rowH = rowH;
-        foEl.attr("height", rowH);
+        foEl.attr('height', rowH);
       });
 
       let yCursor = r * 0.6 + 40;
       node.each(function (d) {
         d.__y = yCursor;
-        d3.select(this).attr("transform", `translate(${laneX}, ${d.__y})`);
+        d3.select(this).attr('transform', `translate(${laneX}, ${d.__y})`);
         const halfGap = nodeGap / 2;
         const tileTop = -r - halfGap / 4;
 
         const tileHeight = 2 * r + halfGap / 2 - 4;
 
-        d3.select(this).select(".event-tile")
-          .attr("x", -r - 30)
-          .attr("y", tileTop + 2)
-          .attr("width", labelDx + 1.5 * labelWidth)
-          .attr("height", tileHeight);
+        d3.select(this)
+          .select('.event-tile')
+          .attr('x', -r - 30)
+          .attr('y', tileTop + 2)
+          .attr('width', labelDx + 1.5 * labelWidth)
+          .attr('height', tileHeight);
         yCursor += d.__rowH + nodeGap;
       });
 
       const newBase = yCursor;
       height = newBase + r * 0.6;
-      svg.attr("viewBox", `0 0 ${width} ${height}`);
-      svg.style("height", "auto");
-      svg.style("max-height", "none");
-
-      const dataWithY = node.data();
+      svg.attr('viewBox', `0 0 ${width} ${height}`);
+      svg.style('height', 'auto');
+      svg.style('max-height', 'none');
     }
 
     function doResizeLayout() {
@@ -369,23 +489,26 @@ export function createDetailOpener(deps) {
       width = graphWrap.clientWidth || width || 800;
       laneX = margin.left + r;
 
-      svg.attr("viewBox", `0 0 ${width} ${height}`);
+      svg.attr('viewBox', `0 0 ${width} ${height}`);
 
       labelDx = r + 12;
-      label.attr("transform", `translate(${labelDx}, 0)`);
-      fo.attr("x", labelDx);
+      label.attr('transform', `translate(${labelDx}, 0)`);
+      fo.attr('x', labelDx);
 
-      node.select("circle").attr("r", r);
-      node.selectAll("text").nodes().forEach((t, idx) => {
-        const sel = d3.select(t);
-        if (idx % 2 === 0) {
-          sel.style("font-size", `${Math.round(r * 0.45)}px`);
-        } else {
-          sel.style("font-size", `${Math.round(r * 0.36)}px`);
-        }
-      });
+      node.select('circle').attr('r', r);
+      node
+        .selectAll('text')
+        .nodes()
+        .forEach((t, idx) => {
+          const sel = d3.select(t);
+          if (idx % 2 === 0) {
+            sel.style('font-size', `${Math.round(r * 0.45)}px`);
+          } else {
+            sel.style('font-size', `${Math.round(r * 0.36)}px`);
+          }
+        });
 
-      fo.attr("y", r * 0.1);
+      fo.attr('y', r * 0.1);
       computeLabelWidth();
 
       requestAnimationFrame(() => {
@@ -396,7 +519,7 @@ export function createDetailOpener(deps) {
         }
       });
     }
-    
+
     computeLabelWidth();
     requestAnimationFrame(() => {
       layoutNodes();
@@ -410,23 +533,32 @@ export function createDetailOpener(deps) {
       doResizeLayout();
     };
 
-    window.removeEventListener("resize", onResize);
-    window.addEventListener("resize", onResize, { passive: true });
+    window.removeEventListener('resize', onResize);
+    window.addEventListener('resize', onResize, { passive: true });
   }
 
-  function openDetail(code, name, fullseries, timeseries, countryHasAnyEvents, selectedEventKey) {
-    const fmtYMDdots = d3.utcFormat("%Y.%m.%d");
-    const startDate = d3.min(timeseries, d => d.date);
-    const endDate = d3.max(timeseries, d => d.date);
+  function openDetail(
+    code,
+    name,
+    fullseries,
+    timeseries,
+    countryHasAnyEvents,
+    selectedEventKey,
+  ) {
+    const fmtYMDdots = d3.utcFormat('%Y.%m.%d');
+    const startDate = d3.min(timeseries, (d) => d.date);
+    const endDate = d3.max(timeseries, (d) => d.date);
 
-    const rawEvents = events.filter((d) => String(d.country).toUpperCase() === code);
+    const rawEvents = events.filter(
+      (d) => String(d.country).toUpperCase() === code,
+    );
     const impacts = rawEvents
-      .map(d => Number(d.impact))
-      .filter(n => Number.isFinite(n))
+      .map((d) => Number(d.impact))
+      .filter((n) => Number.isFinite(n))
       .sort(d3.ascending);
 
     const q1 = d3.quantile(impacts, 0.25) ?? 0;
-    const q2 = d3.quantile(impacts, 0.50) ?? 0;
+    const q2 = d3.quantile(impacts, 0.5) ?? 0;
     const q3 = d3.quantile(impacts, 0.75) ?? 0;
 
     const countryEvents = rawEvents
@@ -434,7 +566,10 @@ export function createDetailOpener(deps) {
         const nImpact = Number(d.impact);
         const start = d.startDate ? fmtYMDdots(new Date(d.startDate)) : null;
         const end = d.endDate ? fmtYMDdots(new Date(d.endDate)) : null;
-        const dateLabel = start && end && start !== end ? `${start} - ${end}` : start || end || "—";
+        const dateLabel =
+          start && end && start !== end
+            ? `${start} - ${end}`
+            : start || end || '—';
 
         // Determine Quartile (0=Low, 1=Moderate, 2=High, 3=Severe)
         let q = 0;
@@ -450,15 +585,19 @@ export function createDetailOpener(deps) {
           endISO: d.endDate || null,
           startDate: d.startDate ? new Date(d.startDate) : null,
           endDate: d.endDate ? new Date(d.endDate) : null,
-          code: "Impact",
+          code: 'Impact',
           title: Number.isFinite(nImpact)
-          ? formatImpact(nImpact).replace(/,/g, ".")
-          : "—",
-          who: d.reportedBy || "",
+            ? formatImpact(nImpact).replace(/,/g, '.')
+            : '—',
+          who: d.reportedBy || '',
           impact: nImpact,
           impactQuartile: q,
-          description: softBreakLongTokens(d.description || "unknown", 16),
-          __matchKey: d.startDate ? String(d.startDate) : (d.peak ? String(d.peak) : dateLabel)
+          description: softBreakLongTokens(d.description || 'unknown', 16),
+          __matchKey: d.startDate
+            ? String(d.startDate)
+            : d.peak
+              ? String(d.peak)
+              : dateLabel,
         };
       })
       .filter((d) => {
@@ -469,13 +608,13 @@ export function createDetailOpener(deps) {
       })
       .sort((a, b) => b.date - a.date || a.title.localeCompare(b.title));
 
-    deps.seriesForSelectedCountry = fullseries; 
+    deps.seriesForSelectedCountry = fullseries;
     renderDetail(code, name, countryEvents, countryHasAnyEvents);
     detailSection.hidden = false;
-    window.scrollTo({ top: detailSection.offsetTop, behavior: "smooth" });
-    
+    window.scrollTo({ top: detailSection.offsetTop, behavior: 'smooth' });
+
     if (selectedEventKey) {
-      const nodes = Array.from(detailSection.querySelectorAll(".node"));
+      const nodes = Array.from(detailSection.querySelectorAll('.node'));
       let targetNode = null;
 
       for (const n of nodes) {
@@ -492,22 +631,22 @@ export function createDetailOpener(deps) {
       }
 
       if (targetNode) {
-        const scroller = detailSection.querySelector(".events-scroller");
-        if (scroller && typeof targetNode.scrollIntoView === "function") {
-          targetNode.scrollIntoView({ behavior: "smooth", block: "center" });
+        const scroller = detailSection.querySelector('.events-scroller');
+        if (scroller && typeof targetNode.scrollIntoView === 'function') {
+          targetNode.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-        targetNode.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+        targetNode.dispatchEvent(new MouseEvent('click', { bubbles: true }));
       } else {
-        const first = detailSection.querySelector(".node");
-        if (first) first.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+        const first = detailSection.querySelector('.node');
+        if (first)
+          first.dispatchEvent(new MouseEvent('click', { bubbles: true }));
       }
     }
-
   }
   return openDetail;
 }
 
-const style = document.createElement("style");
+const style = document.createElement('style');
 style.textContent = `
 :root {
   --font-sans: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;

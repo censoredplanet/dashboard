@@ -1,17 +1,23 @@
-import * as htl from "npm:htl";
+import * as htl from 'npm:htl';
 
-export function DownloadLinks(data, dashboardName, baseName, country, startDate, endDate) {
-  
+export function downloadLinks(
+  data,
+  dashboardName,
+  baseName,
+  country,
+  startDate,
+  endDate,
+) {
   const formatDate = (dateInput) => {
-    if (!dateInput) return "date";
+    if (!dateInput) return 'date';
     const d = new Date(dateInput);
 
-    if (isNaN(d.getTime())) return String(dateInput); 
-    
+    if (isNaN(d.getTime())) return String(dateInput);
+
     const day = String(d.getDate()).padStart(2, '0');
     const month = String(d.getMonth() + 1).padStart(2, '0');
     const year = d.getFullYear();
-    
+
     return `${day}-${month}-${year}`;
   };
 
@@ -22,7 +28,7 @@ export function DownloadLinks(data, dashboardName, baseName, country, startDate,
 
   const download = (blob, extension) => {
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
     a.download = `${fileName}.${extension}`;
     a.click();
@@ -32,8 +38,8 @@ export function DownloadLinks(data, dashboardName, baseName, country, startDate,
   const onJson = (e) => {
     e.preventDefault();
     const jsonContent = JSON.stringify(data, null, 2);
-    const blob = new Blob([jsonContent], { type: "application/json" });
-    download(blob, "json");
+    const blob = new Blob([jsonContent], { type: 'application/json' });
+    download(blob, 'json');
   };
 
   return htl.html`<div style="

@@ -1,27 +1,27 @@
 // components/render-grid.js
-import { fetchCenalertTimeseries } from "./queries.js";
-import { flagEmoji } from "./utils.js";
+import { fetchCenalertTimeseries } from './queries.js';
+import { flagEmoji } from './utils.js';
 
 export function createGridRenderer({ html, parseISO, openDetail }) {
   return async function renderGrid(grid, list, state) {
-    const { tsCache, setCurrentList } = state; 
+    const { tsCache, setCurrentList } = state;
 
     setCurrentList(list);
-    grid.innerHTML = "";
+    grid.innerHTML = '';
 
     for (const { code, name, totalEvents } of list) {
       const isSelected = code === state.selectedCode;
 
       const tile = html`
         <div
-          class=${`tile card ${isSelected ? "selected" : ""}`}
+          class=${`tile card ${isSelected ? 'selected' : ''}`}
           data-code=${code}
           data-name=${name}
           role="button"
           tabindex="0"
           onclick=${async () => {
             state.selectedCode = code;
-            await renderGrid(grid, list, state); 
+            await renderGrid(grid, list, state);
 
             if (!tsCache.has(code)) {
               const data = await fetchCenalertTimeseries({ country: code });
@@ -34,9 +34,9 @@ export function createGridRenderer({ html, parseISO, openDetail }) {
             openDetail(code, name, tsCache.get(code));
           }}
           onkeydown=${(e) => {
-            if (e.key === "Enter" || e.key === " ") {
+            if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault();
-              state.selectedCode = code;  
+              state.selectedCode = code;
               renderGrid(grid, list, state);
               openDetail(code, name, tsCache.get(code) || []);
             }
@@ -49,7 +49,7 @@ export function createGridRenderer({ html, parseISO, openDetail }) {
             </div>
             <div class="line-bottom">
               <span class="events">
-                ${totalEvents} ${totalEvents === 1 ? "Event" : "Events"}
+                ${totalEvents} ${totalEvents === 1 ? 'Event' : 'Events'}
               </span>
             </div>
           </div>

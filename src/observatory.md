@@ -5,7 +5,7 @@ title: Observatory Dashboard
 ```js
 import SlimSelect from "npm:slim-select@2.8.1";
 import { fetchDashboard } from "./components/queries.js";
-import { DownloadLinks } from "./components/data-download.js"
+import { downloadLinks } from "./components/data-download.js"
 const params = new URLSearchParams(window.location.search);
 const countryParam = (params.get("country") ?? "").trim();
 ```
@@ -1315,7 +1315,7 @@ function createResponsiveTable(width) {
     },
   });
 
-  const footer = DownloadLinks(
+  const footer = downloadLinks(
     search, 
     "cp-observatory", 
     "detailed-metrics", 
@@ -1349,7 +1349,7 @@ function createResponsiveTable(width) {
     <div class="grid-colspan-2 card">
       <h2>Outcome Timeline</h2><br>
       ${resize(width => createStackedBarChart(width))}
-      ${DownloadLinks(stackedBarData, "cp-observatory", "outcome-timeline", country.value, start.value, end.value)}
+      ${downloadLinks(stackedBarData, "cp-observatory", "outcome-timeline", country.value, start.value, end.value)}
     </div>
 </div>
 
@@ -1357,7 +1357,7 @@ function createResponsiveTable(width) {
     <div class="grid-colspan-2 card">
       <h2>Outcome per Network</h2><br>
       ${resize(width => chartBar(width))}
-      ${DownloadLinks(networkData, "cp-observatory", "outcome-network", country.value, start.value, end.value)}
+      ${downloadLinks(networkData, "cp-observatory", "outcome-network", country.value, start.value, end.value)}
     </div>
 </div>
 

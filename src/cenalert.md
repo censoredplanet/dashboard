@@ -11,7 +11,7 @@ import { fetchCenalertTimeseries } from "./components/queries.js";
 import { formatDMYdots } from "./components/utils.js";
 import { createGridRenderer } from "./components/render-grid.js";
 import { createDetailOpener } from "./components/detail-view.js";
-import { DownloadLinks } from "./components/data-download.js";
+import { downloadLinks } from "./components/data-download.js";
 
 const params = new URLSearchParams(window.location.search);
 const countryParam = (params.get("country") ?? "").trim();
@@ -258,7 +258,7 @@ const fmtYMD = d3.utcFormat("%Y.%m.%d");
       </div>
     </div>
     ${searchVolumeContainer}
-    ${DownloadLinks(timeseries, "cenalert", "search-volume", countryInput.value, startDate ?? earliestDate, endDate ?? latestDate)}
+    ${downloadLinks(timeseries, "cenalert", "search-volume", countryInput.value, startDate ?? earliestDate, endDate ?? latestDate)}
   </div>
 </div>
 

@@ -1,0 +1,5 @@
+**/*.md
+src/.observablehq/**
+dist/**
+build/**
+node_modules/**
