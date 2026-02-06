@@ -97,7 +97,7 @@ const listInterference = (() => {
   </ul>`;
 
   normalizeCountryList(el);
-  wireCountryList(el, "/-observatory.html");
+  wireCountryList(el, "/observatory.html");
   return el;
 })();
 
@@ -137,7 +137,7 @@ const listAlerts = (() => {
   </div>
   <div class="explorer-link-container">
     <a style= "color: #17827B; font-weight: bold;"; 
-    href="/-observatory.html">Explore Censored Planet Data
+    href="/observatory.html">Explore Censored Planet Data
     <span style="display: inline-block; margin-left: 0.25rem; color: #17827B;">↗︎
     </span></a>
   </div>
