@@ -95,7 +95,7 @@ export function createDetailOpener(deps) {
     const summaryBody = html`<div id="summary-body" class="summary-body">Select an event to see details.</div>`;
 
     const cleanEvents = countryEvents.map(d => ({
-      date: d.date,
+      country: name,
       startDate: d.startDate,
       endDate: d.endDate,
       who: d.who,
@@ -242,18 +242,7 @@ export function createDetailOpener(deps) {
     label.append("line").attr("x1", -8).attr("x2", 0).attr("y1", 0).attr("y2", 0).attr("stroke", "#333");
     label.append("text").attr("font-weight", 500).attr("y", r * 0.1).attr("fill", "#333").text((d) => `${d.dateLabel}`).style("font-size", `${Math.round(r * 0.35)}px`)
     
-    const tile = node.insert("rect", ":first-child")
-      .attr("class", "event-tile")
-      .attr("x", -r - 12)
-      .attr("y", -r - nodeGap / 2)
-      .attr("width", labelDx + 320) 
-      .attr("height", Math.max(baseMinRow, 10) + r * 1.1 + nodeGap) 
-      .attr("rx", 0).attr("ry", 0)
-      .attr("fill", "transparent")
-      .attr("stroke", "transparent")
-      .attr("pointer-events", "all");
     const fo = node.append("foreignObject").attr("x", labelDx).attr("y", r*0.1).attr("width", d => d.tileWidth).attr("height", 10);
-    const htmlBox = fo.append("xhtml:div").attr("class", "label-html");
 
     function renderRight(selectedEvent = null) {
       const fmtYMD = d3.utcFormat("%Y.%m.%d");
@@ -368,8 +357,6 @@ export function createDetailOpener(deps) {
       svg.style("max-height", "none");
 
       const dataWithY = node.data();
-      const firstY = d3.min(dataWithY, (d) => d.__y) ?? (margin.top + r);
-      const lastY = d3.max(dataWithY, (d) => d.__y) ?? (margin.top + r);
     }
 
     function doResizeLayout() {
@@ -421,7 +408,6 @@ export function createDetailOpener(deps) {
 
     const onResize = () => {
       doResizeLayout();
-      const baseH = scroller.clientHeight || scroller.scrollHeight;
     };
 
     window.removeEventListener("resize", onResize);
