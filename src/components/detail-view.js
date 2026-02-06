@@ -1,11 +1,11 @@
-// components/detail-view.js
+import { DownloadLinks } from "./data-download.js";
+
 export function createDetailOpener(deps) {
   const {
     html, d3, Plot, resize,
     DAY, PX_PADDING,
     events, formatImpact, softBreakLongTokens,
-    gridSection, detailSection,
-    startDate, endDate,
+    detailSection, startDate, endDate,
   } = deps;
 
   function updateEventUrl(selectedEvent) {
@@ -93,7 +93,28 @@ export function createDetailOpener(deps) {
     // Summary (right column)
     const summaryTitle = html`<h3 class="summary-title">Event Summary</h3>`;
     const summaryBody = html`<div id="summary-body" class="summary-body">Select an event to see details.</div>`;
-    summaryWrap.append(summaryTitle, summaryBody);
+
+    const cleanEvents = countryEvents.map(d => ({
+      country: name,
+      startDate: d.startDate,
+      endDate: d.endDate,
+      who: d.who,
+      description: d.description,
+      impact: d.title
+    }));
+
+    const footer = DownloadLinks(
+      cleanEvents, 
+      "cenalert", 
+      "events-list", 
+      name, 
+      rangeStart, 
+      rangeEnd
+    );
+
+    footer.style.marginTop = "1rem";
+
+    summaryWrap.append(summaryTitle, summaryBody, footer);
 
     // initial sizes
     let { widthNow: currentWidth, r, baseMinRow, nodeGap } = computeSizes();
@@ -221,18 +242,7 @@ export function createDetailOpener(deps) {
     label.append("line").attr("x1", -8).attr("x2", 0).attr("y1", 0).attr("y2", 0).attr("stroke", "#333");
     label.append("text").attr("font-weight", 500).attr("y", r * 0.1).attr("fill", "#333").text((d) => `${d.dateLabel}`).style("font-size", `${Math.round(r * 0.35)}px`)
     
-    const tile = node.insert("rect", ":first-child")
-      .attr("class", "event-tile")
-      .attr("x", -r - 12)
-      .attr("y", -r - nodeGap / 2)
-      .attr("width", labelDx + 320) 
-      .attr("height", Math.max(baseMinRow, 10) + r * 1.1 + nodeGap) 
-      .attr("rx", 0).attr("ry", 0)
-      .attr("fill", "transparent")
-      .attr("stroke", "transparent")
-      .attr("pointer-events", "all");
     const fo = node.append("foreignObject").attr("x", labelDx).attr("y", r*0.1).attr("width", d => d.tileWidth).attr("height", 10);
-    const htmlBox = fo.append("xhtml:div").attr("class", "label-html");
 
     function renderRight(selectedEvent = null) {
       const fmtYMD = d3.utcFormat("%Y.%m.%d");
@@ -347,8 +357,6 @@ export function createDetailOpener(deps) {
       svg.style("max-height", "none");
 
       const dataWithY = node.data();
-      const firstY = d3.min(dataWithY, (d) => d.__y) ?? (margin.top + r);
-      const lastY = d3.max(dataWithY, (d) => d.__y) ?? (margin.top + r);
     }
 
     function doResizeLayout() {
@@ -400,7 +408,6 @@ export function createDetailOpener(deps) {
 
     const onResize = () => {
       doResizeLayout();
-      const baseH = scroller.clientHeight || scroller.scrollHeight;
     };
 
     window.removeEventListener("resize", onResize);
@@ -464,7 +471,6 @@ export function createDetailOpener(deps) {
 
     deps.seriesForSelectedCountry = fullseries; 
     renderDetail(code, name, countryEvents, countryHasAnyEvents);
-    gridSection.hidden = true;
     detailSection.hidden = false;
     window.scrollTo({ top: detailSection.offsetTop, behavior: "smooth" });
     
