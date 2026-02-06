@@ -5,6 +5,7 @@ title: Observatory Dashboard
 ```js
 import SlimSelect from "npm:slim-select@2.8.1";
 import { fetchDashboard } from "./components/queries.js";
+import { DownloadLinks } from "./components/data-download.js"
 const params = new URLSearchParams(window.location.search);
 const countryParam = (params.get("country") ?? "").trim();
 ```
@@ -297,24 +298,10 @@ const networkData = aggregateByNetwork(queryResults);
 ```
 
 ```js
-const search = view(Inputs.search(subNetworkData));
+const searchInput = Inputs.search(subNetworkData);
+const search = Generators.input(searchInput);
 ```
 
-```js
-const table = view(
-  Inputs.table(search, {
-    sort: "unexpected_rate",
-    reverse: true,
-    rows: 20,
-    format: {
-      unexpected_rate: sparkbar(),
-    },
-    align: {
-      probe_count: "center",
-    },
-  }),
-);
-```
 
 ```js
 function createStackedBarChart(width) {
@@ -1311,10 +1298,58 @@ function measurementSummary(windowWidth) {
 }
 ```
 
+```js
+function createResponsiveTable(width) {
+  const table = Inputs.table(search, {
+    sort: "unexpected_rate",
+    reverse: true,
+    rows: 20,
+    width: width,
+    maxWidth: width,
+    layout: "fixed",
+    format: {
+      unexpected_rate: sparkbar(),
+    },
+    align: {
+      probe_count: "center",
+    },
+  });
+
+  const footer = DownloadLinks(
+    search, 
+    "cp-observatory", 
+    "detailed-metrics", 
+    country.value, 
+    start.value, 
+    end.value
+  );
+
+  const container = document.createElement("div");
+  container.style.width = "100%";
+  container.style.display = "flex";
+  container.style.flexDirection = "column";
+  
+  container.append(table);
+  container.append(footer);
+  
+  return container;
+}
+```
+
+<div class = "grid grid-cols-2">
+    <div class="grid-colspan-2 card">
+      <div style="margin-bottom: 1rem;">
+        ${searchInput}
+      </div>
+      ${resize(width => createResponsiveTable(width))}
+    </div>
+</div>
+
 <div class = "grid grid-cols-2">
     <div class="grid-colspan-2 card">
       <h2>Outcome Timeline</h2><br>
       ${resize(width => createStackedBarChart(width))}
+      ${DownloadLinks(stackedBarData, "cp-observatory", "outcome-timeline", country.value, start.value, end.value)}
     </div>
 </div>
 
@@ -1322,6 +1357,7 @@ function measurementSummary(windowWidth) {
     <div class="grid-colspan-2 card">
       <h2>Outcome per Network</h2><br>
       ${resize(width => chartBar(width))}
+      ${DownloadLinks(networkData, "cp-observatory", "outcome-network", country.value, start.value, end.value)}
     </div>
 </div>
 

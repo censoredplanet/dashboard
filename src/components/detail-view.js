@@ -1,11 +1,11 @@
-// components/detail-view.js
+import { DownloadLinks } from "./data-download.js";
+
 export function createDetailOpener(deps) {
   const {
     html, d3, Plot, resize,
     DAY, PX_PADDING,
     events, formatImpact, softBreakLongTokens,
-    gridSection, detailSection,
-    startDate, endDate,
+    detailSection, startDate, endDate,
   } = deps;
 
   function updateEventUrl(selectedEvent) {
@@ -93,7 +93,28 @@ export function createDetailOpener(deps) {
     // Summary (right column)
     const summaryTitle = html`<h3 class="summary-title">Event Summary</h3>`;
     const summaryBody = html`<div id="summary-body" class="summary-body">Select an event to see details.</div>`;
-    summaryWrap.append(summaryTitle, summaryBody);
+
+    const cleanEvents = countryEvents.map(d => ({
+      date: d.date,
+      startDate: d.startDate,
+      endDate: d.endDate,
+      who: d.who,
+      description: d.description,
+      impact: d.title
+    }));
+
+    const footer = DownloadLinks(
+      cleanEvents, 
+      "cenalert", 
+      "events-list", 
+      name, 
+      rangeStart, 
+      rangeEnd
+    );
+
+    footer.style.marginTop = "1rem";
+
+    summaryWrap.append(summaryTitle, summaryBody, footer);
 
     // initial sizes
     let { widthNow: currentWidth, r, baseMinRow, nodeGap } = computeSizes();
@@ -464,7 +485,6 @@ export function createDetailOpener(deps) {
 
     deps.seriesForSelectedCountry = fullseries; 
     renderDetail(code, name, countryEvents, countryHasAnyEvents);
-    gridSection.hidden = true;
     detailSection.hidden = false;
     window.scrollTo({ top: detailSection.offsetTop, behavior: "smooth" });
     

@@ -11,6 +11,7 @@ import { fetchCenalertTimeseries } from "./components/queries.js";
 import { formatDMYdots } from "./components/utils.js";
 import { createGridRenderer } from "./components/render-grid.js";
 import { createDetailOpener } from "./components/detail-view.js";
+import { DownloadLinks } from "./components/data-download.js";
 
 const params = new URLSearchParams(window.location.search);
 const countryParam = (params.get("country") ?? "").trim();
@@ -247,7 +248,7 @@ const fmtYMD = d3.utcFormat("%Y.%m.%d");
 <div class="grid">
   <div class="card modern-card">
     <div class="search-volume-header">
-      <h2>Search volume (${
+      <h2>Search Volume (${
         d3.extent(timeseries, d => d.date)
           .map(d3.utcFormat("%Y.%m.%d"))
           .join(" – ")
@@ -257,6 +258,7 @@ const fmtYMD = d3.utcFormat("%Y.%m.%d");
       </div>
     </div>
     ${searchVolumeContainer}
+    ${DownloadLinks(timeseries, "cenalert", "search-volume", countryInput.value, startDate ?? earliestDate, endDate ?? latestDate)}
   </div>
 </div>
 
@@ -520,13 +522,8 @@ const formatImpact = new Intl.NumberFormat("de-AT", {
 const softBreakLongTokens = (s, every = 16) =>
   String(s).replace(new RegExp(`(\\S{${every}})(?=\\S)`, "g"), "$1 ");
 
-const gridSection = html`<div class="card card-with-search" style="display:none"></div>`;
 const detailSection = html`<div class="card detail-view modern-card"></div>`;
-
-const gridHeader = html`<div class="card-header"></div>`;
-
 const grid = html`<div class="tiles-grid"></div>`;
-gridSection.append(gridHeader, grid);
 
 let currentList = uniqueCountriesWithEvents;
 const state = {
@@ -539,8 +536,7 @@ const openDetail = createDetailOpener({
   html, d3, Plot, resize,
   DAY, PX_PADDING,
   events, formatImpact, softBreakLongTokens,
-  gridSection, detailSection,
-  formatDMYdots,
+  detailSection, formatDMYdots,
 });
 
 async function showCountryDetail(code, name, selectedEventKey, opts = { scrollIntoView: false }) {
@@ -570,7 +566,6 @@ renderGrid(
   state
 );
 
-display(gridSection);
 display(detailSection);
 
 ```
@@ -903,5 +898,4 @@ body {
   color: var(--text);
   box-shadow: 0 4px 12px rgba(0,0,0,.15);
 }
-
 </style>
