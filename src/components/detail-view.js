@@ -125,8 +125,8 @@ export function createDetailOpener(deps) {
 
     const footer = downloadLinks(
       cleanEvents,
-      'cenalert',
-      'events-list',
+      'cp-cenalert',
+      'events',
       name,
       rangeStart,
       rangeEnd,

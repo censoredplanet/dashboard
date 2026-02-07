@@ -258,7 +258,7 @@ const fmtYMD = d3.utcFormat("%Y.%m.%d");
       </div>
     </div>
     ${searchVolumeContainer}
-    ${downloadLinks(timeseries, "cenalert", "search-volume", countryInput.value, startDate ?? earliestDate, endDate ?? latestDate)}
+    ${downloadLinks(timeseries, "cp-cenalert", "search-volume", countryInput.value, startDate ?? earliestDate, endDate ?? latestDate)}
   </div>
 </div>
 
