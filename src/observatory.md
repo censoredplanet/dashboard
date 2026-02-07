@@ -1318,10 +1318,11 @@ function createResponsiveTable(width) {
   const footer = downloadLinks(
     search, 
     "cp-observatory", 
-    "detailed-metrics", 
+    "results", 
     country.value, 
     start.value, 
-    end.value
+    end.value,
+    source.value
   );
 
   const container = document.createElement("div");
@@ -1349,7 +1350,7 @@ function createResponsiveTable(width) {
     <div class="grid-colspan-2 card">
       <h2>Outcome Timeline</h2><br>
       ${resize(width => createStackedBarChart(width))}
-      ${downloadLinks(stackedBarData, "cp-observatory", "outcome-timeline", country.value, start.value, end.value)}
+      ${downloadLinks(stackedBarData, "cp-observatory", "outcome-timeline", country.value, start.value, end.value, source.value)}
     </div>
 </div>
 
@@ -1357,7 +1358,7 @@ function createResponsiveTable(width) {
     <div class="grid-colspan-2 card">
       <h2>Outcome per Network</h2><br>
       ${resize(width => chartBar(width))}
-      ${downloadLinks(networkData, "cp-observatory", "outcome-network", country.value, start.value, end.value)}
+      ${downloadLinks(networkData, "cp-observatory", "outcome-network", country.value, start.value, end.value, source.value)}
     </div>
 </div>
 

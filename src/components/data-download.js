@@ -7,6 +7,7 @@ export function downloadLinks(
   country,
   startDate,
   endDate,
+  protocol = null,
 ) {
   const formatDate = (dateInput) => {
     if (!dateInput) return 'date';
@@ -24,7 +25,8 @@ export function downloadLinks(
   const clean = (str) => String(str).toLowerCase().trim().replace(/\s+/g, '-');
   const startStr = formatDate(startDate);
   const endStr = formatDate(endDate);
-  const fileName = `${dashboardName}-${clean(country)}-from-${startStr}-till-${endStr}-${baseName}`;
+  const protocolPart = protocol ? `-${String(protocol).toLowerCase()}` : '';
+  const fileName = `${dashboardName}-${clean(country)}${protocolPart}-from-${startStr}-till-${endStr}-${baseName}`;
 
   const download = (blob, extension) => {
     const url = URL.createObjectURL(blob);
