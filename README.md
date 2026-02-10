@@ -49,11 +49,15 @@ A typical Framework project looks like this:
 
 ## Command reference
 
-| Command              | Description                                 |
-| -------------------- | ------------------------------------------- |
-| `npm install`        | Install or reinstall dependencies           |
-| `npm run dev`        | Start local preview server                  |
-| `npm run build`      | Build your static site, generating `./dist` |
-| `npm run deploy`     | Deploy your app to Observable               |
-| `npm run clean`      | Clear the local data loader cache           |
-| `npm run observable` | Run commands like `observable help`         |
+| Command                | Description                                 |
+| ---------------------- | ------------------------------------------- |
+| `npm install`          | Install or reinstall dependencies           |
+| `npm run dev`          | Start local preview server                  |
+| `npm run build`        | Build your static site, generating `./dist` |
+| `npm run deploy`       | Deploy your app to Observable               |
+| `npm run clean`        | Clear the local data loader cache           |
+| `npm run observable`   | Run commands like `observable help`         |
+| `npm run lint`         | Run ESLint on src/components to find errors |
+| `npm run lint:fix`     | Run ESLint and auto fix fixable errors      |
+| `npm run format`       | Format code in components using Prettier    |
+| `npm run format:check` | Check if code is correctly formatted        |
