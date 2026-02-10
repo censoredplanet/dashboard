@@ -1,17 +1,19 @@
 ---
 title: CenAlert Dashboard
 ---
-
 [![Censored Planet Logo](logo-umichlab.svg)](/)
+
+<link rel="stylesheet" href="./styles/cenalert.css">
 
 ```js
 import { utcParse, utcFormat } from "https://esm.sh/d3-time-format@4";
 import { fetchCenalertEvents } from "./components/queries.js";
 import { fetchCenalertTimeseries } from "./components/queries.js";
 import { formatDMYdots } from "./components/utils.js";
-import { createGridRenderer } from "./components/render-grid.js";
 import { createDetailOpener } from "./components/detail-view.js";
 import { downloadLinks } from "./components/data-download.js";
+import { updateURL } from "./components/utils.js";
+import { createSearchVolumeChart } from "./components/time-series-chart.js"; 
 
 const params = new URLSearchParams(window.location.search);
 const countryParam = (params.get("country") ?? "").trim();
@@ -37,26 +39,10 @@ let defaultCountry = null;
 if (countries.includes(countryParam)) {
   defaultCountry = countryParam;
 }
+
+const DAY = 24 * 60 * 60 * 1000;
 ```
 
-```js
-function updateURL(paramsObj = {}, clearEvent = false) {
-  const currentParams = new URLSearchParams(location.search);
-
-  for (const [key, val] of Object.entries(paramsObj)) {
-    if (val === null || val === undefined || val === "") currentParams.delete(key);
-    else currentParams.set(key, val);
-  }
-
-  if (clearEvent) currentParams.delete("event");
-
-  const query = currentParams.toString();
-  const newURL = query ? `${location.pathname}?${query}` : location.pathname;
-
-  history.pushState({}, "", newURL);
-}
-
-```
 ```js
 const countryInput = Inputs.select(countries, {
   label: "Country",
@@ -278,111 +264,28 @@ searchVolumeContainer.style.minHeight = "60px";
 function renderSearchVolumePlot() {
   searchVolumeContainer.innerHTML = "";
 
-  const width = Math.max(600, Math.min(window.innerWidth - 80, 1200)); 
+  const width = Math.max(600, Math.min(window.innerWidth - 80, 1200));
   const showHighlight = Boolean(highlightToggle.value);
-
-  const y1 = d3.min(timeseries, d => d.rate);
-  const y2 = d3.max(timeseries, d => d.rate);
-
-  const plotColors = {
-    text: getComputedStyle(document.documentElement).getPropertyValue("--plot-text").trim(),
-    line: getComputedStyle(document.documentElement).getPropertyValue("--plot-line").trim(),
-    grid: getComputedStyle(document.documentElement).getPropertyValue("--plot-grid").trim(),
-    bg:   getComputedStyle(document.documentElement).getPropertyValue("--plot-bg").trim()
-  };
-  const isDark = document.documentElement.classList.contains("dark");
-
-  const tooltipFill = isDark ? "black" : "white";
-  const marks = [
-    Plot.ruleY([0], { stroke: plotColors.grid }),
-    Plot.lineY(timeseries, {
-      x: "date",
-      y: "rate",
-      stroke: plotColors.line,
-      tip: {
-        fill: tooltipFill,
-        stroke: "black",
-        textColor: "black",
-        color: "black"
-      },
-      title: d =>
-        `Topic: ${d.topic || "Unknown topic"}\n` +
-        `Date: ${fmtYMD(d.date)}\n` +
-        `Rate: ${d.rate != null ? d.rate.toFixed(2) : "N/A"}`
-    }),
-  ];
-
-  if (showHighlight && Array.isArray(zoomedAnomalies) && zoomedAnomalies.length) {
-    marks.push(
-      Plot.rectY(zoomedAnomalies, {
-        x1: d => d.s,
-        x2: d => d.e,
-        y1: y2,
-        y2: 0,
-        fill: "#df9d81",
-        fillOpacity: 0.35,
-        stroke: "#f56363",
-        strokeOpacity: 0.6,
-        strokeWidth: 0.7,
-        tip: {
-          fill: tooltipFill,
-          stroke: "black",
-          textColor: "black",
-          color: "black"
-        },
-        title: d =>
-          `Cause: ${d.cause}\n` +
-          `Duration: ${fmtDMY(d.s)} – ${fmtDMY(d.e)}\n` +
-          (d.impact ? `Impact: ${(+d.impact).toFixed(2)}` : "")
-      }),
-    );
-    
-    marks.push(
-      Plot.ruleX(zoomedAnomalies.map(d => d.s), {
-        stroke: "#ef4444",
-        strokeOpacity: 0.6,
-        strokeWidth: 0.7
-      }),
-      Plot.ruleX(zoomedAnomalies.map(d => d.e), {
-        stroke: "#ef4444",
-        strokeOpacity: 0.6,
-        strokeWidth: 0.7
-      })
-    );
-  }
-
-  const plotSvg = Plot.plot({
-    style: {
-      background: plotColors.bg,
-      color: plotColors.text,
-      fontSize: "13px"
-    },
+  const chart = createSearchVolumeChart(timeseries, {
+    zoomedAnomalies,
+    showHighlight,
     width,
-    grid: true,
-    y: { grid: true, label: "", stroke: plotColors.grid },
-    x: { label: "", stroke: plotColors.grid },
-    marks
-  });
+    onPlotClick: (clickedDate) => {
+      const selectedEvent = events.find(ev => {
+        const evStart = parseISO(ev.startDate) ?? new Date(ev.startDate);
+        const evEnd = parseISO(ev.endDate) ?? new Date(ev.endDate ?? ev.startDate);
+        return +evStart <= +clickedDate && +clickedDate <= +evEnd + DAY;
+      });
 
-  plotSvg.addEventListener("click", () => {
-    const v = plotSvg.value;
-    if (!v || !v.date) return;
-    const clicked = v.date;
-    const selectedEvent = events.find(ev => {
-      const evStart = parseISO(ev.startDate) ?? new Date(ev.startDate);
-      const evEnd = parseISO(ev.endDate) ?? new Date(ev.endDate ?? ev.startDate);
-      return +evStart <= +clicked && +clicked <= +evEnd + DAY;
-    });
-
-    if (selectedEvent) {
-      const name = countryInput.value;
-      const code = countryNameToCode[name] ?? countryCode;
-
-      showCountryDetail(code, name, selectedEvent.startDate, { scrollIntoView: true });
+      if (selectedEvent) {
+        const name = countryInput.value;
+        const code = countryNameToCode[name] ?? countryCode;
+        showCountryDetail(code, name, selectedEvent.startDate, { scrollIntoView: true });
+      }
     }
   });
 
-  searchVolumeContainer.appendChild(plotSvg);
+  searchVolumeContainer.appendChild(chart);
 }
 ```
 
@@ -484,7 +387,6 @@ dateRangeInput.addEventListener("change", async () => {
 ```
 
 ```js
-const DAY = 24 * 60 * 60 * 1000;
 const PX_PADDING = -20;
 
 const eventCounts = events.reduce((acc, d) => {
@@ -498,21 +400,6 @@ const enriched = events.map((d) => ({
   countryName: regionNames.of(String(d.country).toUpperCase()) || d.country,
 }));
 
-const uniqueCountries = [
-  ...new Map(enriched.map((d) => [d.country, d.countryName])).entries(),
-]
-  .map(([code, name]) => ({
-    code,
-    name,
-  }))
-  .sort((a, b) => a.name.localeCompare(b.name));
-
-  const uniqueCountriesWithEvents = uniqueCountries.map(({ code, name }) => ({
-  code,
-  name,
-  totalEvents: eventCounts[code] || 0,
-}));
-
 const formatImpact = new Intl.NumberFormat("de-AT", {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
@@ -523,14 +410,6 @@ const softBreakLongTokens = (s, every = 16) =>
   String(s).replace(new RegExp(`(\\S{${every}})(?=\\S)`, "g"), "$1 ");
 
 const detailSection = html`<div class="card detail-view modern-card"></div>`;
-const grid = html`<div class="tiles-grid"></div>`;
-
-let currentList = uniqueCountriesWithEvents;
-const state = {
-  selectedCode: null,
-  tsCache: new Map(),
-  setCurrentList: (list) => { currentList = list; }
-};
 
 const openDetail = createDetailOpener({
   html, d3, Plot, resize,
@@ -558,344 +437,6 @@ async function showCountryDetail(code, name, selectedEventKey, opts = { scrollIn
   }
   window.scrollTo(0, scrollY);
 }
-const renderGrid = createGridRenderer({ html, parseISO, openDetail });
-
-renderGrid(
-  grid,
-  uniqueCountriesWithEvents,
-  state
-);
 
 display(detailSection);
-
 ```
-
-<style>
-body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-                 Roboto, "Helvetica Neue", Arial, sans-serif;
-    font-size: 16px;
-    color: #222;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-  }
-:root {
-  --font-sans: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "IBM Plex Mono", monospace;
-  --color-text-primary: #1a1a1a;
-  --color-text-secondary: #444;
-  --color-accent: #1e90ff;
-  --bg: #ffffff;
-  --bg-alt: #f5f5f7;
-  --text: #222222;
-  --text-light: #555555;
-  --border: #e5e5e5;
-  --card-bg: #ffffff;
-  --plot-text: var(--text);
-  --plot-line: var(--text);
-  --plot-grid: var(--text-light);
-  --plot-bg: transparent;
-}
-
-
-.filters-row {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.filters-row > * {
-  flex: 1 1 220px;
-}
-.disclaimer-box {
-  background: #960808ff !important;
-  color: white !important;
-  padding: 1rem 1.25rem;
-  border-radius: 0.75rem;
-  font-weight: 600;
-  margin: 1rem 0;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  font-family: var(--font-sans);
-}
-
-.events-grid > .h {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  padding: 0.25rem 0.5rem;
-  font-weight: 600;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  text-align: center;
-}
-.modern-card {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding: 1rem 1.25rem;
-  border-radius: 1rem;
-  background: linear-gradient(145deg, #f9f9fb, #ffffff);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-.modern-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem 1.5rem;
-  align-items: flex-start; 
-}
-
-.modern-filters .filter-group {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 220px;
-}
-
-.modern-filters label {
-  font-weight: 500;
-  font-family: var(--font-sans);
-  font-size: 1rem;
-  color: var(--color-text-primary);
-  text-align: center; 
-  margin-bottom: 0.25rem;
-}
-
-.modern-filters input, 
-.modern-filters select {
-  border-radius: 0.5rem;
-  border: 1px solid #ccc;
-  padding: 0.4rem 0.4rem;
-  color: var(--color-text-primary);
-  font-size: 0.9rem;
-  justify-content: center; 
-  font-family: var(--font-sans);
-  width: 100%;
-}
-
-.modern-filters input[type="date"] {
-  min-width: 140px; 
-  height: 2rem;  
-  justify-content: center; 
-  padding: 0.45rem 0.75rem;
-}
-.date-range-custom {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  align-items: flex-end; 
-}
-
-.date-range-custom .filter-group {
-  flex: 1;
-}
-
-.events-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr auto;
-  gap: 0.25rem 0.5rem;
-  align-items: center;
-  justify-items: left;
-  border-radius: 1rem;
-  background: linear-gradient(145deg, #f9f9fb, #ffffff);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-.events-grid > .r {
-  text-align: center;
-}
-
-.detail-view.modern-card {
-  gap: 0; 
-  padding: 1rem; 
-}
-
-.card-big {
-    display: flex;
-    flex-wrap: wrap;
-    color: var(--color-text-primary);
-    padding: 0rem 0rem;
-    font-family: var(--font-sans);
-  }
-
-.events-grid-header {
-  display: grid;
-  grid-template-columns: 1fr 1fr auto;
-  gap: 0.25rem 0.5rem;
-  align-items: center;
-  justify-items: left;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 0.25rem 0.5rem;
-}
-
-.events-grid-header > .h {
-  position: static;
-  font-weight: 600;
-  text-align: center;
-}
-
-#table-tooltip {
-  position: fixed;
-  z-index: 99999;
-  max-width: min(60vw, 520px);
-  padding: 6px 8px;
-  border-radius: 6px;
-  font: 12px/1.35 var(--sans-serif, system-ui, sans-serif);
-  pointer-events: none;
-  transform: translate(8px, 12px);
-  opacity: 0;
-  transition: opacity .08s ease-out;
-  white-space: normal;
-}
-
-.cell-ellipsis {
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-
-.detail-view .detail-header {
-  display: flex;
-  align-items: center;
-  gap: .75rem;
-  overflow: hidden;
-  height: 100%;
-  max-height: 78vh; 
-  min-height: 0;
-  margin-bottom: .5rem;
-}
-
-.card-with-search {
-  display: flex;
-  flex-direction: column;
-  gap: .75rem;
-}
-
-.tiles-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
-}
-
-.tile.card {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: .5rem;
-  cursor: pointer;
-  padding: 2rem 1rem;
-  font-size: 1.2rem;
-  user-select: none;
-  transition: transform .05s ease, box-shadow .15s ease, border-color .15s ease;
-}
-.search-volume-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 115%;
-}
-
-.search-volume-header h2 {
-  font-family: var(--font-sans);
-  font-size: 1.1rem !important;
-  font-weight: 500;
-  display: flex;
-  color: var(--color-text-secondary);
-  justify-content: space-between;
-  align-items: center;
-}
-
-.highlight-toggle-wrapper label {
-  display: flex !important; 
-  font-family: var(--font-sans);   
-  align-items: center;       
-  gap: 5rem;
-  white-space: nowrap;  
-  font-size: 0.8rem;   
-}
-
-.highlight-toggle-wrapper input[type="checkbox"] {
-  appearance: none; 
-  -webkit-appearance: none;
-  width: 32px;
-  height: 16px;
-  background: #ddd;
-  border-radius: 16px;
-  position: relative;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.highlight-toggle-wrapper input[type="checkbox"]:checked {
-  background: #4f46e5;
-}
-
-.highlight-toggle-wrapper input[type="checkbox"]::after {
-  content: "";
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 12px;
-  height: 12px;
-  background: white;
-  border-radius: 50%;
-  transition: transform 0.2s;
-}
-
-.highlight-toggle-wrapper input[type="checkbox"]:checked::after {
-  transform: translateX(16px); 
-}
-
-.tile.card:hover {
-  transform: translateY(-2px);
-  border-color: #cbd5e1;
-  box-shadow: 0 6px 14px rgba(0,0,0,.06);
-}
-.tile.card.selected {
-  border-color: #1e90ff;
-  box-shadow: 0 0 0 3px rgba(30,144,255,.15);
-}
-
-.tile.card .flag {
-  font-size: 1.8rem;
-}
-
-.timeline-scroller{
-  overflow: auto;
-  overscroll-behavior: contain;
-}
-
-.timeline-scroller::-webkit-scrollbar {
-  height: 8px;
-  width: 8px;
-}
-
-.timeline-scroller::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.timeline-scroller::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-/* Firefox */
-.timeline-scroller {
-  scrollbar-width: thin;
-  scrollbar-color: #888 transparent;
-}
-
-.plot-tooltip {
-  font-family: var(--font-sans) !important;
-  font-size: 13px !important;
-  line-height: 1.4;
-  padding: 6px 8px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: var(--card-bg);
-  color: var(--text);
-  box-shadow: 0 4px 12px rgba(0,0,0,.15);
-}
-</style>
