@@ -1,0 +1,385 @@
+import * as d3 from 'npm:d3';
+
+import { leafColor } from './utils.js';
+
+export function transformFlatData(flatData) {
+  const networkGroups = {};
+  flatData.forEach((item) => {
+    if (!networkGroups[item.network]) {
+      networkGroups[item.network] = {
+        name: item.network,
+        children: {},
+        stackedValues: {},
+      };
+    }
+
+    if (!networkGroups[item.network].children[item.subnetwork]) {
+      networkGroups[item.network].children[item.subnetwork] = {
+        name: item.subnetwork,
+        stackedValues: {},
+      };
+    }
+    const count = parseInt(item.total_count);
+    networkGroups[item.network].children[item.subnetwork].stackedValues[
+      item.outcome
+    ] = count;
+    networkGroups[item.network].stackedValues[item.outcome] =
+      (networkGroups[item.network].stackedValues[item.outcome] || 0) + count;
+  });
+  return {
+    name: 'Root',
+    children: Object.values(networkGroups).map((network) => ({
+      name: network.name,
+      stackedValues: network.stackedValues,
+      metrics: Object.keys(network.stackedValues),
+      children: Object.values(network.children).map((subnet) => ({
+        name: subnet.name,
+        stackedValues: subnet.stackedValues,
+        metrics: Object.keys(subnet.stackedValues),
+      })),
+    })),
+  };
+}
+
+export function hierarchicalBarChart(networkData, width) {
+  const marginTop = 30;
+  const marginRight = 30;
+  const marginBottom = 0;
+  const marginLeft = 200;
+  const barStep = 27;
+  const duration = 750;
+  const barPadding = 3 / barStep;
+
+  const newdata = transformFlatData(networkData);
+
+  let tooltip = d3.select('body .chart-tooltip');
+  if (tooltip.empty()) {
+    tooltip = d3
+      .select('body')
+      .append('div')
+      .attr('class', 'chart-tooltip')
+      .style('opacity', 0)
+      .style('position', 'absolute')
+      .style('background-color', 'rgba(0, 0, 0, 0.8)')
+      .style('color', 'white')
+      .style('padding', '8px')
+      .style('border-radius', '4px')
+      .style('font-size', '12px')
+      .style('pointer-events', 'none');
+  }
+
+  let axisTooltip = d3.select('body .axis-tooltip');
+  if (axisTooltip.empty()) {
+    axisTooltip = d3
+      .select('body')
+      .append('div')
+      .attr('class', 'axis-tooltip')
+      .style('opacity', 0)
+      .style('position', 'absolute')
+      .style('background-color', 'rgba(0, 0, 0, 0.8)')
+      .style('color', 'white')
+      .style('padding', '8px')
+      .style('border-radius', '4px')
+      .style('font-size', '12px')
+      .style('pointer-events', 'none')
+      .style('z-index', '1000');
+  }
+
+  const x = d3.scaleLinear().range([marginLeft, width - marginRight]);
+
+  const yAxis = (g) =>
+    g
+      .attr('class', 'y-axis')
+      .attr('transform', `translate(${marginLeft + 0.5},0)`);
+
+  const xAxis = (g) =>
+    g
+      .attr('class', 'x-axis')
+      .attr('transform', `translate(0,${marginTop})`)
+      .call(d3.axisTop(x).ticks(width / 80, 's'))
+      .call((g) =>
+        (g.selection ? g.selection() : g).select('.domain').remove(),
+      );
+
+  function calculateHeight(d) {
+    const numChildren = d.children ? d.children.length : 1;
+    return numChildren * barStep + 15 + marginBottom;
+  }
+
+  function processData(data) {
+    const root = d3
+      .hierarchy(data)
+      .sum((d) =>
+        d.stackedValues
+          ? Object.values(d.stackedValues).reduce((a, b) => a + b, 0)
+          : 0,
+      )
+      .sort((a, b) => b.value - a.value)
+      .eachAfter(
+        (d) =>
+          (d.index = d.parent ? (d.parent.index = d.parent.index + 1 || 0) : 0),
+      );
+    root.children = root.children || [];
+    return root;
+  }
+
+  function stagger() {
+    let value = 0;
+    return (d, i) => {
+      const t = `translate(${x(value) - x(0)},${barStep * i})`;
+      value += d.value;
+      return t;
+    };
+  }
+
+  function stack(i) {
+    let value = 0;
+    return (d) => {
+      const t = `translate(${x(value) - x(0)},${barStep * i})`;
+      value += d.value;
+      return t;
+    };
+  }
+
+  function createStacks(d) {
+    if (!d.data.stackedValues) return [];
+    const metrics = d.data.metrics || Object.keys(d.data.stackedValues);
+    let cumulative = 0;
+    return metrics.map((metric) => {
+      const value = d.data.stackedValues[metric] || 0;
+      const stack = {
+        metric,
+        value,
+        start: cumulative,
+        end: cumulative + value,
+      };
+      cumulative += value;
+      return stack;
+    });
+  }
+
+  function truncateText(text, maxLength) {
+    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+  }
+
+  function down(svg, d) {
+    if (!d.children || d3.active(svg.node())) return;
+    svg.select('.background').datum(d);
+    const newHeight = calculateHeight(d);
+    const transition1 = svg.transition().duration(duration);
+    const transition2 = transition1.transition();
+
+    svg
+      .transition(transition1)
+      .attr('height', newHeight)
+      .attr('viewBox', [0, 0, width, newHeight]);
+    svg.select('.background').transition(transition1).attr('height', newHeight);
+
+    const exit = svg.selectAll('.enter').attr('class', 'exit');
+    exit.selectAll('rect').attr('fill-opacity', (p) => (p === d ? 0 : null));
+    exit.transition(transition1).attr('fill-opacity', 0).remove();
+
+    const enter = bar(svg, down, d, '.y-axis').attr('fill-opacity', 0);
+    enter.transition(transition1).attr('fill-opacity', 1);
+    enter
+      .selectAll('g')
+      .attr('transform', stack(d.index))
+      .transition(transition1)
+      .attr('transform', stagger());
+
+    const totalValue = d.children.reduce(
+      (sum, child) =>
+        sum +
+        Object.values(child.data.stackedValues || {}).reduce(
+          (a, b) => a + b,
+          0,
+        ),
+      0,
+    );
+
+    x.domain([0, totalValue]);
+    svg.selectAll('.x-axis').transition(transition2).call(xAxis);
+    enter
+      .selectAll('g')
+      .transition(transition2)
+      .attr('transform', (d, i) => `translate(0,${barStep * i})`);
+    enter
+      .selectAll('.stack')
+      .attr('fill-opacity', 1)
+      .transition(transition2)
+      .attr('x', (d) => x(d.start))
+      .attr('width', (d) => x(d.end) - x(d.start));
+  }
+
+  function up(svg, d) {
+    if (!d.parent || !svg.selectAll('.exit').empty()) return;
+    svg.select('.background').datum(d.parent);
+    const transition1 = svg.transition().duration(duration);
+    const transition2 = transition1.transition();
+
+    const newHeight = calculateHeight(d.parent);
+    svg
+      .transition(transition1)
+      .attr('height', newHeight)
+      .attr('viewBox', [0, 0, width, newHeight]);
+    svg.select('.background').transition(transition1).attr('height', newHeight);
+
+    const exit = svg.selectAll('.enter').attr('class', 'exit');
+    const totalParentValue = d.parent.children.reduce(
+      (sum, child) =>
+        sum +
+        Object.values(child.data.stackedValues || {}).reduce(
+          (a, b) => a + b,
+          0,
+        ),
+      0,
+    );
+    x.domain([0, totalParentValue]);
+
+    svg.selectAll('.x-axis').transition(transition1).call(xAxis);
+    exit.selectAll('g').transition(transition1).attr('transform', stagger());
+    exit
+      .selectAll('g')
+      .transition(transition2)
+      .attr('transform', stack(d.index));
+    exit
+      .selectAll('.stack')
+      .transition(transition1)
+      .attr('x', (d) => x(d.start))
+      .attr('width', (d) => x(d.end) - x(d.start));
+    exit.transition(transition2).attr('fill-opacity', 0).remove();
+
+    const enter = bar(svg, down, d.parent, '.exit').attr('fill-opacity', 0);
+    enter
+      .selectAll('g')
+      .attr('transform', (d, i) => `translate(0,${barStep * i})`);
+    enter.transition(transition2).attr('fill-opacity', 1);
+    enter
+      .selectAll('.stack')
+      .attr('fill-opacity', (p) => (p === d ? 0 : null))
+      .transition(transition2)
+      .attr('x', (d) => x(d.start))
+      .attr('width', (d) => x(d.end) - x(d.start))
+      .on('end', function () {
+        d3.select(this).attr('fill-opacity', 1);
+      });
+  }
+
+  function bar(svg, down, d, selector) {
+    const g = svg
+      .insert('g', selector)
+      .attr('class', 'enter')
+      .attr('transform', `translate(0,${marginTop + barStep * barPadding})`)
+      .attr('text-anchor', 'end')
+      .style('font', '10px sans-serif');
+
+    const barGroup = g
+      .selectAll('g')
+      .data(d.children)
+      .join('g')
+      .attr('cursor', (d) => (!d.children ? null : 'pointer'))
+      .on('click', (event, d) => down(svg, d));
+
+    barGroup
+      .append('text')
+      .attr('x', marginLeft - 6)
+      .attr('y', (barStep * (1 - barPadding)) / 2)
+      .attr('dy', '.35em')
+      .attr('font-size', '14px')
+      .attr('fill', '#17827B')
+      .text((d) => {
+        const maxChars = window.innerWidth <= 768 ? 10 : 18;
+        return truncateText(d.data.name, maxChars);
+      })
+      .on('mouseover', function (event, d) {
+        if (d.data.name.length > 15) {
+          axisTooltip.transition().duration(200).style('opacity', 0.9);
+          axisTooltip
+            .html(d.data.name)
+            .style('left', event.pageX - 10 + 'px')
+            .style('top', event.pageY - 28 + 'px');
+        }
+      })
+      .on('mouseout', () =>
+        axisTooltip.transition().duration(500).style('opacity', 0),
+      );
+
+    barGroup
+      .selectAll('.stack')
+      .data((d) => createStacks(d))
+      .join('rect')
+      .attr('class', 'stack')
+      .attr('x', (d) => x(d.start))
+      .attr('width', (d) => x(d.end) - x(d.start))
+      .attr('height', barStep * (1 - barPadding))
+      .attr('fill', (d) => leafColor(d.metric))
+      .on('mouseover', function (event, d) {
+        d3.select(this).style('opacity', 0.8);
+        tooltip.transition().duration(200).style('opacity', 0.9);
+        tooltip
+          .html(`${d.metric}: ${d3.format(',')(d.value)}`)
+          .style('left', event.pageX + 10 + 'px')
+          .style('top', event.pageY - 28 + 'px');
+      })
+      .on('mouseout', function () {
+        d3.select(this).style('opacity', 1);
+        tooltip.transition().duration(500).style('opacity', 0);
+      });
+
+    return g;
+  }
+
+  const root = processData(newdata);
+  const initialHeight = calculateHeight(root);
+
+  const svg = d3
+    .create('svg')
+    .attr('viewBox', [0, 0, width, initialHeight])
+    .attr('width', width)
+    .attr('height', initialHeight)
+    .style('max-width', '100%')
+    .style('height', 'auto');
+
+  const totalValue = (root.children || []).reduce(
+    (sum, child) =>
+      sum +
+      (child.data.stackedValues
+        ? Object.values(child.data.stackedValues).reduce((a, b) => a + b, 0)
+        : 0),
+    0,
+  );
+
+  x.domain([0, totalValue || 1]);
+
+  svg
+    .append('rect')
+    .attr('class', 'background')
+    .attr('fill', 'none')
+    .attr('pointer-events', 'all')
+    .attr('width', width)
+    .attr('height', initialHeight)
+    .attr('cursor', 'pointer')
+    .on('click', (event, d) => up(svg, d));
+
+  svg.append('g').call(xAxis);
+  svg.append('g').call(yAxis);
+
+  const node = svg.node();
+  let isVisible = false;
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !isVisible) {
+          isVisible = true;
+          down(svg, root);
+          observer.disconnect();
+        }
+      });
+    },
+    { threshold: 0.1 },
+  );
+
+  observer.observe(node);
+
+  return node;
+}

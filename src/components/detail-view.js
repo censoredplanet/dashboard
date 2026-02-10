@@ -182,6 +182,12 @@ export function createDetailOpener(deps) {
       .attr('class', 'node')
       .attr('transform', () => `translate(${laneX}, ${margin.top + r})`)
       .style('cursor', 'pointer');
+    node
+      .append('rect')
+      .attr('class', 'event-tile')
+      .attr('rx', 8) // Rounded corners
+      .attr('ry', 8)
+      .attr('fill', 'transparent');
 
     const impactColors = ['#f7f7f7', '#fddbc7', '#f4a582', '#d6604d'];
     function getContrastColor(color) {
@@ -252,12 +258,12 @@ export function createDetailOpener(deps) {
           self
             .classed('active', true)
             .select('circle')
-            .attr('stroke', '#1e90ff')
-            .attr('stroke-width', 2.5);
+            .attr('stroke', '#17827B')
+            .attr('stroke-width', 5);
           self
             .select('.event-tile')
-            .attr('stroke', '#1e90ff')
-            .attr('fill', '#1e90ff');
+            .attr('stroke', '#17827B')
+            .attr('fill', '#17827B');
         }
         renderRight(d);
         const summaryBody = document.getElementById('summary-body');
@@ -653,12 +659,11 @@ style.textContent = `
   --font-mono: "IBM Plex Mono", monospace;
   --color-text-primary: #1a1a1a;
   --color-text-secondary: #444;
-  --color-accent: #1e90ff;
+  --color-accent: #17827B;
   --font-sans: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   --font-mono: "IBM Plex Mono", monospace;
   --color-text-primary: #1a1a1a;
   --color-text-secondary: #444;
-  --color-accent: #1e90ff;
   --bg: #ffffff;
   --bg-alt: #f5f5f7;
   --text: #222222;
@@ -861,7 +866,7 @@ style.textContent = `
 
 .node.active .event-tile {
   stroke: var(--color-accent);
-  fill: rgba(30,144,255,0.08);
+  fill: rgba(23, 130, 123, 0.1);
 }
 
 .timeline-scroller::-webkit-scrollbar {
