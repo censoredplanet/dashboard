@@ -117,10 +117,9 @@ const listAlerts = (() => {
   return el;
 })();
 ```
-
 <div class="hero">
   <h1>Censored Planet Dashboard</h1>
-
+  
   <div class="grid grid-cols-3">
     <div class="card">
       <h2>📏 Total Measurements</h2>
@@ -170,6 +169,51 @@ const listAlerts = (() => {
 </div>
 
 <style>
+
+footer nav a {
+  display: inline-block;
+  color: #17827B !important;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  margin: 0.5rem;
+  border: 2px solid #17827B;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  background: color-mix(in oklab, #3bcbcbff, transparent 92%);
+}
+
+footer nav a:hover {
+  background: #17827B;
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(23, 130, 123, 0.3);
+}
+
+footer nav a:active {
+  transform: translateY(0);
+}
+
+
+footer nav {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 3rem;
+  padding: 2rem 0;
+  border-top: 1px solid color-mix(in oklab, var(--theme-foreground-muted), transparent 85%);
+}
+
+footer nav a[rel="next"]::after {
+  content: " →";
+  margin-left: 0.25rem;
+}
+
+footer nav a[rel="prev"]::before {
+  content: "← ";
+  margin-right: 0.25rem;
+}
+
 .info-icon {
   display: inline-block;
   margin-left: 6px;
@@ -302,10 +346,27 @@ h2 .info-icon {
   animation-delay: 0.8s;
 }
 
-.explorer-link-container {
-  opacity: 0;
-  animation: fadeInUp 0.8s ease-out forwards;
-  animation-delay: 1.2s;
+.explorer-link-container a {
+  display: inline-block;
+  color: #17827B;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;           
+  margin-top: 1rem;                  
+  border: 2px solid #17827B;         
+  border-radius: 8px;
+  text-decoration: none;             
+  transition: all 0.2s ease;         
+}
+
+.explorer-link-container a:hover {
+  background: #17827B;              
+  color: white;                   
+  transform: translateY(-2px);    
+  box-shadow: 0 4px 12px rgba(23, 130, 123, 0.3);  
+}
+
+.explorer-link-container a:active {
+  transform: translateY(0);         
 }
 
 .chart-container {

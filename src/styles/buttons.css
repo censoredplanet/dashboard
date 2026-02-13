@@ -1,0 +1,63 @@
+/* Shared button and list styles */
+.country-list {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  max-height: 280px;
+  overflow: auto;
+}
+
+.country-list li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 150px;
+  padding: 8px 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  border-radius: 8px;
+  background: color-mix(in oklab, #3bcbcbff, transparent 92%);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.country-list li:hover {
+  background: color-mix(in oklab, #17827B, transparent 85%);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(23, 130, 123, 0.2);
+}
+
+.country-list li:active {
+  transform: translateY(0);
+}
+
+.country-list .val {
+  background: hsl(0 70% var(--light, 62%));
+  color: #e6f3efff;
+  padding: 4px 12px;
+  border-radius: 999px;
+  min-width: 50px;
+  text-align: center;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  border: 1px solid hsl(0 60% calc(var(--light, 62%) + 5%));
+}
+
+/* Explorer link button */
+.explorer-link-container a {
+  display: inline-block;
+  color: #17827B;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #17827B;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.explorer-link-container a:hover {
+  background: #17827B;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(23, 130, 123, 0.3);
+}
