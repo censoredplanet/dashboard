@@ -2,6 +2,8 @@
 title: Censored Planet Dashboard
 ---
 
+<link rel="stylesheet" href="./styles/buttons.css">
+
 ```js
 const totalMeasurementsCount = await FileAttachment(
   "data/totalMeasurementsCount.json",

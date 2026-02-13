@@ -4,6 +4,8 @@ title: CenAlert Dashboard
 [![Censored Planet Logo](logo-umichlab.svg)](/)
 
 <link rel="stylesheet" href="./styles/cenalert.css">
+<link rel="stylesheet" href="./styles/buttons.css">
+
 
 ```js
 import { utcParse, utcFormat } from "https://esm.sh/d3-time-format@4";
