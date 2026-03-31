@@ -35,7 +35,7 @@ for (const { name, code } of countriesList) {
 }
 
 const countries = countriesList.map((c) => c.name);
-let defaultCountry = null;
+let defaultCountry = "Russia";
 if (countries.includes(countryParam)) {
   defaultCountry = countryParam;
 }
