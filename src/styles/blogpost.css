@@ -1,0 +1,276 @@
+/* ============================================================
+   blogpost.css — CenAlert blog post card styles
+   ============================================================ */
+
+.blog-container {
+  width: 75%;
+  max-width: 750px;
+  margin: 0 auto; 
+    
+}
+/* ── Base & layout ── */
+.post-hero,
+.post-section,
+.stat-card {
+  font-family: var(--font-sans);
+  border-radius: 10px;
+  padding: 2rem 2.25rem;
+  margin-bottom: 1.25rem;
+  background: var(--theme-background-alt, #f9f9f9);
+  border: 1px solid var(--theme-border, #e5e5e5);
+}
+
+/* ── Hero card ── */
+.post-hero {
+  padding: 2.5rem 2.75rem;
+  background: var(--theme-background-alt, #f4f6fb);
+  border-left: 4px solid #17827B;
+}
+
+.post-hero-title {
+  font-size: 1.65rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--theme-foreground, #111);
+}
+
+.post-hero-subtitle {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: grey;
+  line-height: 1.55;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0rem;
+  border-bottom: 1px solid var(--theme-border, #e5e5e5);
+}
+
+.post-hero-byline {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--theme-foreground-muted, #888);
+  margin-top: 0.3rem;
+  margin-bottom: 1.5rem;
+}
+
+.post-hero-body p {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--theme-foreground, #222);
+  margin: 0 0 0.9rem;
+}
+
+.post-hero-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Stats grid ── */
+.stats-grid {
+  margin: 1.25rem 0;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  background: var(--theme-background, #fff);
+}
+
+.stat-number {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #17827B;
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+
+.stat-label {
+  font-size: 0.82rem;
+  color: var(--theme-foreground-muted, #888);
+  line-height: 1.45;
+}
+
+/* ── Section cards ── */
+.post-section {
+  background: var(--theme-background, #fff);
+}
+
+.section-heading {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--theme-foreground, #111);
+  margin-bottom: 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--theme-border, #e5e5e5);
+}
+
+.section-body p {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  width: 100%;
+  color: var(--theme-foreground, #222);
+  margin: 0 0 0.9rem;
+}
+
+.section-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Steps (How it works) ── */
+.step-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.25rem;
+}
+
+.step-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.step-number {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: #17827B;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.1rem;
+}
+
+.step-content {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--theme-foreground, #222);
+}
+
+.step-label {
+  font-weight: 700;
+}
+
+/* ── Event list (What it found) ── */
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.event-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  background: var(--theme-background-alt, #f9f9f9);
+  border: 1px solid var(--theme-border, #e5e5e5);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+.event-flag {
+  font-size: 1.75rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.event-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--theme-foreground, #111);
+  margin-bottom: 0.3rem;
+}
+
+.event-desc {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--theme-foreground-alt, #444);
+  margin-bottom: 0.5rem;
+}
+
+.event-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+}
+
+.tag-censorship {
+  background: #fde8e8;
+  color: #b91c1c;
+}
+
+.tag-privacy {
+  background: #e8f0fd;
+  color: #1d4ed8;
+}
+
+/* ── Limitations ── */
+.limitation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.limitation-item {
+  padding: 1rem 1.25rem;
+  background: var(--theme-background-alt, #fafafa);
+  border-left: 3px solid var(--theme-foreground-muted, #ccc);
+  border-radius: 0 6px 6px 0;
+}
+
+.limitation-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--theme-foreground, #111);
+  margin-bottom: 0.3rem;
+}
+
+.limitation-desc {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--theme-foreground-alt, #555);
+}
+
+/* ── Access card ── */
+.post-access-card {
+  background: var(--theme-background-alt, #f4f6fb);
+  border-left: 4px solid #17827B;
+  color: #17827B;
+}
+
+.access-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  color: #17827B;
+  margin-top: 0.75rem;
+}
+
+.access-link {
+  display: inline-block;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #17827B;
+  background: var(--theme-background, #fff);
+  border: 1px solid #17827B;
+  border-radius: 6px;
+  padding: 0.4rem 1rem;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.access-link:hover {
+  background: #17827B;
+  color: #fff;
+}
