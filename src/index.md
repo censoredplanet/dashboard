@@ -131,45 +131,57 @@ const listAlerts = (() => {
       <span class="big">${countryCount}</span>
     </div>
     <div class="card">
-      <h2>Measurements last 30 days</h2>
+      <h2>Measurements (Last 30 Days)</h2>
       <span class="big">${countsByDateFormatted}</span>
     </div>
-  </div>
-  <div class="explorer-link-container">
-    <a style= "color: #17827B; font-weight: bold;"; 
-    href="/observatory.html">Explore Censored Planet Data
-    <span style="display: inline-block; margin-left: 0.25rem; color: #17827B;">↗︎
-    </span></a>
   </div>
 </div>
 
 <div class="hero hero--lists">
+<div class="lists-col-headers grid grid-cols-4">
+  <a href="/observatory.html" class="col-span-2 block">
+  <h2 class="col-title">Censorship Observatory</h2>
+  </a>
+  <a href="/cenalert.html" class="col-span-2 block">
+  <h2 class="col-title">Censorship Alerts</h2>
+  </a>
+  <span class="powered-by">Powered by Google Trends</span>
+</div>
 <div class="grid grid-cols-4">
+  
   <div class="card col-span-2">
-    <h2>
-      Interference Rate Last 30 Days
+    <p class="col-subtitle">
+      Interference Rate
       <span
         class="info-icon"
-        data-tip="Interference rates use Bayesian smoothing with a prior. 
-        Each country’s observed rate is blended with the global average, weighted by the average measurements per country. 
-        This tempers extremes for countries with few measurements. 
-        More data means less pull toward the global rate."
+        data-tip="Interference rates are shown from the last 30 days. Rates use Bayesian smoothing with a prior. Each country's observed rate is blended with the global average, weighted by the average measurements per country. This tempers extremes for countries with few measurements. More data means less pull toward the global rate."
         role="img"
         aria-label="Info"
         tabindex="0"
       >i</span>
-    </h2>
+    </p>
     ${listInterference}
   </div>
 
   <div class="card col-span-2">
-    <h2>Potential Censorship Alerts Last 6 Months</h2>
+  <p class="col-subtitle">
+      What is censorship?
+      <span
+        class="info-icon"
+        data-tip="Censorship requires intent, and CenAlert does not automatically measure intentional blockage. Instead, it analyzes changes in user behavior reflected in Google Trends data, which may indicate experiences with or expectations of Internet restrictions. Further context is available for events in our dashboard."
+        role="img"
+        aria-label="Info"
+        tabindex="0"
+      >i</span>
+    </p>
     ${listAlerts}
   </div>
   </div>
 </div>
 
 <style>
+
+
 .info-icon {
   display: inline-block;
   margin-left: 6px;
@@ -244,6 +256,7 @@ h2 .info-icon {
 
 .hero {
   display: flex;
+  
   flex-direction: column;
   align-items: center;
   font-family: var(--sans-serif);
@@ -500,6 +513,44 @@ h2 .info-icon {
     gap: 0.5rem;
   }
 }
+.lists-col-headers {
+  width: 100%;
+  margin-bottom: -0.25rem;
+}
 
+.col-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--theme-foreground-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 0.25rem 0;
+  padding: 0 0.25rem;
+}
+.powered-by {
+  position: absolute;
+  top: -10px;
+  right: 45px;
+  font-size: 0.7rem;
+  color: blue;
+  opacity: 0.7;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  cursor: default;
+}
+
+.powered-by:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.col-subtitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--theme-foreground-muted);
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
 
 </style>

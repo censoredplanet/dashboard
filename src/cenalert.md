@@ -215,8 +215,8 @@ const fmtYMD = d3.utcFormat("%Y.%m.%d");
 ```
 
 
-<div class="card-big" style="display:flex; flex-direction:column;">
-      CenAlert is an open-source, data-driven alert system that leverages Google Trends to pinpoint where and when global Internet censorship spikes, amplifying user voices even in hard-to-monitor regions. By detecting surges in searches for circumvention tools, CenAlert provides timely, prioritized insights and notifications to empower advocacy and response, bridging critical gaps left as traditional reporting channels face increasing threats.
+<div class="card-big">
+      CenAlert is an open-source, data-driven alert system that leverages Google Trends to pinpoint where and when global Internet censorship spikes, amplifying user voices even in hard-to-monitor regions. By detecting surges in searches for circumvention tools, CenAlert provides timely, prioritized insights and notifications to empower advocacy and response, bridging critical gaps left as traditional reporting channels face increasing threats. Read more in our <a href="./blogpost">blog post.</a>
 </div>
 <div class="disclaimer-box">
   CenAlert does not directly measure censorship. Instead, it analyzes changes in user behavior reflected in Google Trends data, which may indicate experiences with or expectations of Internet restrictions. While spikes often coincide with censorship events, alternative explanations, including geoblocking or increased surveillance, are also possible.
