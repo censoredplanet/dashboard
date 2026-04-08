@@ -9,7 +9,7 @@ title: CenAlert — An Early-Warning System for Internet Censorship
   <div class="post-hero-subtitle">When a government blocks social media or VPNs, people search for workarounds — fast. CenAlert watches those searches in real time to surface potential censorship events before they make the news.</div>
   <div class="post-hero-byline">From the Censored Planet research team · Research paper available at <a href="https://github.com/censoredplanet/cenalert-paper">GitHub</a>.</div>
   <div class="post-hero-body">
-    <p>When Iran blocked Instagram in September 2022, or when Türkiye pulled the plug on Twitter ahead of elections, something predictable happened: millions of people suddenly started searching for VPNs. That spike in search activity is a signal — and CenAlert is built to catch it.</p>
+    <p>When Bangladesh shut down the internet in November 2015 citing national security concerns, or when Ethiopia blocked social media access to quell religious unrest, something predictable happened: millions of people suddenly started searching for VPNs. That spike in search activity is a signal — and CenAlert is built to catch it.</p>
     <p>Developed by researchers at Censored Planet, CenAlert is an open-source alerting system that monitors Google Trends data across 76 countries to detect unusual spikes in searches for censorship circumvention tools, primarily VPNs. When a spike is detected, the system flags it for investigation by journalists, academics, and digital rights organizations.</p>
     <p>In an evaluation covering 2011–2024, the vast majority of CenAlert's highest-impact alerts were explainable — 76 of the top 100 coincided directly with documented censorship events. The system typically detects spikes the same day they begin.</p>
   </div>

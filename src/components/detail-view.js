@@ -447,7 +447,19 @@ export function createDetailOpener(deps) {
     }
 
     renderRight(countryEvents.length ? countryEvents[0] : null);
+    const infoLabel = html`<div class="left-col-label">
+      Impact factor
+      <span
+        class="info-icon"
+        data-tip="We've given each anomaly an impact factor: the total area above the detection threshold over the duration of the spike. Higher impact means a bigger, longer, or more intense surge in circumvention searches. This score helps prioritize which alerts most warrant investigation. "
+        role="img"
+        aria-label="Info"
+        tabindex="0"
+      >i</span>
+    </div>`;
+
     scroller.style.overflowY = 'auto';
+    container.querySelector('.left-col').prepend(infoLabel);
     scroller.append(svg.node());
 
     function layoutNodes() {
@@ -716,6 +728,70 @@ style.textContent = `
   padding: 0;
 }
 
+.info-icon {
+  display: inline-block;
+  margin-left: 6px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 11px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #17827B;
+  cursor: default;
+  position: relative;
+}
+.info-icon::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  bottom: 125%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: pre-line;
+  width: 300px;
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .2s ease, transform .2s ease;
+  pointer-events: none;
+  z-index: 1000;
+}
+.info-icon::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 115%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(0,0,0,0.85) transparent transparent transparent;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .2s ease;
+}
+.info-icon:hover::after,
+.info-icon:hover::before,
+.info-icon:focus-visible::after,
+.info-icon:focus-visible::before {
+  opacity: 1;
+  visibility: visible;
+}
+.left-col-label {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  padding: 0.5rem 1rem 0;
+  display: flex;
+  align-items: center;
+}
 .events-scroller {
   padding: 1rem 0rem;
 }
