@@ -1,0 +1,1128 @@
+start,end,peak,impact,cause,who,country,label,match_start
+2015-07-03,2015-07-03,2015-07-03,0.07011553091812317,Grindr,"CenAlert, Access Now",AE,unknown,2016-10-28
+2020-02-21,2020-02-21,2020-02-21,0.12523566465599245,Skype,CenAlert,AE,unknown,2017-12-28
+2023-01-01,2023-01-01,2023-01-01,0.19929083264775826,Skype,CenAlert,AE,unknown,2017-12-28
+2014-02-16,2014-02-16,2014-02-16,0.2082622860310579,Grindr,Access Now,AE,unknown,2016-10-28
+2012-08-31,2012-08-31,2012-08-31,0.3127480871862822,Grindr,"CenAlert, Access Now",AE,unknown,2016-10-28
+2013-02-08,2013-02-08,2013-02-08,0.4630885371680069,Grindr,"CenAlert, Access Now",AE,unknown,2016-10-28
+2012-12-14,2012-12-14,2012-12-14,0.47318085685447464,Grindr,Access Now,AE,unknown,2016-10-28
+2018-01-26,2018-01-26,2018-01-26,1.8511115422725481,Skype,CenAlert,AE,unknown,2017-12-28
+2020-02-28,2020-02-28,2020-02-28,1.9939779559077273,Skype,CenAlert,AE,unknown,2017-12-28
+2023-12-07,2023-12-07,2023-12-07,4.09156624130118,Skype,CenAlert,AE,unknown,2017-12-28
+2018-01-19,2018-01-19,2018-01-19,4.14994764323778,Skype,CenAlert,AE,unknown,2017-12-28
+2015-06-06,2015-06-06,2015-06-06,4.262012860272595,Grindr,"CenAlert, Access Now",AE,unknown,2016-10-28
+2017-12-22,2017-12-23,2017-12-22,6.657365251651576,Skype,CenAlert,AE,manual,2017-12-28
+2015-07-17,2015-07-19,2015-07-17,6.749581336962578,Grindr,"CenAlert, Access Now",AE,unknown,2016-10-28
+2022-07-09,2022-07-10,2022-07-09,8.832666081922099,Skype,CenAlert,AE,unknown,2017-12-28
+2017-06-25,2017-06-26,2017-06-25,13.457107609595234,Skype,CenAlert,AE,unknown,2017-12-28
+2018-01-22,2018-01-23,2018-01-22,63.67472160337317,Skype,CenAlert,AE,unknown,2017-12-28
+2015-12-17,2015-12-17,2015-12-17,64.0644449731027,Grindr,"CenAlert, Access Now",AE,unknown,2016-10-28
+2016-07-28,2016-08-02,2016-07-30,73.94928508437008,Grindr,"CenAlert, Access Now",AE,unknown,2016-10-28
+2017-12-29,2018-01-13,2018-01-01,179.30746569862822,Skype,CenAlert,AE,manual,2017-12-28
+2022-09-23,2022-09-23,2022-09-23,7.868389939158334,"TikTok, PUBG","CenAlert, Access Now",AF,unknown,2022-10-17
+2017-11-16,2017-11-16,2017-11-16,13.088979931822223,"TikTok, PUBG","CenAlert, Access Now",AF,unknown,2022-10-17
+2022-09-10,2022-09-11,2022-09-11,35.924300801822255,"TikTok, PUBG","CenAlert, Access Now",AF,unknown,2022-10-17
+2022-03-12,2022-03-12,2022-03-12,4.977698198867557,Blocking TikTok,"CenAlert, OONI, Access Now, NetBlocks",AM,unknown,2022-09-13
+2023-09-19,2023-09-22,2023-09-19,29.821309023228146,TikTok and the Google Play Store,"CenAlert, OONI, Access Now",AZ,community,2023-09-19
+2020-09-27,2020-11-11,2020-10-01,1424.4659083752924,Blocking of social media websites during Nagorno-Karabakh war,"CenAlert, OONI, NetBlocks",AZ,community,2020-09-27
+2024-04-20,2024-04-20,2024-04-20,0.016852626410758464,"Facebook, Facebook Messenger, Instagram, Signal, Telegram, WhatsApp, X, YouTube","CenAlert, OONI, Pulse",BD,unknown,2024-07-16
+2018-12-28,2018-12-29,2018-12-28,0.2054070186559933,Skype,"CenAlert, Access Now",BD,unknown,2018-11-21
+2020-03-06,2020-03-06,2020-03-06,0.3566822857140335,"Broadband, Mobile, Facebook and Facebook Messenger","CenAlert, Pulse, Access Now, NetBlocks",BD,unknown,2021-03-26
+2022-08-14,2022-08-15,2022-08-15,0.8210076836733045,"Facebook, WhatsApp, IMO messenger","CenAlert, Access Now",BD,unknown,2022-11-05
+2018-08-03,2018-08-06,2018-08-04,1.2581590544206396,Skype,"CenAlert, Access Now",BD,unknown,2018-11-21
+2021-08-26,2021-08-28,2021-08-27,1.4280067538573862,"Broadband, Mobile, Facebook and Facebook Messenger","CenAlert, Pulse, Access Now, NetBlocks",BD,unknown,2021-03-26
+2022-12-31,2023-01-03,2023-01-01,2.7313907849102,"Facebook, WhatsApp, IMO messenger",Access Now,BD,unknown,2022-11-05
+2015-01-18,2015-01-21,2015-01-20,7.047264628920426,"Facebook, Viber",CenAlert,BD,unknown,2015-11-18
+2024-07-17,2024-07-18,2024-07-18,8.000395486892206,"Facebook, Facebook Messenger, Instagram, Signal, Telegram, WhatsApp, X, YouTube","CenAlert, OONI, Pulse",BD,community,2024-07-16
+2024-08-04,2024-08-05,2024-08-04,16.804107676736912,"Facebook, Facebook Messenger, Instagram, Signal, Telegram, WhatsApp, X, YouTube","CenAlert, Pulse",BD,community,2024-08-04
+2021-03-26,2021-03-30,2021-03-27,46.3158363036276,"Broadband, Mobile, Facebook and Facebook Messenger","CenAlert, Pulse, Access Now, NetBlocks",BD,community,2021-03-26
+2015-11-18,2015-12-10,2015-11-20,231.3790898485901,"Facebook, Viber",CenAlert,BD,manual,2015-11-18
+2024-07-23,2024-07-31,2024-07-24,414.31289080212605,Internet partially restored; social media still blocked,"CenAlert, NetBlocks",BD,community,2024-07-23
+2022-01-11,2022-01-22,2022-01-13,389.04583119702255,"Facebook, WhatsApp","Access Now, NetBlocks",BF,community,2022-01-10
+2020-05-20,2020-05-21,2020-05-20,132.51216779161277,"Blocking of social media during elections, Facebook, Twitter, WhatsApp, Instagram, Telegram, Youtube and other Google services","OONI, Access Now, NetBlocks",BI,community,2020-05-20
+2019-04-28,2019-04-28,2019-04-28,40.27960497982642,"Blocking social media, also scattered shutdowns 28/29, Facebook, Twitter, Instagram and messaging apps WhatsApp, Telegram and Viber + Shutdowns","CenAlert, Pulse, Access Now, NetBlocks, OONI",BJ,community,2019-04-27
+2024-07-27,2024-07-27,2024-07-27,0.03449224028846265,Twitter/X,"CenAlert, OONI",BR,unknown,2024-08-31
+2017-12-08,2017-12-08,2017-12-08,0.08833265665279888,WhatsApp,"CenAlert, Access Now",BR,unknown,2016-07-19
+2020-03-13,2020-03-13,2020-03-13,0.1617805278102804,Telegram,"CenAlert, Access Now",BR,unknown,2022-03-18
+2021-10-04,2021-10-04,2021-10-04,0.3249731988436264,Telegram,"CenAlert, Access Now",BR,unknown,2022-03-18
+2017-05-03,2017-05-03,2017-05-03,0.46198862570391697,WhatsApp,"CenAlert, Access Now",BR,unknown,2016-07-19
+2019-07-03,2019-07-03,2019-07-03,0.6126533548820057,Telegram,"CenAlert, Access Now",BR,unknown,2022-03-18
+2021-01-17,2021-01-17,2021-01-17,0.8185391802244264,Telegram,"CenAlert, Access Now",BR,unknown,2022-03-18
+2022-03-18,2022-03-19,2022-03-19,1.183778501892709,Telegram,"CenAlert, Access Now",BR,community,2022-03-18
+2018-03-10,2018-03-11,2018-03-11,1.2454470309066092,WhatsApp,"CenAlert, Access Now",BR,unknown,2016-07-19
+2024-08-17,2024-08-19,2024-08-17,1.2798086428572075,Twitter/X,"CenAlert, OONI",BR,unknown,2024-08-31
+2018-02-24,2018-02-28,2018-02-24,1.3228066539315373,WhatsApp,"CenAlert, Access Now",BR,unknown,2016-07-19
+2020-12-05,2020-12-06,2020-12-05,1.5998341643503737,Telegram,"CenAlert, Access Now",BR,unknown,2022-03-18
+2022-01-02,2022-01-15,2022-01-09,2.0840756814660786,Telegram,"CenAlert, Access Now",BR,unknown,2022-03-18
+2024-04-07,2024-04-09,2024-04-08,3.4673025715876555,Twitter/X,"CenAlert, OONI",BR,unknown,2024-08-31
+2023-04-27,2023-04-29,2023-04-27,4.915642806551802,"Telegram, Blocking Telegram","CenAlert, OONI, Access Now, NetBlocks",BR,community,2023-04-26
+2016-07-19,2016-07-21,2016-07-19,9.066666666666666,WhatsApp,"CenAlert, Access Now",BR,community,2016-07-19
+2020-03-16,2020-03-29,2020-03-23,18.011595920265847,Telegram,"CenAlert, Access Now",BR,unknown,2022-03-18
+2024-08-29,2024-09-09,2024-08-31,62.89792519140252,Twitter/X,"CenAlert, OONI",BR,community,2024-08-31
+2016-05-02,2016-05-04,2016-05-02,68.71111111111111,"Blocking WhatsApp, WhatsApp","CenAlert, OONI, Access Now",BR,community,2016-05-02
+2015-12-17,2015-12-18,2015-12-17,101.21655381399015,Blocking WhatsApp,"CenAlert, OONI",BR,community,2015-12-17
+2023-04-25,2023-04-25,2023-04-25,0.4390453247750594,"Blocking of 86+ websites (mainly news media, electoral sites, and sites expressing political criticism) amidst protests",OONI,BY,unknown,2020-08-22
+2022-11-20,2022-11-21,2022-11-20,1.092644420493504,"Blocking of 86+ websites (mainly news media, electoral sites, and sites expressing political criticism) amidst protests","CenAlert, OONI",BY,unknown,2020-08-22
+2024-05-25,2024-05-25,2024-05-25,1.7756787634223015,"Blocking of 86+ websites (mainly news media, electoral sites, and sites expressing political criticism) amidst protests","CenAlert, OONI",BY,unknown,2020-08-22
+2022-03-04,2022-03-16,2022-03-13,22.383497381965697,"Blocking of 86+ websites (mainly news media, electoral sites, and sites expressing political criticism) amidst protests","CenAlert, OONI",BY,unknown,2020-08-22
+2020-08-08,2020-08-12,2020-08-11,188.256265663484,"Blocking SSL traffic destined to popular messaging apps, social media platforms, email providers, VPNs, etc.; blocking of belarus2020.org","CenAlert, Access Now, NetBlocks",BY,community,2020-08-09
+2023-12-18,2023-12-18,2023-12-18,39.180360878285164,"Facebook, Twitter, WhatsApp, Instagram",Access Now,CD,unknown,2017-08-07
+2017-10-06,2017-10-06,2017-10-06,2.0710089059753614,"Facebook, Twitter, WhatsApp","CenAlert, Access Now",CM,community,2017-09-30
+2017-09-30,2017-10-01,2017-09-30,135.1372487049484,"Facebook, Twitter, WhatsApp","CenAlert, Access Now",CM,community,2017-09-30
+2013-06-15,2013-06-15,2013-06-15,0.049927093328479444,Anti-Japan Protests,"CenAlert, Other",CN,unknown,2012-08-19
+2012-03-22,2012-03-22,2012-03-22,0.11105878024562621,Anti-Japan Protests,Other,CN,unknown,2012-08-19
+2011-10-10,2011-10-10,2011-10-10,0.19972172519874398,Anti-Japan Protests,"CenAlert, Other",CN,unknown,2012-08-19
+2014-06-01,2014-06-01,2014-06-01,2.601057633308148,Anti-Japan Protests,"CenAlert, Other",CN,unknown,2012-08-19
+2024-02-03,2024-02-03,2024-02-03,5.202266353526873,"OONI, Blocking OONI",OONI,CN,unknown,2023-07-07
+2017-10-09,2017-10-09,2017-10-09,5.88770898246743,WhatsApp,"CenAlert, Access Now",CN,unknown,2017-07-11
+2017-10-06,2017-10-06,2017-10-06,7.404359312782262,WhatsApp,"CenAlert, Access Now",CN,unknown,2017-07-11
+2015-09-04,2015-09-04,2015-09-04,10.849312332544898,Blocking Chinese language Wikipedia,"CenAlert, OONI",CN,unknown,2016-11-10
+2017-06-22,2017-06-25,2017-06-23,38.86212384186143,WhatsApp,"CenAlert, Access Now",CN,unknown,2017-07-11
+2019-06-01,2019-06-03,2019-06-02,92.39012244242232,,"CenAlert, Pulse, Access Now",CN,unknown,2019-05-20
+2012-08-20,2013-01-01,2012-11-17,622.1798798045445,Anti-Japan Protests,"CenAlert, Other",CN,other,2012-08-19
+2021-01-10,2021-01-10,2021-01-10,0.12862550751558066,"Facebook, Twitter",NetBlocks,CU,unknown,2020-12-10
+2021-06-04,2021-06-04,2021-06-04,0.26474475354528737,"Blocking Signal, Facebook, WhatsApp, Instagram, some Telegram servers, YouTube","CenAlert, OONI, Access Now, NetBlocks",CU,unknown,2021-07-11
+2020-06-04,2020-06-04,2020-06-04,0.41388970411399884,"Twitter, WhatsApp, YouTube, and some Google and Facebook servers","Access Now, NetBlocks",CU,unknown,2020-11-27
+2020-12-05,2020-12-05,2020-12-05,0.46019464502020435,"Facebook, Twitter","CenAlert, NetBlocks",CU,community,2020-12-10
+2020-10-26,2020-10-28,2020-10-26,0.7864828944136892,"Twitter, WhatsApp, YouTube, and some Google and Facebook servers","Access Now, NetBlocks",CU,unknown,2020-11-27
+2021-11-13,2021-11-16,2021-11-15,0.8885753356513728,"Blocking Signal (along with other social media amid protests), Facebook, WhatsApp, Instagram, Telegram, WhatsApp, YouTube","CenAlert, OONI, Access Now, NetBlocks",CU,unknown,2021-07-11
+2021-10-04,2021-10-04,2021-10-04,3.102792956054908,"Blocking Signal (along with other social media amid protests), Facebook, WhatsApp, Instagram, Telegram, WhatsApp, YouTube","CenAlert, OONI, Access Now, NetBlocks",CU,unknown,2021-07-11
+2020-10-19,2020-10-23,2020-10-21,4.5869904762886335,"Twitter, WhatsApp, YouTube, and some Google and Facebook servers","CenAlert, Access Now, NetBlocks",CU,unknown,2020-11-27
+2023-03-14,2023-03-16,2023-03-15,8.963601518240106,"Blocking Signal (along with other social media amid protests), Facebook, WhatsApp, Instagram, some Telegram servers, YouTube","CenAlert, OONI, Access Now, NetBlocks",CU,unknown,2021-07-11
+2020-10-15,2020-10-17,2020-10-16,15.023572946322318,"Twitter, WhatsApp, YouTube, and some Google and Facebook servers","CenAlert, Access Now, NetBlocks",CU,unknown,2020-11-27
+2020-11-29,2020-11-30,2020-11-29,17.379530442828223,"Twitter, WhatsApp, YouTube, and some Google and Facebook servers","CenAlert, Access Now, NetBlocks",CU,community,2020-11-27
+2021-07-11,2021-07-19,2021-07-14,364.89870179911884,"Blocking Signal (along with other social media amid protests), Facebook, WhatsApp, Instagram, some Telegram servers","CenAlert, OONI, Access Now, NetBlocks",CU,community,2021-07-11
+2022-01-25,2022-01-25,2022-01-25,0.022996729113897718,,"CenAlert, Access Now",DZ,unknown,2022-06-13
+2024-09-04,2024-09-04,2024-09-04,0.05433194027869992,News Media,Pulse,DZ,unknown,2023-06-11
+2022-01-27,2022-01-27,2022-01-27,0.0940105153591837,,"CenAlert, Access Now",DZ,unknown,2022-06-13
+2015-09-26,2015-09-26,2015-09-26,0.15705449875402566,Submarine cable cut,Other,DZ,unknown,2015-10-22
+2015-05-20,2015-05-20,2015-05-20,0.16436604375415165,Submarine cable cut,Other,DZ,unknown,2015-10-22
+2019-12-11,2019-12-12,2019-12-11,0.2235556186649994,"YouTube as well as Android mobile platform backends, Google Translate, Google Hangouts and Play Store","CenAlert, NetBlocks",DZ,unknown,2019-08-08
+2015-07-10,2015-07-11,2015-07-11,0.2457164193630037,Submarine cable cut,"CenAlert, Other",DZ,unknown,2015-10-22
+2016-01-15,2016-01-15,2016-01-15,0.26477789047684386,Submarine cable cut,"CenAlert, Other",DZ,unknown,2015-10-22
+2024-12-20,2024-12-21,2024-12-20,0.3111853146555208,News Media,"CenAlert, Pulse",DZ,unknown,2023-06-11
+2024-07-05,2024-07-06,2024-07-06,0.5491125847974621,News Media,"CenAlert, Pulse",DZ,unknown,2023-06-11
+2015-06-27,2015-06-27,2015-06-27,0.5759702163147002,Submarine cable cut,Other,DZ,unknown,2015-10-22
+2015-09-13,2015-09-13,2015-09-13,0.6698795835334894,Submarine cable cut,"CenAlert, Other",DZ,unknown,2015-10-22
+2019-03-13,2019-03-13,2019-03-13,0.6772072488117411,Facebook,"CenAlert, Access Now",DZ,unknown,2019-02-21
+2015-09-17,2015-09-17,2015-09-17,0.6865148770479528,Submarine cable cut,"CenAlert, Other",DZ,unknown,2015-10-22
+2018-06-23,2018-06-23,2018-06-23,0.7145168792694419,Facebook,Access Now,DZ,community,2018-06-21
+2022-12-16,2022-12-17,2022-12-16,0.8372378628087542,News Media,"CenAlert, Pulse",DZ,unknown,2023-06-11
+2015-07-05,2015-07-06,2015-07-06,0.849059238043802,Submarine cable cut,"CenAlert, Other",DZ,unknown,2015-10-22
+2021-09-03,2021-09-04,2021-09-03,0.878119581706013,,"CenAlert, Access Now",DZ,unknown,2022-06-13
+2019-04-14,2019-04-14,2019-04-14,0.9037486539954007,Facebook,"CenAlert, Access Now",DZ,unknown,2019-02-21
+2014-11-27,2014-11-27,2014-11-27,0.9426213692319898,Submarine cable cut,"CenAlert, Other",DZ,unknown,2015-10-22
+2014-09-23,2014-09-23,2014-09-23,0.9444944130060322,Submarine cable cut,Other,DZ,unknown,2015-10-22
+2015-08-21,2015-08-21,2015-08-21,0.9538933736103257,Submarine cable cut,"CenAlert, Other",DZ,unknown,2015-10-22
+2015-08-24,2015-08-24,2015-08-24,1.1268325811646918,Submarine cable cut,"CenAlert, Other",DZ,unknown,2015-10-22
+2014-11-25,2014-11-25,2014-11-25,1.2587991165719763,Submarine cable cut,"CenAlert, Other",DZ,unknown,2015-10-22
+2014-11-09,2014-11-09,2014-11-09,1.3020777432648258,Submarine cable cut,"CenAlert, Other",DZ,unknown,2015-10-22
+2015-07-15,2015-07-16,2015-07-15,1.3329442275776895,Submarine cable cut,"CenAlert, Other",DZ,unknown,2015-10-22
+2014-07-29,2014-07-30,2014-07-29,1.3984122922464683,Submarine cable cut,Other,DZ,unknown,2015-10-22
+2015-09-30,2015-09-30,2015-09-30,1.5703029870825471,Submarine cable cut,"CenAlert, Other",DZ,unknown,2015-10-22
+2014-06-13,2014-06-13,2014-06-13,2.29997112413681,Submarine cable cut,"CenAlert, Other",DZ,unknown,2015-10-22
+2022-02-20,2022-02-21,2022-02-21,2.4371329420595096,,"CenAlert, Access Now",DZ,unknown,2022-06-13
+2014-12-01,2014-12-02,2014-12-02,2.655286818125319,Submarine cable cut,Other,DZ,unknown,2015-10-22
+2015-10-16,2015-10-18,2015-10-16,2.893210881987482,Submarine cable cut,"CenAlert, Other",DZ,other,2015-10-22
+2014-12-09,2014-12-12,2014-12-10,3.9230499377959465,Submarine cable cut,"CenAlert, Other",DZ,unknown,2015-10-22
+2014-07-16,2014-07-17,2014-07-16,4.12688112899414,Submarine cable cut,"CenAlert, Other",DZ,unknown,2015-10-22
+2017-07-13,2017-07-13,2017-07-13,4.876785088275181,Facebook,"CenAlert, Access Now",DZ,unknown,2018-06-21
+2018-10-19,2018-10-21,2018-10-20,5.333346415244267,Facebook,"CenAlert, Access Now",DZ,unknown,2018-06-21
+2021-11-18,2021-11-19,2021-11-18,5.63944352398463,,"CenAlert, Access Now",DZ,unknown,2022-06-13
+2019-02-28,2019-03-01,2019-02-28,5.769066552640382,Facebook,"CenAlert, Access Now",DZ,unknown,2019-02-21
+2022-01-11,2022-01-12,2022-01-12,8.799655541257971,,"CenAlert, Access Now",DZ,unknown,2022-06-13
+2018-06-19,2018-06-21,2018-06-20,8.920134217891306,Facebook,"CenAlert, Access Now",DZ,community,2018-06-21
+2020-08-19,2020-08-23,2020-08-21,9.680945408684984,"Facebook, Twitter, WhatsApp, Instagram, Telegram, Social media and messaging services","CenAlert, Access Now, NetBlocks",DZ,unknown,2020-09-12
+2019-02-21,2019-02-23,2019-02-22,14.145905800796037,Facebook,"CenAlert, Access Now",DZ,community,2019-02-21
+2017-07-15,2017-07-18,2017-07-15,15.70631484999782,Facebook,"CenAlert, Access Now",DZ,unknown,2018-06-21
+2020-03-15,2020-03-17,2020-03-15,17.63717828971609,"Facebook, Twitter, WhatsApp, Instagram, Telegram, Social media and messaging services","CenAlert, Access Now, NetBlocks",DZ,unknown,2020-09-12
+2024-06-08,2024-06-13,2024-06-09,17.763373355500775,News Media,"CenAlert, Pulse",DZ,unknown,2023-06-11
+2021-06-20,2021-06-24,2021-06-20,18.937019937891705,"Facebook, Twitter, WhatsApp, Instagram, Telegram, Social media and messaging services","CenAlert, Access Now, NetBlocks",DZ,unknown,2020-09-12
+2015-02-02,2015-02-12,2015-02-05,19.006926710508523,Submarine cable cut,"CenAlert, Other",DZ,unknown,2015-10-22
+2022-06-11,2022-06-15,2022-06-12,22.008782143346735,,"CenAlert, Access Now",DZ,community,2022-06-13
+2014-04-04,2014-04-10,2014-04-05,22.11430833568095,Submarine cable cut,"CenAlert, Other",DZ,unknown,2015-10-22
+2017-04-14,2017-04-15,2017-04-14,24.20893601965712,"Social media, 3G mobile internet","CenAlert, Access Now",DZ,unknown,2016-06-19
+2023-06-10,2023-06-16,2023-06-11,30.99700029624155,News Media,"CenAlert, Pulse",DZ,community,2023-06-11
+2017-06-09,2017-06-15,2017-06-13,34.697262560013506,"Social media, 3G mobile internet","CenAlert, Access Now",DZ,unknown,2016-06-19
+2019-06-15,2019-06-20,2019-06-16,43.350558658124825,Social media restrictions on Algeria Telecom,"CenAlert, Pulse, Access Now, NetBlocks",DZ,community,2019-06-15
+2020-09-12,2020-09-17,2020-09-13,45.13539621234658,"Facebook, Twitter, WhatsApp, Instagram, Telegram, Social media and messaging services","CenAlert, Access Now, NetBlocks",DZ,community,2020-09-12
+2014-12-15,2015-01-10,2015-01-02,68.78929331409344,Submarine cable cut,"CenAlert, Other",DZ,unknown,2015-10-22
+2015-10-23,2015-10-27,2015-10-24,108.87609539330762,Submarine cable cut,"CenAlert, Other",DZ,other,2015-10-22
+2016-06-18,2016-06-22,2016-06-19,172.65938977468952,"Social media, 3G mobile internet","CenAlert, Access Now",DZ,community,2016-06-19
+2024-08-04,2024-08-13,2024-08-05,236.2495968790338,Pirated Pro League Streams,CenAlert,EC,manual,2024-08-03
+2021-10-04,2021-10-04,2021-10-04,0.032353466741678716,Telegram,"CenAlert, Pulse, Access Now",EG,unknown,2020-10-22
+2019-01-27,2019-01-27,2019-01-27,0.18261523105515565,"Voiceonline, an opposition campaign petition website","CenAlert, NetBlocks",EG,unknown,2019-04-09
+2020-12-05,2020-12-05,2020-12-05,0.21930453408238293,Telegram,"CenAlert, Pulse, Access Now",EG,unknown,2020-10-22
+2018-05-30,2018-05-30,2018-05-30,0.2692046286290495,Pornography,CenAlert,EG,unknown,2018-10-06
+2023-06-29,2023-06-29,2023-06-29,0.3588650912776501,Proton services,OONI,EG,unknown,2023-06-01
+2023-06-26,2023-06-26,2023-06-26,0.4522847475939926,Proton services,OONI,EG,unknown,2023-06-01
+2024-01-04,2024-01-04,2024-01-04,0.5431866572312458,Proton services,"CenAlert, OONI",EG,unknown,2023-06-01
+2024-09-11,2024-09-11,2024-09-11,0.5802054399779557,Proton services,OONI,EG,unknown,2023-06-01
+2021-03-19,2021-03-19,2021-03-19,0.6517651553724448,Telegram,"Pulse, Access Now",EG,unknown,2020-10-22
+2017-03-31,2017-03-31,2017-03-31,0.7314796623826911,VoIP,CenAlert,EG,unknown,2017-04-21
+2017-10-04,2017-10-04,2017-10-04,0.7941186838991854,"Pornography, Torrents",CenAlert,EG,unknown,2017-12-28
+2020-04-20,2020-04-20,2020-04-20,1.0719886881152298,COVID-19 restrictions,"CenAlert, Other",EG,unknown,2020-03-22
+2022-01-04,2022-01-04,2022-01-04,1.0800259191328827,Telegram,"CenAlert, Pulse, Access Now",EG,unknown,2020-10-22
+2019-01-30,2019-01-30,2019-01-30,1.1446555775805614,"Voiceonline, an opposition campaign petition website","CenAlert, NetBlocks",EG,unknown,2019-04-09
+2016-09-23,2016-09-23,2016-09-23,1.7181581628674127,Tor,"CenAlert, OONI",EG,unknown,2016-10-02
+2022-10-21,2022-10-21,2022-10-21,1.8084215432319333,Proton services,"CenAlert, OONI",EG,unknown,2023-06-01
+2019-05-07,2019-05-07,2019-05-07,2.4957177021257486,Egybest (and other piracy sites),CenAlert,EG,manual,2019-05-13
+2019-09-23,2019-09-23,2019-09-23,3.8752402567671993,Blocking BBC and Alhurra news media websites coinciding with protests,"CenAlert, OONI, Access Now, NetBlocks, Pulse",EG,community,2019-09-22
+2022-06-02,2022-06-02,2022-06-02,4.041918490476078,Proton services,"CenAlert, OONI",EG,unknown,2023-06-01
+2016-10-12,2016-10-12,2016-10-12,4.702070187826973,Tor,"CenAlert, OONI",EG,unknown,2016-10-02
+2020-04-13,2020-04-15,2020-04-15,5.297849734729027,COVID-19 restrictions,"CenAlert, Other",EG,unknown,2020-03-22
+2020-04-17,2020-04-18,2020-04-17,5.514481734283571,COVID-19 restrictions,"CenAlert, Other",EG,unknown,2020-03-22
+2019-04-20,2019-04-21,2019-04-21,5.918776373661906,Bitly,"CenAlert, NetBlocks",EG,community,2019-04-18
+2018-06-07,2018-06-08,2018-06-08,6.106120903625111,Pornography,CenAlert,EG,unknown,2018-10-06
+2020-03-15,2020-03-18,2020-03-16,6.448698150973513,COVID-19 restrictions,"CenAlert, Other",EG,unknown,2020-03-22
+2018-10-06,2018-10-07,2018-10-07,8.02943317009564,Pornography,CenAlert,EG,manual,2018-10-06
+2016-10-01,2016-10-03,2016-10-03,10.260691162202647,Tor,"CenAlert, OONI",EG,community,2016-10-02
+2019-04-09,2019-04-14,2019-04-11,28.88884378295242,"Voiceonline, an opposition campaign petition website","CenAlert, NetBlocks",EG,community,2019-04-09
+2017-04-21,2017-04-25,2017-04-22,109.64742609985102,VoIP,CenAlert,EG,manual,2017-04-21
+2017-12-28,2018-01-02,2017-12-30,126.61386600248937,"Pornography, Torrents",CenAlert,EG,manual,2017-12-28
+2020-03-21,2020-04-11,2020-03-26,145.40566616026905,COVID-19 restrictions,"CenAlert, Other",EG,other,2020-03-22
+2019-05-13,2019-05-18,2019-05-14,189.82534597390793,Egybest (and other piracy sites),CenAlert,EG,manual,2019-05-13
+2024-07-14,2024-07-14,2024-07-14,1.302496624634152,Crackdown on watching pirated soccer broadcasts,"CenAlert, Other",ES,unknown,2024-03-07
+2024-07-02,2024-07-02,2024-07-02,1.4060206698964421,Crackdown on watching pirated soccer broadcasts,"CenAlert, Other",ES,unknown,2024-03-07
+2023-07-16,2023-07-16,2023-07-16,1.7027693884614692,Crackdown on watching pirated soccer broadcasts,"CenAlert, Other",ES,unknown,2024-03-07
+2011-08-18,2011-08-18,2011-08-18,2.428777742906944,Blocking 25 sites related to Catalonia independence referendum,OONI,ES,unknown,2017-09-25
+2019-07-03,2019-07-03,2019-07-03,3.486309423020451,COVID-19 restrictions,"CenAlert, Other",ES,unknown,2020-03-14
+2024-10-26,2024-10-26,2024-10-26,4.479902767195753,Crackdown on watching pirated soccer broadcasts,"CenAlert, Other",ES,unknown,2024-03-07
+2020-03-23,2020-03-23,2020-03-23,4.482128138894531,COVID-19 restrictions,"CenAlert, Other",ES,unknown,2020-03-14
+2021-05-13,2021-05-13,2021-05-13,5.523034267473992,COVID-19 restrictions,"CenAlert, Other",ES,unknown,2020-03-14
+2016-10-21,2016-10-21,2016-10-21,8.007509699956579,Blocking 25 sites related to Catalonia independence referendum,"CenAlert, OONI",ES,unknown,2017-09-25
+2022-11-21,2022-11-22,2022-11-21,10.319343868619171,Crackdown on watching pirated soccer broadcasts,"CenAlert, Other",ES,unknown,2024-03-07
+2022-02-15,2022-02-15,2022-02-15,13.835684610127437,COVID-19 restrictions,"CenAlert, Other",ES,unknown,2020-03-14
+2021-05-26,2021-05-26,2021-05-26,14.412854176013369,COVID-19 restrictions,"CenAlert, Other",ES,unknown,2020-03-14
+2011-08-21,2011-08-26,2011-08-24,17.183326273259006,Blocking 25 sites related to Catalonia independence referendum,"CenAlert, OONI",ES,unknown,2017-09-25
+2011-01-31,2011-02-04,2011-02-03,34.27864875058505,Blocking 25 sites related to Catalonia independence referendum,"CenAlert, OONI",ES,unknown,2017-09-25
+2024-03-23,2024-03-24,2024-03-23,41.96349217549633,Crackdown on watching pirated soccer broadcasts,"CenAlert, Other",ES,unknown,2024-03-07
+2024-03-07,2024-03-12,2024-03-08,157.67807007793357,Crackdown on watching pirated soccer broadcasts,"CenAlert, Other",ES,other,2024-03-07
+2011-02-06,2011-03-11,2011-02-11,178.8670915152438,Blocking 25 sites related to Catalonia independence referendum,"CenAlert, OONI",ES,unknown,2017-09-25
+2020-03-10,2020-03-20,2020-03-16,179.09937708681537,COVID-19 restrictions,"CenAlert, Other",ES,other,2020-03-14
+2017-05-11,2017-05-11,2017-05-11,0.13199635343610971,Directive enumerating prohibited acts during state of emergency,Other,ET,unknown,2016-10-15
+2017-05-01,2017-05-01,2017-05-01,0.2340368804021935,Directive enumerating prohibited acts during state of emergency,Other,ET,unknown,2016-10-15
+2017-04-24,2017-04-24,2017-04-24,0.3201897627757564,Directive enumerating prohibited acts during state of emergency,Other,ET,unknown,2016-10-15
+2017-02-07,2017-02-07,2017-02-07,0.33240728170259626,Directive enumerating prohibited acts during state of emergency,Other,ET,unknown,2016-10-15
+2017-11-06,2017-11-06,2017-11-06,0.4498039477358571,Social media only,Access Now,ET,unknown,2017-12-12
+2017-03-23,2017-03-23,2017-03-23,0.9053702303158779,Directive enumerating prohibited acts during state of emergency,Other,ET,unknown,2016-10-15
+2021-05-17,2021-05-17,2021-05-17,1.681768155097184,"Facebook, WhatsApp, Instagram","CenAlert, Access Now",ET,community,2021-05-16
+2016-10-03,2016-10-04,2016-10-04,1.8175962851445888,"Social media, mobile Internet",OONI,ET,community,2016-10-05
+2022-09-10,2022-09-11,2022-09-11,2.480257593391789,"Blocking social media amid church split tensions and calls for anti-government protests, Facebook, Telegram, Tik Tok, YouTube","CenAlert, OONI, Access Now, NetBlocks, Pulse",ET,unknown,2023-02-09
+2016-09-19,2016-09-21,2016-09-19,2.6272287111942845,"Social media, mobile Internet",OONI,ET,unknown,2016-10-05
+2022-06-16,2022-06-16,2022-06-16,2.6482728118630074,"Facebook, Messenger, some WhatsApp and Telegram servers","CenAlert, NetBlocks",ET,unknown,2021-11-08
+2017-09-10,2017-09-10,2017-09-10,4.268313639744365,Social media only,Access Now,ET,unknown,2017-12-12
+2016-08-08,2016-08-09,2016-08-08,4.9821511928111555,Social media,"CenAlert, Access Now",ET,community,2016-08-07
+2019-06-28,2019-07-01,2019-07-01,5.498288531398014,"Blocking of whatsapp, Facebook, Instagram, Messenger, WhatsApp, some VPN sites, Telegram, YouTube","CenAlert, OONI, NetBlocks",ET,community,2019-06-27
+2016-10-06,2016-10-07,2016-10-06,7.376485189149696,"Social media, mobile Internet","CenAlert, OONI",ET,community,2016-10-05
+2022-10-17,2022-10-20,2022-10-18,12.019028006592979,"Blocking social media amid church split tensions and calls for anti-government protests, Facebook, Telegram, Tik Tok, YouTube","CenAlert, OONI, Access Now, NetBlocks, Pulse",ET,unknown,2023-02-09
+2017-12-23,2017-12-23,2017-12-23,12.22495550631221,Social media only,Access Now,ET,unknown,2017-12-12
+2016-10-13,2016-10-15,2016-10-13,16.126311486746552,Directive enumerating prohibited acts during state of emergency,Other,ET,other,2016-10-15
+2020-07-15,2020-07-29,2020-07-15,19.648823336344847,"Shutdown partially lifted, social media still blocked",CenAlert,ET,manual,2020-07-14
+2016-10-10,2016-10-11,2016-10-10,23.796615534687213,Directive enumerating prohibited acts during state of emergency,Other,ET,other,2016-10-15
+2018-01-01,2018-01-03,2018-01-01,27.857138960492954,Social media only,"CenAlert, Access Now",ET,unknown,2017-12-12
+2017-12-25,2017-12-30,2017-12-26,83.09858546778453,Social media only,Access Now,ET,unknown,2017-12-12
+2021-11-08,2021-11-12,2021-11-09,125.35458653721535,"Facebook, Messenger, some WhatsApp and Telegram servers","CenAlert, NetBlocks",ET,community,2021-11-08
+2017-12-12,2017-12-21,2017-12-20,137.1223184837476,Social media only,Access Now,ET,community,2017-12-12
+2016-07-10,2016-07-21,2016-07-11,155.0954463071876,Social media,"CenAlert, Access Now",ET,community,2016-07-11
+2016-10-17,2016-11-17,2016-10-25,328.2650052244836,Directive enumerating prohibited acts during state of emergency,Other,ET,other,2016-10-15
+2023-02-09,2023-04-20,2023-02-10,1500.9378946116371,"Blocking social media amid church split tensions and calls for anti-government protests, Facebook, Telegram, Tik Tok, YouTube","CenAlert, OONI, Access Now, NetBlocks, Pulse",ET,community,2023-02-09
+2016-09-12,2016-09-12,2016-09-12,0.36158355961907773,,Access Now,GA,unknown,2016-08-28
+2018-08-12,2018-08-12,2018-08-12,0.17520358606775943,Public Wifi,Access Now,GB,unknown,2019-05-18
+2022-01-01,2022-01-01,2022-01-01,0.7176479470372641,Pirated Premier League streams,CenAlert,GB,unknown,2020-09-26
+2022-08-13,2022-08-13,2022-08-13,0.8739932266842558,Pirated Premier League streams,CenAlert,GB,unknown,2020-09-26
+2019-12-07,2019-12-07,2019-12-07,0.9831885078214384,"COVID-19 social distancing, work from home advisory","CenAlert, Other",GB,unknown,2020-03-16
+2021-09-25,2021-09-25,2021-09-25,1.5212383368233091,Pirated Premier League streams,CenAlert,GB,unknown,2020-09-26
+2019-04-17,2019-04-17,2019-04-17,1.6786209481158494,Public Wifi,"CenAlert, Access Now",GB,unknown,2019-05-18
+2021-09-11,2021-09-11,2021-09-11,2.535971489039703,Pirated Premier League streams,CenAlert,GB,unknown,2020-09-26
+2021-08-14,2021-08-14,2021-08-14,3.5495725350476164,Pirated Premier League streams,CenAlert,GB,unknown,2020-09-26
+2020-10-24,2020-10-24,2020-10-24,3.759668347164208,Pirated Premier League streams,CenAlert,GB,unknown,2020-09-26
+2022-08-06,2022-08-06,2022-08-06,4.053866957490129,Pirated Premier League streams,CenAlert,GB,unknown,2020-09-26
+2015-11-09,2015-11-09,2015-11-09,5.076016107474061,Public Wifi,"CenAlert, Access Now",GB,unknown,2019-05-18
+2024-09-21,2024-09-21,2024-09-21,8.230170348639689,Pirated Premier League streams,CenAlert,GB,unknown,2020-09-26
+2024-08-17,2024-08-17,2024-08-17,8.45681697433011,Pirated Premier League streams,CenAlert,GB,unknown,2020-09-26
+2023-01-21,2023-01-22,2023-01-21,8.521464404357971,Pirated Premier League streams,CenAlert,GB,unknown,2020-09-26
+2012-05-02,2012-05-03,2012-05-02,8.80493679403363,Public Wifi,"CenAlert, Access Now",GB,unknown,2019-05-18
+2023-08-12,2023-08-12,2023-08-12,10.412346657703814,Pirated Premier League streams,CenAlert,GB,unknown,2020-09-26
+2015-11-04,2015-11-05,2015-11-04,10.51832457591442,Public Wifi,"CenAlert, Access Now",GB,unknown,2019-05-18
+2019-03-02,2019-03-03,2019-03-03,10.811059117037516,Public Wifi,"CenAlert, Access Now",GB,unknown,2019-05-18
+2020-03-30,2020-04-02,2020-03-30,12.39357346705333,"COVID-19 social distancing, work from home advisory","CenAlert, Other",GB,unknown,2020-03-16
+2020-03-11,2020-03-13,2020-03-13,16.644972493685145,"COVID-19 social distancing, work from home advisory","CenAlert, Other",GB,other,2020-03-16
+2020-10-17,2020-10-18,2020-10-17,18.659944769093556,Pirated Premier League streams,CenAlert,GB,unknown,2020-09-26
+2022-08-20,2022-08-20,2022-08-20,29.336300179197828,Pirated Premier League streams,CenAlert,GB,unknown,2020-09-26
+2020-10-03,2020-10-04,2020-10-04,42.30184061729585,Pirated Premier League streams,CenAlert,GB,unknown,2020-09-26
+2020-03-23,2020-03-27,2020-03-24,73.95715717983609,"COVID-19 social distancing, work from home advisory","CenAlert, Other",GB,unknown,2020-03-16
+2020-09-19,2020-09-24,2020-09-20,101.54940024672817,Pirated Premier League streams,CenAlert,GB,manual,2020-09-19
+2020-09-26,2020-10-01,2020-09-27,115.02949331517391,Pirated Premier League streams,CenAlert,GB,manual,2020-09-26
+2020-03-16,2020-03-20,2020-03-17,133.29532508742824,"COVID-19 social distancing, work from home advisory","CenAlert, Other",GB,other,2020-03-16
+2023-05-19,2023-05-19,2023-05-19,7.405747187282685,"Facebook, WhatsApp, Instagram, TikTok, Messaging (WhatsApp, Facebook Messenger, Telegram)","OONI, Access Now, NetBlocks, Pulse",GN,community,2023-05-17
+2021-08-20,2021-08-20,2021-08-20,99.00000000000001,Facebook,"CenAlert, Access Now",GQ,unknown,2017-10-27
+2016-05-28,2016-05-28,2016-05-28,0.06353192917361739,China announces National Security Law,"CenAlert, Other",HK,unknown,2020-05-21
+2018-02-15,2018-02-15,2018-02-15,0.17142026927591303,China announces National Security Law,"CenAlert, Other",HK,unknown,2020-05-21
+2022-11-20,2022-11-20,2022-11-20,0.20257980128621966,Blocking of Hong Kong Watch website,"CenAlert, OONI",HK,unknown,2022-02-14
+2013-05-07,2013-05-07,2013-05-07,0.3734886729442355,China announces National Security Law,"CenAlert, Other",HK,unknown,2020-05-21
+2017-01-24,2017-01-24,2017-01-24,1.4908362583758787,China announces National Security Law,Other,HK,unknown,2020-05-21
+2018-05-26,2018-05-26,2018-05-26,1.969342144598187,China announces National Security Law,"CenAlert, Other",HK,unknown,2020-05-21
+2018-06-16,2018-06-17,2018-06-17,3.6435975034351067,China announces National Security Law,"CenAlert, Other",HK,unknown,2020-05-21
+2022-11-22,2022-11-24,2022-11-22,7.52039858292612,Blocking of Hong Kong Watch website,"CenAlert, OONI",HK,unknown,2022-02-14
+2020-06-30,2020-07-01,2020-07-01,19.487563184523374,China announces National Security Law,"CenAlert, Other",HK,unknown,2020-05-21
+2019-10-04,2019-10-08,2019-10-04,43.11314748085191,China announces National Security Law,"CenAlert, Other",HK,unknown,2020-05-21
+2020-05-21,2020-05-30,2020-05-22,250.6740849096925,China announces National Security Law,"CenAlert, Other",HK,other,2020-05-21
+2013-01-03,2013-01-04,2013-01-04,0.13708174402929574,"Blocking Vimeo, Reddit","CenAlert, OONI",ID,unknown,2014-05-11
+2022-11-22,2022-11-22,2022-11-22,0.2228693264927517,"Blocking gaming websites, yahoo, Payment Services and Gaming Platforms (e.g., PayPal, Steam)","CenAlert, OONI, NetBlocks",ID,unknown,2022-07-29
+2020-05-24,2020-05-25,2020-05-24,0.3110043982955073,"WhatsApp, Instagram, Facebook Messenger","Pulse, Access Now, NetBlocks",ID,unknown,2019-05-22
+2022-03-18,2022-03-19,2022-03-18,0.32789069935354576,"Blocking gaming websites, yahoo, Payment Services and Gaming Platforms (e.g., PayPal, Steam)","CenAlert, OONI, NetBlocks",ID,unknown,2022-07-29
+2017-06-20,2017-06-20,2017-06-20,0.6277737726935513,Blocking suarapapua.com,"CenAlert, OONI",ID,unknown,2016-11-04
+2022-07-30,2022-07-30,2022-07-30,1.033444043477266,"Blocking gaming websites, yahoo, Payment Services and Gaming Platforms (e.g., PayPal, Steam)","CenAlert, OONI, NetBlocks",ID,community,2022-07-29
+2024-04-29,2024-04-29,2024-04-29,1.2826722949352485,DuckDuckGo,"CenAlert, OONI",ID,unknown,2024-07-29
+2023-09-14,2023-09-18,2023-09-15,4.015079691693444,DuckDuckGo,"CenAlert, OONI",ID,unknown,2024-07-29
+2023-09-01,2023-09-10,2023-09-02,8.658050897376981,DuckDuckGo,"CenAlert, OONI",ID,unknown,2024-07-29
+2020-08-29,2020-09-02,2020-08-30,13.576556856400053,"WhatsApp, Facebook, Instagram, Telegram, Facebook Messenger","CenAlert, Pulse, Access Now, NetBlocks",ID,unknown,2019-05-22
+2018-08-08,2018-09-09,2018-08-16,27.17413723311209,Telegram,"CenAlert, Access Now",ID,unknown,2018-04-27
+2019-05-22,2019-05-25,2019-05-22,246.86677238328565,"WhatsApp, Facebook, Instagram, Telegram, Facebook, Twitter, WhatsApp, Instagram, Facebook Messenger","Pulse, Access Now, NetBlocks",ID,community,2019-05-22
+2022-07-31,2022-07-31,2022-07-31,0.15337702427841293,"Facebook, Twitter, WhatsApp, Instagram, Telegram, QQ, WeChat, Qzone, Tumblr",Access Now,IN,unknown,2022-06-17
+2022-05-05,2022-05-05,2022-05-05,2.8947677289211597,"Facebook, Twitter, WhatsApp, Instagram, Telegram, QQ, WeChat, Qzone, Tumblr","CenAlert, Access Now",IN,unknown,2022-06-17
+2023-08-25,2023-08-26,2023-08-25,3.3848784813464476,"Facebook, Twitter, WhatsApp, Telegram, QQ, WeChat, Ozone, Tumblr","CenAlert, Access Now",IN,community,2023-08-26
+2016-07-14,2016-07-15,2016-07-14,4.330136391111921,WhatsApp,"CenAlert, Access Now",IN,unknown,2016-08-05
+2016-07-28,2016-07-30,2016-07-29,5.985007348210445,WhatsApp,"CenAlert, Access Now",IN,unknown,2016-08-05
+2019-12-10,2019-12-11,2019-12-10,9.38732514413735,"Facebook, Twitter, WhatsApp","CenAlert, Pulse, Access Now",IN,unknown,2019-12-22
+2015-12-17,2015-12-17,2015-12-17,10.42037522689212,WhatsApp,"CenAlert, Access Now",IN,unknown,2016-08-05
+2019-04-21,2019-04-24,2019-04-21,23.008577291944704,Facebook,"CenAlert, Pulse, Access Now",IN,community,2019-04-22
+2022-01-07,2022-01-16,2022-01-15,29.926261008971608,"Facebook, Twitter, WhatsApp, Instagram","CenAlert, Access Now",IN,unknown,2021-10-27
+2019-06-24,2019-06-26,2019-06-24,33.83153541090388,,"CenAlert, Access Now",IN,unknown,2019-06-14
+2023-03-23,2023-03-30,2023-03-26,47.354758290565826,"Facebook, Twitter, WhatsApp, Telegram, QQ, WeChat, Ozone, Tumblr","CenAlert, Access Now",IN,unknown,2023-04-02
+2020-06-30,2020-07-03,2020-07-02,49.11437440967882,"TikTok, WeChat, and 57 other Chinese-made apps","CenAlert, Access Now",IN,community,2020-06-29
+2017-04-29,2017-05-05,2017-04-30,57.06234869813642,22 websites blocked,"CenAlert, Access Now",IN,unknown,2017-04-17
+2024-11-04,2024-11-22,2024-11-14,70.50057535307121,Unspecified social media services,"CenAlert, Access Now",IN,unknown,2023-10-27
+2015-08-02,2015-08-06,2015-08-04,79.372135063856,WhatsApp,Access Now,IN,unknown,2016-08-05
+2018-10-24,2018-11-05,2018-10-25,79.98500714504348,"Facebook, WhatsApp","Pulse, Access Now",IN,unknown,2019-02-23
+2021-05-10,2021-05-18,2021-05-15,80.86954804748916,"Facebook, Twitter, WhatsApp, Instagram",Access Now,IN,unknown,2021-09-07
+2019-05-13,2019-05-15,2019-05-14,94.69595592430562,Facebook,"CenAlert, Access Now",IN,unknown,2019-04-24
+2020-03-16,2020-03-27,2020-03-23,98.71797607488293,"Websites (only 301 allowed), Social Media, Mobile Internet speed",CenAlert,IN,unknown,2020-01-24
+2020-01-25,2020-03-04,2020-02-29,1183.7817610040154,"Websites (only 301 allowed), Social Media, Mobile Internet speed",CenAlert,IN,manual,2020-01-24
+2020-10-26,2020-10-26,2020-10-26,0.018329800938364116,,"CenAlert, Access Now",IQ,unknown,2020-12-08
+2019-11-07,2019-11-07,2019-11-07,0.41921828188941745,"Facebook, Twitter, WhatsApp, Instagram","CenAlert, Pulse, Access Now",IQ,unknown,2019-10-25
+2019-04-12,2019-04-14,2019-04-14,0.8440561103829474,"Facebook, Twitter, WhatsApp, Instagram, Telegram","CenAlert, Pulse, Access Now, NetBlocks",IQ,unknown,2019-10-02
+2021-10-04,2021-10-04,2021-10-04,2.0406020299778582,,"CenAlert, Access Now",IQ,unknown,2020-12-08
+2022-07-31,2022-08-01,2022-08-01,4.68137214919456,"Facebook, Twitter, WhatsApp, Instagram, Telegram","CenAlert, Pulse, Access Now",IQ,unknown,2023-02-05
+2016-05-27,2016-05-27,2016-05-27,5.634893432404088,Social media,"CenAlert, Access Now",IQ,unknown,2016-06-04
+2023-02-06,2023-02-08,2023-02-06,11.256323537158542,"WhatsApp, Facebook, Twitter, Instagram, Telegram","CenAlert, Pulse",IQ,community,2023-02-07
+2022-08-29,2022-08-30,2022-08-29,15.16259683329761,"Facebook, Twitter, WhatsApp, Instagram, Telegram","CenAlert, Pulse, Access Now",IQ,unknown,2023-02-05
+2019-04-19,2019-04-21,2019-04-19,15.59339843933008,"Facebook, Twitter, WhatsApp, Instagram, Telegram","CenAlert, Pulse, Access Now, NetBlocks",IQ,unknown,2019-10-02
+2019-05-13,2019-05-15,2019-05-14,18.62663380665097,"Facebook, Twitter, WhatsApp, Instagram, Telegram","CenAlert, Pulse, Access Now, NetBlocks",IQ,unknown,2019-10-02
+2019-11-09,2019-11-20,2019-11-12,32.35017220821301,"Facebook, Twitter, WhatsApp, Instagram","CenAlert, Pulse, Access Now",IQ,unknown,2019-10-25
+2014-06-13,2014-06-29,2014-06-15,38.46075169890755,Social media,Access Now,IQ,unknown,2016-06-04
+2023-08-05,2023-08-13,2023-08-06,42.21632364029408,Telegram,"CenAlert, OONI, Access Now, NetBlocks",IQ,community,2023-08-05
+2019-10-02,2019-10-03,2019-10-02,51.00435118636479,"Facebook, Twitter, WhatsApp, Instagram, Telegram, Facebook, Twitter, WhatsApp","CenAlert, Pulse, Access Now, NetBlocks",IQ,community,2019-10-02
+2019-10-06,2019-11-05,2019-10-11,362.07251057507955,"Facebook, Twitter, WhatsApp, Instagram, Telegram, Facebook, Twitter, WhatsApp","CenAlert, Pulse, Access Now, NetBlocks",IQ,community,2019-10-02
+2018-07-14,2018-07-26,2018-07-15,615.2192294561585,"Facebook, Multiple shutdowns in population centers, Facebook and Twitter blocked","CenAlert, Access Now, NetBlocks",IQ,community,2018-07-14
+2015-07-18,2015-07-18,2015-07-18,0.02037899638242857,Psiphon,CenAlert,IR,unknown,2014-02-15
+2016-06-03,2016-06-03,2016-06-03,0.11076004239041248,"Instagram, Telegram",Access Now,IR,unknown,2017-04-28
+2024-11-28,2024-11-28,2024-11-28,0.5369361412081615,Anniversary of death of Mahsa Zhina Amini (Woman Life Freedom movement),"CenAlert, Other",IR,unknown,2023-09-15
+2022-09-08,2022-09-09,2022-09-09,0.7651816241218343,"Blocking of Whatsapp, DoH, Instagram, Skype, Viber, LinkedIn, Instagram, LinkedIn, Skype, Blocking of encrypted DNS","OONI, Access Now, NetBlocks, Pulse",IR,unknown,2022-09-20
+2019-11-27,2019-11-28,2019-11-28,1.1119946649961356,Internet Access,Access Now,IR,unknown,2019-11-16
+2020-12-21,2020-12-25,2020-12-23,1.3224228096882058,"Blocking Signal, Signal","OONI, Access Now",IR,unknown,2021-01-25
+2023-12-22,2023-12-22,2023-12-22,1.6738545661852058,Anniversary of death of Mahsa Zhina Amini (Woman Life Freedom movement),"CenAlert, Other",IR,unknown,2023-09-15
+2020-12-16,2020-12-18,2020-12-17,2.474128239978497,"Blocking Signal, Signal","CenAlert, OONI, Access Now",IR,unknown,2021-01-25
+2014-02-16,2014-02-21,2014-02-16,2.743691284762807,Psiphon,CenAlert,IR,manual,2014-02-15
+2015-12-10,2015-12-12,2015-12-10,3.0548906970129064,"Instagram, Telegram","CenAlert, Access Now",IR,unknown,2017-04-28
+2018-11-11,2018-11-16,2018-11-13,5.324429607603001,"Cellular services, Internet",CenAlert,IR,unknown,2018-08-06
+2013-12-19,2013-12-23,2013-12-20,5.637625643106787,WeChat,CenAlert,IR,manual,2013-12-19
+2022-11-17,2022-11-19,2022-11-18,7.334894441320117,Internet cuts,CenAlert,IR,manual,2022-11-17
+2018-08-02,2018-08-05,2018-08-02,7.811745368874025,"Cellular services, Internet",CenAlert,IR,manual,2018-08-06
+2023-09-15,2023-09-19,2023-09-16,10.348971710558097,Anniversary of death of Mahsa Zhina Amini (Woman Life Freedom movement),"CenAlert, Other",IR,other,2023-09-15
+2019-04-17,2019-04-27,2019-04-18,17.682348956919014," Instagram blocks Iranian Guard Commanders' pages, Iranian officials threaten to ban Instagram but ultimately don't do it","CenAlert, Other",IR,other,2019-04-17
+2013-03-07,2013-03-09,2013-03-07,20.46090678932603,VPNs,CenAlert,IR,manual,2013-03-06
+2011-09-29,2011-09-30,2011-09-30,22.353237460622836,PPTP VPNs,CenAlert,IR,manual,2011-09-29
+2019-11-16,2019-11-24,2019-11-20,194.3816311708979,Internet Access,"CenAlert, Access Now",IR,community,2019-11-16
+2017-12-31,2018-01-10,2018-01-01,235.54299220408862,"Blocking of Telegram/Instagram, Blocking of Tor",OONI,IR,community,2018-01-01
+2018-04-29,2018-06-09,2018-05-05,488.7638181625448,Telegram,CenAlert,IR,manual,2018-04-30
+2022-09-21,2022-11-12,2022-09-23,1909.2594956029209,"Disruption/potential blocking of IPv6 traffic, Blocking of Google play store and Apple app store, Blocking of HTTP/3 and QUIC traffic, Blocking of Skype and LinkedIn",OONI,IR,community,2022-09-22
+2019-02-20,2019-02-20,2019-02-20,0.47278380628334205,COVID-19 restrictions,"CenAlert, Other",IT,unknown,2020-03-09
+2021-03-28,2021-03-28,2021-03-28,0.6928058235540355,Blocking Project Gutenberg website,"CenAlert, OONI",IT,unknown,2020-05-20
+2023-08-19,2023-08-20,2023-08-20,0.878085163680737,ChatGPT,CenAlert,IT,unknown,2023-03-31
+2020-03-06,2020-03-06,2020-03-06,1.1043050538678685,COVID-19 restrictions,"CenAlert, Other",IT,other,2020-03-09
+2022-03-14,2022-03-14,2022-03-14,1.4522860838413436,ChatGPT,CenAlert,IT,unknown,2023-03-31
+2024-08-17,2024-08-18,2024-08-17,3.0514811910622655,ChatGPT,CenAlert,IT,unknown,2023-03-31
+2019-07-03,2019-07-03,2019-07-03,3.714561767980509,COVID-19 restrictions,"CenAlert, Other",IT,unknown,2020-03-09
+2020-02-24,2020-02-26,2020-02-26,5.93556819292553,COVID-19 restrictions,"CenAlert, Other",IT,unknown,2020-03-09
+2020-11-08,2020-11-08,2020-11-08,10.669896659210078,Blocking Project Gutenberg website,"CenAlert, OONI",IT,unknown,2020-05-20
+2024-02-01,2024-02-01,2024-02-01,20.892375557885053,ChatGPT,CenAlert,IT,unknown,2023-03-31
+2020-03-23,2020-03-26,2020-03-23,25.402135377015554,COVID-19 restrictions,"CenAlert, Other",IT,unknown,2020-03-09
+2020-03-09,2020-03-20,2020-03-10,176.4608616627075,COVID-19 restrictions,"CenAlert, Other",IT,other,2020-03-09
+2023-03-31,2023-04-15,2023-04-01,345.89656664914276,ChatGPT,CenAlert,IT,manual,2023-03-31
+2021-09-07,2021-09-07,2021-09-07,0.0806062674061172,"Facebook, Messenger, imo",Access Now,JO,unknown,2021-06-24
+2020-08-05,2020-08-05,2020-08-05,0.30840301110639423,Facebook Live,"CenAlert, NetBlocks",JO,community,2020-08-05
+2020-12-05,2020-12-05,2020-12-05,0.3801289502094676,"WhatsApp, WhatsApp, Telegram","CenAlert, Pulse, Access Now",JO,unknown,2020-12-31
+2022-01-05,2022-01-05,2022-01-05,0.4016891946457326,WhatsApp,"CenAlert, Access Now",JO,unknown,2022-06-30
+2020-05-20,2020-05-21,2020-05-21,0.41211337467009734,"Facebook, WhatsApp, Telegram, IMO, Tango, Line, Viber, Telegram, Facebook messenger, Viber, Line, Tango, WhatsApp, and IMO","Pulse, Access Now",JO,unknown,2020-07-01
+2019-05-11,2019-05-11,2019-05-11,0.9768482286810674,PUBG,CenAlert,JO,unknown,2019-07-04
+2018-11-30,2018-11-30,2018-11-30,2.3916132278238997,Facebook livestreaming interference,OONI,JO,community,2018-11-30
+2019-04-20,2019-04-20,2019-04-20,3.724629583695311,PUBG,CenAlert,JO,unknown,2019-07-04
+2019-06-24,2019-06-24,2019-06-24,4.1490374485414065,PUBG,CenAlert,JO,unknown,2019-07-04
+2022-10-04,2022-10-05,2022-10-04,4.149261825870244,TikTok,"Access Now, NetBlocks",JO,unknown,2022-12-16
+2020-07-29,2020-07-29,2020-07-29,5.525453734425522,"Facebook, Facebook Live, Facebook Live Streaming and Speed throttling","CenAlert, Pulse, Access Now, NetBlocks",JO,community,2020-07-29
+2021-03-15,2021-03-16,2021-03-15,6.818537650295848,"Facebook, Clubhouse; Facebook Live, Facebook Live, Facebook, Clubhouse, Facebook Live","CenAlert, Access Now, NetBlocks",JO,community,2021-03-15
+2019-05-13,2019-05-15,2019-05-13,31.943336108439944,PUBG,CenAlert,JO,unknown,2019-07-04
+2022-12-16,2023-01-09,2022-12-16,570.4024556300044,TikTok,"CenAlert, Access Now, NetBlocks",JO,community,2022-12-16
+2019-07-04,2019-08-03,2019-07-04,571.4164301420149,PUBG,CenAlert,JO,manual,2019-07-04
+2020-03-19,2020-03-19,2020-03-19,0.2604463814695315,Telegram,"CenAlert, OONI, Access Now",KE,unknown,2023-11-08
+2020-03-16,2020-03-16,2020-03-16,0.65315739235899,Telegram,"CenAlert, OONI, Access Now",KE,unknown,2023-11-08
+2023-03-31,2023-03-31,2023-03-31,0.7996220894797048,Telegram,"CenAlert, OONI, Access Now",KE,unknown,2023-11-08
+2020-08-02,2020-08-02,2020-08-02,0.8610753026705984,Telegram,"CenAlert, OONI, Access Now",KE,unknown,2023-11-08
+2024-09-16,2024-09-16,2024-09-16,0.9011131157336969,Shutdown,"CenAlert, Pulse",KE,unknown,2024-06-25
+2020-03-23,2020-03-24,2020-03-23,0.972727652211617,Telegram,"CenAlert, OONI, Access Now",KE,unknown,2023-11-08
+2020-12-05,2020-12-06,2020-12-05,2.6636654853245822,Telegram,"CenAlert, OONI, Access Now",KE,unknown,2023-11-08
+2024-11-08,2024-11-08,2024-11-08,3.100360001925594,Shutdown,Pulse,KE,unknown,2024-06-25
+2024-01-30,2024-02-01,2024-01-30,3.2060741279709717,Telegram,"OONI, Access Now",KE,unknown,2023-11-08
+2017-08-07,2017-08-07,2017-08-07,3.382389227496903,Telegram,"CenAlert, OONI, Access Now",KE,unknown,2023-11-08
+2020-03-30,2020-04-19,2020-04-11,77.25012132833427,Telegram,"CenAlert, OONI, Access Now",KE,unknown,2023-11-08
+2024-06-23,2024-06-27,2024-06-25,110.61603395332017,Shutdown,"CenAlert, Pulse",KE,community,2024-06-25
+2024-10-05,2024-10-05,2024-10-05,2.021045135019193,TikTok,OONI,KG,unknown,2024-04-18
+2024-09-20,2024-09-22,2024-09-20,2.1967693147931833,TikTok,OONI,KG,unknown,2024-04-18
+2022-03-07,2022-03-07,2022-03-07,7.086763693870711,TikTok,OONI,KG,unknown,2024-04-18
+2023-07-26,2023-07-26,2023-07-26,16.77655549783196,TikTok,OONI,KG,unknown,2024-04-18
+2022-03-11,2022-03-15,2022-03-14,62.91830050556602,TikTok,"CenAlert, OONI",KG,unknown,2024-04-18
+2024-04-17,2024-04-25,2024-04-18,253.43062439018274,TikTok,OONI,KG,community,2024-04-18
+2021-05-29,2021-05-29,2021-05-29,0.6106101788937544,Blocking of illegal gambling sites,"CenAlert, OONI",KH,unknown,2022-02-16
+2020-12-05,2020-12-05,2020-12-05,2.9698377775433897,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",KH,unknown,2020-08-29
+2023-07-26,2023-07-26,2023-07-26,3.335017422128317,News media,"CenAlert, OONI",KH,unknown,2023-07-17
+2023-07-08,2023-07-08,2023-07-08,3.5217869316985997,News media,"CenAlert, OONI",KH,unknown,2023-07-17
+2024-04-29,2024-04-29,2024-04-29,3.8702242912424794,News media,"CenAlert, OONI",KH,unknown,2023-07-17
+2021-06-02,2021-06-02,2021-06-02,6.162982327108153,Blocking of illegal gambling sites,OONI,KH,unknown,2022-02-16
+2023-03-20,2023-03-21,2023-03-20,16.689174540932797,Voice of Democracy,"CenAlert, OONI",KH,unknown,2023-02-13
+2023-10-14,2023-10-14,2023-10-14,22.716937847189953,News media,OONI,KH,unknown,2023-07-17
+2018-07-11,2018-07-11,2018-07-11,46.42078693666649,"Blocking news media before election, Blocking of independent news media before election",OONI,KH,unknown,2018-07-27
+2023-09-15,2023-09-19,2023-09-15,63.73155160017589,News media,"CenAlert, OONI",KH,unknown,2023-07-17
+2018-08-23,2018-08-23,2018-08-23,65.09602098616689,"Blocking news media before election, Blocking of independent news media before election","CenAlert, OONI",KH,unknown,2018-07-27
+2018-07-14,2018-07-14,2018-07-14,65.13226817828529,"Blocking news media before election, Blocking of independent news media before election",OONI,KH,unknown,2018-07-27
+2018-08-03,2018-08-03,2018-08-03,67.67651249563282,"Blocking news media before election, Blocking of independent news media before election","CenAlert, OONI",KH,unknown,2018-07-27
+2018-06-29,2018-06-29,2018-06-29,74.80572233408238,"Blocking news media before election, Blocking of independent news media before election",OONI,KH,unknown,2018-07-27
+2020-08-29,2020-09-02,2020-08-30,127.18016783349643,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",KH,other,2020-08-29
+2019-05-06,2019-05-06,2019-05-06,0.010213960912578424,"Facebook, Instagram, Telegram, YouTube, Facebook, Instagram and YouTube as well as news and campaign websites","Pulse, Access Now, NetBlocks",KZ,community,2019-05-09
+2024-03-22,2024-03-22,2024-03-22,0.03169950635468188,Blocking of Russian news media Sputnik24,"CenAlert, OONI",KZ,unknown,2023-11-18
+2021-03-29,2021-03-29,2021-03-29,0.08037876912236674,"Facebook, WhatsApp, Instagram, Telegram",Access Now,KZ,community,2021-03-27
+2019-03-06,2019-03-06,2019-03-06,0.12647059206876832,"Facebook, Instagram, Telegram, YouTube, Facebook, Instagram and YouTube as well as news and campaign websites","Pulse, Access Now, NetBlocks",KZ,unknown,2019-05-09
+2021-09-05,2021-09-05,2021-09-05,0.23246369892825092,Blocking of HOLA News,OONI,KZ,unknown,2021-10-04
+2022-09-28,2022-09-29,2022-09-29,0.2988090805559671,Throttling Radio Free Europe/Radio Liberty website,"CenAlert, OONI",KZ,community,2022-09-27
+2023-10-21,2023-10-21,2023-10-21,0.31906357497461535,Blocking of Russian news media Sputnik24,"CenAlert, OONI",KZ,unknown,2023-11-18
+2024-09-29,2024-09-30,2024-09-30,0.5028080531096544,Canva server outage,"CenAlert, Other",KZ,other,2024-09-29
+2023-03-14,2023-03-16,2023-03-14,0.6085464318281049,Blocking of amnestry.org.ru,"CenAlert, OONI",KZ,unknown,2023-06-30
+2017-06-06,2017-06-06,2017-06-06,0.766119395633186,"WhatsApp, Instagram, Facebook, YouTube",CenAlert,KZ,unknown,2017-09-02
+2020-12-05,2020-12-07,2020-12-06,0.9557188889922452,"Facebook, WhatsApp, Instagram, Telegram","CenAlert, Access Now",KZ,unknown,2021-03-27
+2022-03-12,2022-03-14,2022-03-13,1.4000000000000004,"WhatsApp, Telegram, Signal, possibly","CenAlert, Access Now",KZ,unknown,2022-01-04
+2016-05-21,2016-05-21,2016-05-21,2.15746722986562,"Facebook, VKontakte, WhatsApp, Viber, YouTube, Twitter",CenAlert,KZ,manual,2016-05-20
+2016-12-16,2016-12-17,2016-12-16,2.213642293541331,"Facebook, YouTube, Instagram, and Google",CenAlert,KZ,manual,2016-12-16
+2017-09-03,2017-09-03,2017-09-03,2.2641824036618994,"WhatsApp, Instagram, Facebook, YouTube",CenAlert,KZ,manual,2017-09-02
+2018-02-09,2018-02-09,2018-02-09,5.299055070913811,GetContact,CenAlert,KZ,manual,2018-02-09
+2019-05-08,2019-05-10,2019-05-09,14.90498771510802,"Facebook, Instagram, Telegram, YouTube, Facebook, Instagram and YouTube as well as news and campaign websites","CenAlert, Pulse, Access Now, NetBlocks",KZ,community,2019-05-09
+2024-12-14,2024-12-20,2024-12-15,23.836194108613007,Slowdown,CenAlert,KZ,manual,2024-12-14
+2019-06-11,2019-06-14,2019-06-12,127.90236599470289,"Facebook, Twitter, Instagram, WhatsApp, Facebook and Instagram","CenAlert, Pulse, Access Now, NetBlocks",KZ,community,2019-06-11
+2022-01-04,2022-01-11,2022-01-05,349.998134300581,"WhatsApp, Telegram, Signal, possibly","CenAlert, Access Now",KZ,community,2022-01-04
+2022-09-14,2022-09-14,2022-09-14,10.317361911736526,Grindr,"CenAlert, Access Now",LB,unknown,2019-05-24
+2019-10-17,2019-10-17,2019-10-17,36.732391689534474,Grindr,"CenAlert, Access Now",LB,unknown,2019-05-24
+2019-05-13,2019-05-16,2019-05-13,6.877625719887453,"Facebook, Twitter, WhatsApp, Instagram, YouTube, Viber, Snapchat and Facebook Messenger","CenAlert, Pulse, Access Now, NetBlocks",LK,community,2019-05-13
+2022-04-02,2022-04-04,2022-04-03,13.071216782902958,"Facebook, Twitter, WhatsApp, Instagram, YouTube, Facebook, Twitter, WhatsApp, Viber and YouTube","CenAlert, Pulse, Access Now, NetBlocks",LK,community,2022-04-02
+2019-04-21,2019-04-29,2019-04-22,39.30174250559938,"Website of an unamed VPN service, Facebook, WhatsApp, Instagram, YouTube, Viber, Snapchat and Facebook Messenger","CenAlert, Pulse, Access Now, NetBlocks",LK,community,2019-04-21
+2018-03-07,2018-03-15,2018-03-08,436.8555876368722,"Facebook, WhatsApp, Viber","CenAlert, Access Now, NetBlocks",LK,community,2018-03-07
+2021-10-04,2021-10-04,2021-10-04,1.2738915844615697,Facebook,CenAlert,LY,unknown,2018-09-03
+2019-05-14,2019-05-15,2019-05-14,4.886344400441736,Facebook,CenAlert,LY,unknown,2018-09-03
+2019-04-14,2019-04-14,2019-04-14,8.29306367418252,Facebook,CenAlert,LY,unknown,2018-09-03
+2018-09-03,2018-09-08,2018-09-04,255.64727093398403,Facebook,CenAlert,LY,manual,2018-09-03
+2024-01-26,2024-01-26,2024-01-26,2.3628381141328205,VoIP,"CenAlert, Access Now",MA,unknown,2016-02-16
+2017-04-21,2017-04-24,2017-04-24,10.34550257921282,VoIP,Access Now,MA,unknown,2016-02-16
+2019-05-13,2019-05-14,2019-05-13,31.250537180643732,VoIP,"CenAlert, Access Now",MA,unknown,2016-02-16
+2020-12-05,2020-12-06,2020-12-05,35.46633005688366,VoIP,"CenAlert, Access Now",MA,unknown,2016-02-16
+2020-10-20,2020-10-21,2020-10-20,22.141758396574375,"Twitter, Facebook, Facebook Messenger, WhatsApp, Facebook, Twitter, WhatsApp, Instagram","CenAlert, Access Now, NetBlocks",ML,unknown,2020-07-10
+2020-07-11,2020-07-15,2020-07-13,208.14771268477298,"Twitter, Facebook, Facebook Messenger, WhatsApp, Facebook, Twitter, WhatsApp, Instagram","CenAlert, Access Now, NetBlocks",ML,community,2020-07-10
+2022-07-27,2022-07-27,2022-07-27,0.8576589216080688,"Facebook, Twitter","CenAlert, Access Now",MM,unknown,2021-05-25
+2022-05-04,2022-05-05,2022-05-04,1.56431963681157,"Facebook, Twitter","CenAlert, Access Now",MM,unknown,2021-05-25
+2024-11-29,2024-11-30,2024-11-29,1.7574317329547355,VPNs,CenAlert,MM,unknown,2024-05-30
+2020-08-29,2020-09-01,2020-08-30,19.283752943711633,"Facebook, Twitter, Instagram, Facebook, Instagram, Messenger and some WhatsApp servers (on state-run ISP)","CenAlert, Pulse, OONI, Access Now, NetBlocks",MM,unknown,2021-02-02
+2024-02-15,2024-03-09,2024-02-17,22.01059800685814,VPNs,CenAlert,MM,unknown,2024-05-30
+2022-01-24,2022-02-14,2022-02-07,35.423129486786436,"Facebook, Twitter","CenAlert, Access Now",MM,unknown,2021-05-25
+2021-05-03,2021-05-16,2021-05-07,183.32253879324662,"Facebook, Twitter","CenAlert, Access Now",MM,unknown,2021-05-25
+2024-05-30,2024-07-30,2024-05-31,527.4788719435004,VPNs,CenAlert,MM,manual,2024-05-30
+2021-02-03,2021-02-28,2021-02-04,552.2862329705445,"Facebook, Twitter, Instagram, Facebook, Instagram, Messenger and some WhatsApp servers (on state-run ISP)","CenAlert, Pulse, OONI, Access Now, NetBlocks",MM,community,2021-02-02
+2024-11-01,2024-11-02,2024-11-01,100.9199318841716,"Facebook, Instagram, TikTok, YouTube, Twitter/X, and Linkedin","CenAlert, OONI, Pulse",MU,community,2024-11-01
+2016-03-04,2016-03-04,2016-03-04,3.4758738734375143,Blocking BBC article,"CenAlert, OONI",MY,unknown,2016-02-16
+2021-06-01,2021-06-01,2021-06-01,4.544537169267265,COVID-19 restrictions,"CenAlert, Other",MY,unknown,2020-03-16
+2016-06-20,2016-06-20,2016-06-20,5.15269004817754,Blocking BBC article,"CenAlert, OONI",MY,unknown,2016-02-16
+2022-06-02,2022-06-02,2022-06-02,6.539322716976628,MalaysiaNow and of a website which belongs to a former Malaysian Member of Parliament,"CenAlert, OONI",MY,unknown,2023-06-28
+2020-12-06,2020-12-06,2020-12-06,9.557621446806024,COVID-19 restrictions,"CenAlert, Other",MY,unknown,2020-03-16
+2024-09-06,2024-09-06,2024-09-06,10.794257306428719,Grindr,"CenAlert, OONI",MY,unknown,2024-04-17
+2018-05-08,2018-05-08,2018-05-08,23.84861569475764,COVID-19 restrictions,"CenAlert, Other",MY,unknown,2020-03-16
+2020-08-29,2020-09-01,2020-08-30,96.14037415854256,COVID-19 restrictions,"CenAlert, Other",MY,unknown,2020-03-16
+2020-03-16,2020-04-13,2020-03-17,506.3331569059683,COVID-19 restrictions,"CenAlert, Other",MY,other,2020-03-16
+2016-03-22,2016-03-22,2016-03-22,0.015953942418591716,Social media,"CenAlert, Access Now",NG,unknown,2018-09-30
+2021-10-04,2021-10-04,2021-10-04,0.060142347258695494,Twitter,"CenAlert, Access Now, NetBlocks",NG,unknown,2021-06-04
+2022-07-28,2022-07-29,2022-07-29,0.8050766461321821,Twitter,"CenAlert, Access Now, NetBlocks",NG,unknown,2021-06-04
+2020-10-20,2020-10-21,2020-10-20,16.93227739401305,Twitter,"CenAlert, Access Now, NetBlocks",NG,unknown,2021-06-04
+2024-05-18,2024-05-28,2024-05-24,27.60247672602297,Twitter,"CenAlert, Access Now, NetBlocks",NG,unknown,2021-06-04
+2021-06-04,2021-06-10,2021-06-05,173.39301671412156,Twitter,"CenAlert, Access Now, NetBlocks",NG,community,2021-06-04
+2020-02-27,2020-02-27,2020-02-27,0.09714144896835908,Pornography,CenAlert,NP,unknown,2018-09-21
+2021-12-22,2021-12-22,2021-12-22,0.12436011437373828,TikTok,Access Now,NP,unknown,2023-11-13
+2020-01-18,2020-01-18,2020-01-18,0.12935077385337745,Pornography,CenAlert,NP,unknown,2018-09-21
+2020-02-29,2020-02-29,2020-02-29,0.28767883898786195,Pornography,CenAlert,NP,unknown,2018-09-21
+2020-01-07,2020-01-07,2020-01-07,0.6667114491400472,Pornography,CenAlert,NP,unknown,2018-09-21
+2020-02-16,2020-02-17,2020-02-17,0.7160059736665154,Pornography,CenAlert,NP,unknown,2018-09-21
+2018-12-14,2018-12-15,2018-12-14,0.7600473359986992,Pornography,CenAlert,NP,unknown,2018-09-21
+2022-01-14,2022-01-16,2022-01-16,1.1783029816258548,TikTok,Access Now,NP,unknown,2023-11-13
+2020-03-21,2020-03-21,2020-03-21,1.2164312976062117,Pornography,CenAlert,NP,unknown,2018-09-21
+2018-11-10,2018-11-11,2018-11-11,1.4865130487587788,Pornography,CenAlert,NP,unknown,2018-09-21
+2018-09-21,2018-09-21,2018-09-21,1.7086653029530474,Pornography,CenAlert,NP,manual,2018-09-21
+2023-03-31,2023-03-31,2023-03-31,1.711016823148972,TikTok,Access Now,NP,unknown,2023-11-13
+2020-03-25,2020-03-26,2020-03-25,2.0477731187526462,Pornography,CenAlert,NP,unknown,2018-09-21
+2018-12-05,2018-12-07,2018-12-07,3.080968319750095,Pornography,CenAlert,NP,unknown,2018-09-21
+2018-11-08,2018-11-08,2018-11-08,3.9712892716939177,Pornography,CenAlert,NP,unknown,2018-09-21
+2018-11-13,2018-11-20,2018-11-15,15.446576620986065,Pornography,CenAlert,NP,unknown,2018-09-21
+2018-06-14,2018-06-18,2018-06-15,16.52001730094723,Pornography,CenAlert,NP,unknown,2018-09-21
+2019-04-11,2019-04-14,2019-04-12,34.587682709090814,Pornography,CenAlert,NP,unknown,2018-09-21
+2018-10-20,2018-11-05,2018-10-24,77.9401240947025,Pornography,CenAlert,NP,unknown,2018-09-21
+2018-09-27,2018-10-18,2018-10-01,189.34720244797944,Pornography,CenAlert,NP,manual,2018-09-21
+2023-11-13,2023-11-28,2023-11-15,416.5466490538496,TikTok,"CenAlert, Access Now",NP,community,2023-11-13
+2014-08-03,2014-08-03,2014-08-03,0.4306189453884457,Clubhouse,Access Now,OM,unknown,2021-03-14
+2013-01-20,2013-01-20,2013-01-20,2.118364876306501,Clubhouse,Access Now,OM,unknown,2021-03-14
+2014-10-10,2014-10-10,2014-10-10,3.021181565417038,Clubhouse,Access Now,OM,unknown,2021-03-14
+2013-08-10,2013-08-10,2013-08-10,4.120248379430578,Clubhouse,Access Now,OM,unknown,2021-03-14
+2013-02-07,2013-02-07,2013-02-07,4.43604365123781,Clubhouse,Access Now,OM,unknown,2021-03-14
+2015-02-28,2015-02-28,2015-02-28,5.132042936678786,Clubhouse,Access Now,OM,unknown,2021-03-14
+2013-02-05,2013-02-05,2013-02-05,5.566866292412627,Clubhouse,Access Now,OM,unknown,2021-03-14
+2013-03-01,2013-03-01,2013-03-01,5.720805640931374,Clubhouse,Access Now,OM,unknown,2021-03-14
+2013-08-16,2013-08-17,2013-08-16,8.38283474635017,Clubhouse,Access Now,OM,unknown,2021-03-14
+2013-01-24,2013-01-24,2013-01-24,9.193896529533248,Clubhouse,Access Now,OM,unknown,2021-03-14
+2023-12-07,2023-12-07,2023-12-07,16.593628694474738,Grindr,Access Now,OM,unknown,2022-02-11
+2015-12-03,2015-12-04,2015-12-03,31.838038244817227,Clubhouse,"CenAlert, Access Now",OM,unknown,2021-03-14
+2016-06-22,2016-06-25,2016-06-22,55.342014324492425,Clubhouse,"CenAlert, Access Now",OM,unknown,2021-03-14
+2024-01-24,2024-01-28,2024-01-24,77.76601847467941,Grindr,"CenAlert, Access Now",OM,unknown,2022-02-11
+2014-09-26,2014-09-26,2014-09-26,0.048440371558730266,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game",Other,PH,unknown,2020-08-29
+2015-07-06,2015-07-06,2015-07-06,0.08922799363857337,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game",Other,PH,unknown,2020-08-29
+2016-06-24,2016-06-24,2016-06-24,0.0959319884375276,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,unknown,2020-08-29
+2014-07-16,2014-07-16,2014-07-16,0.13555802470892164,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,unknown,2020-08-29
+2017-04-14,2017-04-14,2017-04-14,0.1552968106871928,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,unknown,2020-08-29
+2024-06-04,2024-06-04,2024-06-04,0.17502187465006447,Blocking of foreign news sites (including bulatlat.com),"CenAlert, OONI",PH,unknown,2022-06-17
+2020-02-14,2020-02-14,2020-02-14,0.18746317984869165,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,unknown,2020-08-29
+2019-01-25,2019-01-25,2019-01-25,0.2962076109850802,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,unknown,2020-08-29
+2022-06-19,2022-06-19,2022-06-19,0.310211879250855,Blocking of foreign news sites (including bulatlat.com),"CenAlert, OONI",PH,community,2022-06-17
+2019-07-19,2019-07-19,2019-07-19,0.3212219100629472,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,unknown,2020-08-29
+2024-03-26,2024-03-26,2024-03-26,0.3671409599200093,Blocking of foreign news sites (including bulatlat.com),"CenAlert, OONI",PH,unknown,2022-06-17
+2023-01-28,2023-01-28,2023-01-28,0.3835918231925195,Blocking of foreign news sites (including bulatlat.com),"CenAlert, OONI",PH,unknown,2022-06-17
+2022-10-29,2022-10-29,2022-10-29,0.3994456711999108,Blocking of foreign news sites (including bulatlat.com),"CenAlert, OONI",PH,unknown,2022-06-17
+2017-07-09,2017-07-09,2017-07-09,0.4241302355989749,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,unknown,2020-08-29
+2019-08-23,2019-08-23,2019-08-23,0.43958304783295166,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,unknown,2020-08-29
+2014-12-04,2014-12-05,2014-12-05,0.4532478085154201,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,unknown,2020-08-29
+2016-04-18,2016-04-18,2016-04-18,0.5838715880689831,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,unknown,2020-08-29
+2016-04-20,2016-04-20,2016-04-20,0.799362587520565,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,unknown,2020-08-29
+2011-11-11,2011-11-11,2011-11-11,0.9867646461715616,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game",Other,PH,unknown,2020-08-29
+2023-11-19,2023-11-19,2023-11-19,0.9908992087271669,Blocking of foreign news sites (including bulatlat.com),"CenAlert, OONI",PH,unknown,2022-06-17
+2013-01-03,2013-01-04,2013-01-03,1.08567650304113,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,unknown,2020-08-29
+2023-01-15,2023-01-15,2023-01-15,1.2290096420120307,Blocking of foreign news sites (including bulatlat.com),"CenAlert, OONI",PH,unknown,2022-06-17
+2017-01-15,2017-01-19,2017-01-16,1.486541136421959,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,unknown,2020-08-29
+2020-12-06,2020-12-06,2020-12-06,2.0096954091914228,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,unknown,2020-08-29
+2021-05-22,2021-05-23,2021-05-22,2.020368280752681,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,unknown,2020-08-29
+2022-04-09,2022-04-09,2022-04-09,2.6345549141822504,Blocking of foreign news sites (including bulatlat.com),"CenAlert, OONI",PH,unknown,2022-06-17
+2012-10-02,2012-10-05,2012-10-03,3.5230444494848605,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,unknown,2020-08-29
+2021-12-25,2021-12-28,2021-12-27,4.679427839885687,Blocking of foreign news sites (including bulatlat.com),"CenAlert, OONI",PH,unknown,2022-06-17
+2020-08-14,2020-08-15,2020-08-14,5.220204374276815,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,unknown,2020-08-29
+2021-05-29,2021-05-29,2021-05-29,5.6866293230376215,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,unknown,2020-08-29
+2021-06-01,2021-06-01,2021-06-01,12.264339334781972,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,unknown,2020-08-29
+2018-10-27,2018-11-08,2018-11-04,15.035892831347468,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game",Other,PH,unknown,2020-08-29
+2020-03-12,2020-04-17,2020-03-25,88.92183772592591,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,unknown,2020-08-29
+2020-08-29,2020-09-03,2020-08-30,220.54926027131097,"Geo-restricted event: VPN usage to access a LATAM-specifc ""free skin"" event for the King of Fighters game","CenAlert, Other",PH,other,2020-08-29
+2014-07-29,2014-07-29,2014-07-29,0.3448369094006898,Blocking of DeviantArt website,OONI,PK,unknown,2014-03-05
+2020-10-10,2020-10-10,2020-10-10,1.1425198539066201,TikTok,CenAlert,PK,manual,2020-10-09
+2024-07-17,2024-07-17,2024-07-17,1.3655774636366473,Facebook,"CenAlert, NetBlocks",PK,community,2024-07-16
+2021-04-16,2021-04-16,2021-04-16,2.7340924341513606,"Facebook, Twitter, WhatsApp, Telegram, Youtube, Twitter, Facebook, WhatsApp, YouTube, Telegram","CenAlert, Pulse, Access Now",PK,community,2021-04-16
+2023-04-22,2023-04-23,2023-04-23,2.8814962708805467,End of Ramadan,"CenAlert, Other",PK,other,2023-04-20
+2012-09-22,2012-09-25,2012-09-25,3.234784415836911,Blocking of Youtube,OONI,PK,community,2012-09-17
+2024-01-20,2024-01-20,2024-01-20,3.8643046818774422,"Social media, including X/Twitter, Facebook, Instagram and YouTube","CenAlert, NetBlocks",PK,community,2024-01-20
+2019-05-13,2019-05-15,2019-05-14,5.255468697133168,Taiwan VPN PUBG/Game For Peace Exploit,"CenAlert, Other",PK,other,2019-05-13
+2023-12-17,2023-12-17,2023-12-17,6.028266188983871,"Facebook, Instagram, X, YouTube, Facebook, Twitter, Instagram, YouTube","CenAlert, Pulse, Access Now",PK,community,2023-12-17
+2022-05-03,2022-05-05,2022-05-03,6.544424211830346,End of Ramadan,"CenAlert, Other",PK,other,2022-05-01
+2021-03-12,2021-03-15,2021-03-13,7.2930859407109025,TikTok,CenAlert,PK,manual,2021-03-12
+2021-07-21,2021-07-24,2021-07-22,9.520437201358831,TikTok,CenAlert,PK,manual,2021-07-21
+2024-01-07,2024-01-07,2024-01-07,11.895883757184865,"Social media, including X/Twitter, Facebook, Instagram and YouTube","CenAlert, NetBlocks",PK,community,2024-01-07
+2014-01-25,2014-01-29,2014-01-26,16.109071908805937,Hotspot Shield,CenAlert,PK,manual,2014-01-26
+2024-12-01,2024-12-01,2024-12-01,17.461407707644767,VPN ban cancelled,"CenAlert, Other",PK,other,2024-12-01
+2024-10-18,2024-10-20,2024-10-20,19.004759334948204,WhatsApp,CenAlert,PK,manual,2024-10-17
+2024-10-04,2024-10-06,2024-10-06,38.41868235457595,Internet disruptions,CenAlert,PK,manual,2024-10-04
+2014-02-01,2014-02-16,2014-02-02,42.73978776106162,Hotspot Shield,CenAlert,PK,manual,2014-01-26
+2024-07-20,2024-07-21,2024-07-21,47.15776167811303,WhatsApp,CenAlert,PK,manual,2024-07-20
+2017-11-25,2017-11-28,2017-11-26,61.713842337906726,"Facebook, WhatsApp, Telegram, 14 news websites","CenAlert, OONI, Access Now, NetBlocks",PK,community,2017-11-25
+2020-07-01,2020-07-20,2020-07-02,99.18386907471879,PUBG,CenAlert,PK,manual,2020-07-01
+2024-11-24,2024-11-28,2024-11-26,101.51839976689928,WhatsApp,"CenAlert, NetBlocks",PK,community,2024-11-23
+2024-08-09,2024-08-15,2024-08-14,119.80511460491684,Social media slowdown,CenAlert,PK,manual,2024-08-09
+2012-09-27,2013-01-07,2012-12-09,229.4519585209999,Blocking of Youtube,OONI,PK,unknown,2012-09-17
+2023-05-09,2023-05-16,2023-05-11,403.77520316018513,"Mobile shutdowns, Facebook, Twitter, YouTube, and Instagram","CenAlert, OONI, Access Now, NetBlocks",PK,community,2023-05-09
+2019-12-20,2019-12-20,2019-12-20,0.771582580324214,Grindr,Access Now,QA,unknown,2020-01-01
+2017-09-29,2017-09-29,2017-09-29,1.1695339100329463,VoIP,CenAlert,QA,unknown,2017-09-07
+2017-09-25,2017-09-25,2017-09-25,1.7066300570488835,VoIP,CenAlert,QA,unknown,2017-09-07
+2018-10-26,2018-10-26,2018-10-26,1.8481899145074436,VoIP,CenAlert,QA,unknown,2017-09-07
+2018-01-11,2018-01-11,2018-01-11,2.440937105626702,VoIP,CenAlert,QA,unknown,2017-09-07
+2019-06-04,2019-06-04,2019-06-04,4.256168739525123,Grindr,Access Now,QA,unknown,2020-01-01
+2016-06-22,2016-06-23,2016-06-23,6.830755879627702,VoIP,CenAlert,QA,unknown,2017-09-07
+2017-10-06,2017-10-06,2017-10-06,8.762708205015997,VoIP,CenAlert,QA,unknown,2017-09-07
+2023-12-07,2023-12-07,2023-12-07,13.310334130194207,Grindr,"CenAlert, Access Now",QA,unknown,2020-01-01
+2017-09-19,2017-09-19,2017-09-19,19.89148581285452,VoIP,CenAlert,QA,unknown,2017-09-07
+2018-01-13,2018-01-17,2018-01-14,85.9787727511781,VoIP,CenAlert,QA,unknown,2017-09-07
+2017-09-08,2017-09-17,2017-09-14,212.59635927583332,VoIP,CenAlert,QA,manual,2017-09-07
+2016-04-27,2016-04-27,2016-04-27,0.07095886467851242,Russia promotes VPNs after Russian platforms are blocked by Ukraine,"CenAlert, Other",RU,unknown,2017-05-16
+2019-04-16,2019-04-16,2019-04-16,0.1973156285750588,Lower house approves Internet isolation law,Other,RU,other,2019-04-16
+2020-03-23,2020-03-23,2020-03-23,0.2520159856399822,COVID (school closure),"CenAlert, Other",RU,other,2020-03-21
+2016-01-01,2016-01-01,2016-01-01,0.25376070244909643,Russia promotes VPNs after Russian platforms are blocked by Ukraine,"CenAlert, Other",RU,unknown,2017-05-16
+2023-12-13,2023-12-13,2023-12-13,0.8107678620627929,Blocking VPN protocols,CenAlert,RU,unknown,2023-08-05
+2020-03-26,2020-03-27,2020-03-27,0.918926694818424,COVID-19 lockdown orders,"CenAlert, Other",RU,other,2020-03-30
+2021-01-17,2021-01-17,2021-01-17,1.3596157660639996,Alexei Navalny detained,"CenAlert, Other",RU,other,2021-01-17
+2017-07-31,2017-07-31,2017-07-31,1.4421104320363245,VPN ban signed and published,CenAlert,RU,manual,2017-07-30
+2017-11-01,2017-11-01,2017-11-01,1.536064496150428,VPN ban comes into effect,CenAlert,RU,manual,2017-11-01
+2020-03-30,2020-04-01,2020-03-30,1.6873893521725467,COVID-19 lockdown orders,"CenAlert, Other",RU,other,2020-03-30
+2019-04-21,2019-04-22,2019-04-21,1.730714224405851,Opera VPN server-side issues,"CenAlert, Other",RU,other,2019-04-21
+2020-03-16,2020-03-20,2020-03-19,2.942078313324238,COVID (mass public events banned),Other,RU,other,2020-03-16
+2024-09-07,2024-09-07,2024-09-07,3.870415713655582,Planet VPN,CenAlert,RU,manual,2024-09-06
+2017-05-16,2017-05-22,2017-05-17,5.110765910114761,Russia promotes VPNs after Russian platforms are blocked by Ukraine,"CenAlert, Other",RU,other,2017-05-16
+2023-08-07,2023-08-08,2023-08-07,8.66324659951183,Blocking VPN protocols,CenAlert,RU,manual,2023-08-05
+2024-10-08,2024-10-08,2024-10-08,14.16944256287951,"Discord, Blocking of Discord",OONI,RU,community,2024-10-08
+2021-06-17,2021-06-27,2021-06-18,19.935162337152967,Blocking Opera VPN,CenAlert,RU,manual,2021-06-17
+2018-04-12,2018-05-05,2018-04-16,143.94096057478123,Telegram,"CenAlert, Access Now",RU,community,2018-04-13
+2024-08-01,2024-09-02,2024-08-08,372.32821981243023,Blocking of EU news media websites,"CenAlert, OONI",RU,community,2024-08-02
+2022-02-25,2022-03-28,2022-03-14,934.7764073971799,"Throttling Twitter, Blocking foreign news websites, Facebook","CenAlert, OONI, Access Now, NetBlocks, Pulse",RU,community,2022-02-26
+2014-01-18,2014-01-18,2014-01-18,0.4550476131864265,VoIP,"CenAlert, Access Now",SA,unknown,2016-03-17
+2022-01-28,2022-01-28,2022-01-28,0.46776634791214633,Potential fines and punishment for using VPNs becomes viral topic of discussion online,Other,SA,unknown,2023-12-03
+2024-06-16,2024-06-16,2024-06-16,1.5531738844778715,Potential fines and punishment for using VPNs becomes viral topic of discussion online,"CenAlert, Other",SA,unknown,2023-12-03
+2020-07-31,2020-07-31,2020-07-31,1.753553779499704,Snapchat international update causes backlash and users attempt to reverse update using VPN (ostensibly to connect to locations that had not yet received the update),"CenAlert, Other",SA,unknown,2018-02-06
+2022-07-09,2022-07-11,2022-07-10,2.5237629574382083,Potential fines and punishment for using VPNs becomes viral topic of discussion online,"CenAlert, Other",SA,unknown,2023-12-03
+2016-07-06,2016-07-06,2016-07-06,2.714050765751395,VoIP,"CenAlert, Access Now",SA,unknown,2016-03-17
+2014-10-04,2014-10-04,2014-10-04,4.0124156039181855,VoIP,"CenAlert, Access Now",SA,unknown,2016-03-17
+2013-06-05,2013-06-07,2013-06-06,7.678431230592437,VoIP,"CenAlert, Access Now",SA,unknown,2016-03-17
+2013-08-08,2013-08-09,2013-08-08,9.656633946397633,VoIP,"CenAlert, Access Now",SA,unknown,2016-03-17
+2022-05-02,2022-05-05,2022-05-03,13.696741837478157,Potential fines and punishment for using VPNs becomes viral topic of discussion online,"CenAlert, Other",SA,unknown,2023-12-03
+2023-04-21,2023-04-22,2023-04-21,14.282789698839267,Potential fines and punishment for using VPNs becomes viral topic of discussion online,"CenAlert, Other",SA,unknown,2023-12-03
+2024-04-10,2024-04-12,2024-04-10,17.515830150931535,Potential fines and punishment for using VPNs becomes viral topic of discussion online,"CenAlert, Other",SA,unknown,2023-12-03
+2023-01-14,2023-01-15,2023-01-14,20.426904017754403,Potential fines and punishment for using VPNs becomes viral topic of discussion online,"CenAlert, Other",SA,unknown,2023-12-03
+2014-07-28,2014-08-02,2014-07-29,25.028290309681097,VoIP,"CenAlert, Access Now",SA,unknown,2016-03-17
+2017-06-25,2017-06-27,2017-06-25,25.790190411831787,Grindr,"CenAlert, Access Now",SA,unknown,2017-02-09
+2021-05-12,2021-05-16,2021-05-13,26.936795751801654,Potential fines and punishment for using VPNs becomes viral topic of discussion online,"CenAlert, Other",SA,unknown,2023-12-03
+2019-06-04,2019-06-08,2019-06-04,38.081939077200246,Snapchat international update causes backlash and users attempt to reverse update using VPN,"CenAlert, Other",SA,unknown,2018-02-06
+2018-06-15,2018-06-20,2018-06-16,40.88854103781247,Snapchat international update causes backlash and users attempt to reverse update using VPN,"CenAlert, Other",SA,unknown,2018-02-06
+2017-04-11,2017-04-12,2017-04-11,47.52898373553077,Grindr,"CenAlert, Access Now",SA,unknown,2017-02-09
+2015-07-17,2015-07-23,2015-07-18,74.85165353767528,VoIP,"CenAlert, Access Now",SA,unknown,2016-03-17
+2016-05-09,2016-05-15,2016-05-10,86.61306486459006,VoIP,"CenAlert, Access Now",SA,unknown,2016-03-17
+2016-09-05,2016-09-17,2016-09-08,94.49606120729544,Grindr,"CenAlert, Access Now",SA,unknown,2017-02-09
+2018-02-06,2018-02-09,2018-02-07,105.94507961360992,Snapchat international update causes backlash and users attempt to reverse update using VPN,"CenAlert, Other",SA,other,2018-02-06
+2023-12-03,2023-12-11,2023-12-08,161.3642071695101,Potential fines and punishment for using VPNs becomes viral topic of discussion online,"CenAlert, Other",SA,other,2023-12-03
+2024-01-25,2024-01-25,2024-01-25,0.08460710710145936,Internet partially restored; Facebook reportedly blocked,Access Now,SD,unknown,2021-11-18
+2024-01-16,2024-01-16,2024-01-16,0.12979549159352688,Internet partially restored; Facebook reportedly blocked,Access Now,SD,unknown,2021-11-18
+2024-01-23,2024-01-23,2024-01-23,0.1666970661410634,Internet partially restored; Facebook reportedly blocked,Access Now,SD,unknown,2021-11-18
+2024-02-01,2024-02-01,2024-02-01,0.22310075933380524,Internet partially restored; Facebook reportedly blocked,Access Now,SD,unknown,2021-11-18
+2023-06-26,2023-06-26,2023-06-26,0.27573681866332045,Internet partially restored; Facebook reportedly blocked,Access Now,SD,unknown,2021-11-18
+2022-09-09,2022-09-09,2022-09-09,0.3074508852997577,Internet partially restored; Facebook reportedly blocked,Access Now,SD,unknown,2021-11-18
+2023-07-06,2023-07-06,2023-07-06,0.31072336984168736,Internet partially restored; Facebook reportedly blocked,"CenAlert, Access Now",SD,unknown,2021-11-18
+2021-10-04,2021-10-04,2021-10-04,0.7143362066321925,"Facebook, Twitter, WhatsApp, Social media","CenAlert, Access Now, NetBlocks",SD,unknown,2021-10-25
+2024-01-30,2024-01-30,2024-01-30,0.7723150791556295,Internet partially restored; Facebook reportedly blocked,"CenAlert, Access Now",SD,unknown,2021-11-18
+2019-06-03,2019-06-03,2019-06-03,1.2492486851366493,"Twitter, Periscope, Facebook, Instagram, WhatsApp and Telegram + power outage","CenAlert, Pulse, Access Now, NetBlocks",SD,unknown,2019-04-07
+2021-12-25,2021-12-25,2021-12-25,1.2725198094846473,Internet partially restored; Facebook reportedly blocked,"CenAlert, Access Now",SD,unknown,2021-11-18
+2019-05-14,2019-05-14,2019-05-14,1.673303319029662,"Twitter, Periscope, Facebook, Instagram, WhatsApp and Telegram + power outage","CenAlert, Pulse, Access Now, NetBlocks",SD,unknown,2019-04-07
+2019-07-09,2019-07-10,2019-07-09,1.8275633158147206,"Twitter, Periscope, Facebook, Instagram, WhatsApp and Telegram + power outage","CenAlert, Pulse, Access Now, NetBlocks",SD,unknown,2019-04-07
+2023-04-23,2023-04-24,2023-04-24,2.256077396572624,Internet partially restored; Facebook reportedly blocked,Access Now,SD,unknown,2021-11-18
+2023-07-03,2023-07-04,2023-07-03,2.475605524315803,Internet partially restored; Facebook reportedly blocked,"CenAlert, Access Now",SD,unknown,2021-11-18
+2023-09-26,2023-09-26,2023-09-26,2.6365981276898878,Internet partially restored; Facebook reportedly blocked,"CenAlert, Access Now",SD,unknown,2021-11-18
+2021-12-29,2021-12-29,2021-12-29,3.3811547869667926,Internet partially restored; Facebook reportedly blocked,"CenAlert, Access Now",SD,unknown,2021-11-18
+2021-11-14,2021-11-14,2021-11-14,7.684647731299508,Internet partially restored; Facebook reportedly blocked,"CenAlert, Access Now",SD,community,2021-11-18
+2021-10-26,2021-10-26,2021-10-26,14.43160382055485,"Facebook, Twitter, WhatsApp, Social media","CenAlert, Access Now, NetBlocks",SD,community,2021-10-25
+2023-04-15,2023-04-16,2023-04-15,15.56114324426285,Internet partially restored; Facebook reportedly blocked,"CenAlert, Access Now",SD,unknown,2021-11-18
+2021-11-02,2021-11-09,2021-11-03,201.55032672794087,ADSL available via some providers,CenAlert,SD,manual,2021-11-01
+2021-11-16,2021-11-23,2021-11-18,205.7925422786107,Internet partially restored; Facebook reportedly blocked,"CenAlert, Access Now",SD,community,2021-11-18
+2019-04-07,2019-04-11,2019-04-09,249.46251364848064,"Facebook, Instagram, WhatsApp and Telegram + power outage","CenAlert, Pulse, Access Now, NetBlocks",SD,community,2019-04-07
+2018-12-20,2019-01-14,2018-12-21,636.5896131930647,"Facebook, Twitter, WhatsApp, Instagram, Social media","CenAlert, Pulse, Access Now, NetBlocks",SD,community,2018-12-21
+2024-02-04,2024-02-06,2024-02-05,3.463274716912304,TikTok,"CenAlert, OONI, Access Now, NetBlocks",SN,unknown,2023-08-02
+2023-05-17,2023-05-17,2023-05-17,6.579052468023891,"Blockng of social media, Blockng of Telegram, Facebook, Twitter, WhatsApp, Instagram, Telegram, YouTube","CenAlert, OONI, Access Now, NetBlocks, Pulse",SN,unknown,2023-06-01
+2024-12-04,2024-12-04,2024-12-04,7.133970065046752,TikTok,"CenAlert, OONI, Access Now, NetBlocks",SN,unknown,2023-08-02
+2021-03-04,2021-03-06,2021-03-05,12.199356597718888,"Facebook, YouTube, WhatsApp, Telegram, Facebook, WhatsApp, Telegram, Youtube, Facebook, YouTube, WhatsApp, and some Telegram servers","CenAlert, Pulse, Access Now, NetBlocks",SN,community,2021-03-04
+2023-07-31,2023-08-09,2023-07-31,25.90161374806739,TikTok,"CenAlert, OONI, Access Now, NetBlocks",SN,community,2023-08-02
+2023-06-01,2023-06-07,2023-06-02,273.1262614295107,"Blockng of social media, Blockng of Telegram, Facebook, Twitter, WhatsApp, Instagram, Telegram, YouTube","CenAlert, OONI, Access Now, NetBlocks, Pulse",SN,community,2023-06-01
+2024-12-14,2024-12-14,2024-12-14,1.1126002507010782,Social media only,Access Now,SO,unknown,2017-11-13
+2023-08-27,2023-08-27,2023-08-27,10.602147932109673,Social media only,"CenAlert, Access Now",SO,unknown,2017-11-13
+2023-02-18,2023-02-18,2023-02-18,99.0,"Facebook, WhatsApp, Instagram, Facebook, Instagram, WhatsApp, Messenger","CenAlert, Access Now, NetBlocks",SR,community,2023-02-17
+2024-06-02,2024-06-02,2024-06-02,15.057755545043392,"Facebook, TikTok","CenAlert, Pulse",SS,unknown,2025-01-22
+2021-10-20,2021-10-21,2021-10-21,83.294637000336,"Facebook, Twitter, WhatsApp, Instagram","CenAlert, Access Now",SZ,community,2021-10-15
+2021-07-01,2021-07-09,2021-07-04,410.48963986224527,Shutdown; internet resored on July 4 with social media blocking,"CenAlert, Access Now",SZ,community,2021-06-29
+2020-07-22,2020-07-25,2020-07-23,284.5999999999007,WhatsApp,NetBlocks,TD,community,2020-07-22
+2017-09-20,2017-09-20,2017-09-20,99.0,WhatsApp,CenAlert,TG,manual,2017-09-19
+2016-12-26,2016-12-26,2016-12-26,2.2440049364081815,Facebook blocked,"CenAlert, OONI",TH,unknown,2014-05-28
+2017-12-02,2017-12-02,2017-12-02,4.618392767340282,Blocking of Change.org,OONI,TH,unknown,2020-10-16
+2020-03-17,2020-03-17,2020-03-17,4.84356092414999,Blocking of Change.org,"CenAlert, OONI",TH,unknown,2020-10-16
+2020-10-19,2020-10-19,2020-10-19,5.85836870860755,Blocking of Change.org,"CenAlert, OONI",TH,community,2020-10-16
+2013-03-02,2013-03-02,2013-03-02,7.013624524495629,Facebook blocked,OONI,TH,unknown,2014-05-28
+2016-07-06,2016-07-06,2016-07-06,10.151952826673327,Facebook blocked,"CenAlert, OONI",TH,unknown,2014-05-28
+2015-12-26,2015-12-26,2015-12-26,14.61062438841325,Facebook blocked,"CenAlert, OONI",TH,unknown,2014-05-28
+2019-11-07,2019-11-08,2019-11-07,15.906745757052079,Blocking of Change.org,"CenAlert, OONI",TH,unknown,2020-10-16
+2014-05-28,2014-05-28,2014-05-28,18.488506841854765,Facebook blocked,"CenAlert, OONI",TH,community,2014-05-28
+2017-05-06,2017-05-06,2017-05-06,30.037382811863736,Facebook blocked,"CenAlert, OONI",TH,unknown,2014-05-28
+2020-11-02,2020-11-03,2020-11-03,74.01072498299982,Blocking of Change.org,"CenAlert, OONI",TH,unknown,2020-10-16
+2019-05-06,2019-05-06,2019-05-06,15.581925712015746,Facebook,"CenAlert, Pulse, Access Now",TJ,unknown,2019-04-23
+2024-01-25,2024-01-25,2024-01-25,0.12907187142884347,"Facebook, Twitter, WhatsApp, Instagram, Telegram, VPN services",Access Now,TM,unknown,2021-10-20
+2023-07-30,2023-07-30,2023-07-30,1.293489148078713,"Facebook, Twitter, WhatsApp, Instagram, Telegram, VPN services","CenAlert, Access Now",TM,unknown,2021-10-20
+2022-04-05,2022-04-06,2022-04-05,1.3903193461153975,"Facebook, Twitter, WhatsApp, Instagram, Telegram, VPN services",Access Now,TM,unknown,2021-10-20
+2022-12-07,2022-12-07,2022-12-07,1.7639411804304572,"Facebook, Twitter, WhatsApp, Instagram, Telegram, VPN services","CenAlert, Access Now",TM,unknown,2021-10-20
+2023-09-13,2023-09-13,2023-09-13,2.0714210108949658,"Facebook, Twitter, WhatsApp, Instagram, Telegram, VPN services","CenAlert, Access Now",TM,unknown,2021-10-20
+2017-07-13,2017-07-13,2017-07-13,2.2053688785200656,LINE,CenAlert,TM,unknown,2016-06-25
+2019-01-17,2019-01-17,2019-01-17,3.8735087547521303,LINE,CenAlert,TM,unknown,2016-06-25
+2020-09-19,2020-09-20,2020-09-19,4.950095481762126,"Facebook, Twitter, WhatsApp, Instagram, Telegram, VPN services",Access Now,TM,unknown,2021-10-20
+2023-04-01,2023-04-04,2023-04-02,5.803200550718962,"Facebook, Twitter, WhatsApp, Instagram, Telegram, VPN services",Access Now,TM,unknown,2021-10-20
+2021-09-15,2021-09-15,2021-09-15,8.129821082596191,"Facebook, Twitter, WhatsApp, Instagram, Telegram, VPN services","CenAlert, Access Now",TM,unknown,2021-10-20
+2021-06-17,2021-06-19,2021-06-18,17.843147241516405,"Facebook, Twitter, WhatsApp, Instagram, Telegram, VPN services",Access Now,TM,unknown,2021-10-20
+2016-04-28,2016-05-01,2016-04-29,20.254465593569478,LINE,CenAlert,TM,unknown,2016-06-25
+2019-11-12,2019-11-14,2019-11-13,22.89571849719701,"Facebook, Twitter, WhatsApp, Instagram, Telegram, VPN services","CenAlert, Access Now",TM,unknown,2021-10-20
+2021-03-17,2021-03-19,2021-03-17,24.108769613819362,"Facebook, Twitter, WhatsApp, Instagram, Telegram, VPN services",Access Now,TM,unknown,2021-10-20
+2022-04-10,2022-04-16,2022-04-11,87.20440200619345,"Facebook, Twitter, WhatsApp, Instagram, Telegram, VPN services","CenAlert, Access Now",TM,unknown,2021-10-20
+2020-04-06,2020-04-28,2020-04-10,167.01870441421573,"Facebook, Twitter, WhatsApp, Instagram, Telegram, VPN services","CenAlert, Access Now",TM,unknown,2021-10-20
+2023-06-03,2023-06-10,2023-06-08,180.97007700557882,"Facebook, Twitter, WhatsApp, Instagram, Telegram, VPN services",Access Now,TM,unknown,2021-10-20
+2021-01-05,2021-02-15,2021-01-31,449.2122552451232,"Facebook, Twitter, WhatsApp, Instagram, Telegram, VPN services",Access Now,TM,unknown,2021-10-20
+2016-06-25,2016-07-06,2016-06-30,568.5021586099938,LINE,CenAlert,TM,manual,2016-06-25
+2016-06-19,2016-06-19,2016-06-19,1.084147950791035,Zoom and Microsoft Teams,"CenAlert, Access Now",TN,unknown,2022-03-30
+2020-03-23,2020-03-23,2020-03-23,7.2783102251576395,Zoom and Microsoft Teams,"CenAlert, Access Now",TN,unknown,2022-03-30
+2020-12-05,2020-12-06,2020-12-05,9.358090264320595,Zoom and Microsoft Teams,"CenAlert, Access Now",TN,unknown,2022-03-30
+2020-03-16,2020-03-16,2020-03-16,14.713097453901327,Zoom and Microsoft Teams,"CenAlert, Access Now",TN,unknown,2022-03-30
+2014-09-14,2014-09-14,2014-09-14,19.795937430447097,Zoom and Microsoft Teams,Access Now,TN,unknown,2022-03-30
+2022-02-21,2022-02-21,2022-02-21,21.073498295361944,Zoom and Microsoft Teams,"CenAlert, Access Now",TN,unknown,2022-03-30
+2014-09-20,2014-09-20,2014-09-20,28.23580756128767,Zoom and Microsoft Teams,Access Now,TN,unknown,2022-03-30
+2022-01-01,2022-01-01,2022-01-01,0.028401957540766354,"Facebook, Twitter, Instagram, YouTube, Twitter, Instagram, Facebook, YouTube, and some Telegram servers","CenAlert, Access Now, NetBlocks",TR,unknown,2022-11-13
+2018-06-05,2018-06-05,2018-06-05,0.20223678702566517,Opposition party ad campaign ahead of elections,"CenAlert, Other",TR,other,2018-06-05
+2024-02-23,2024-02-24,2024-02-23,0.3168971946082131,Twitch,CenAlert,TR,manual,2024-02-22
+2015-07-25,2015-07-25,2015-07-25,0.40089321529608357,"96 pro-Kurdish and left wing news websites, including Özgür Gündem",CenAlert,TR,manual,2015-07-25
+2013-06-05,2013-06-05,2013-06-05,0.5706052352276323,"Facebook, Twitter",CenAlert,TR,manual,2013-06-01
+2015-07-22,2015-07-22,2015-07-22,0.5790114931492902,Twitter,CenAlert,TR,manual,2015-07-22
+2016-02-17,2016-02-17,2016-02-17,0.7237925639441625,"Twitter, Facebook throttling",CenAlert,TR,manual,2016-02-17
+2013-06-01,2013-06-02,2013-06-01,0.8655589743489518,"On May 27, 2013, protests broke out in Istanbul over government plans to turn Taksim Gezi Park, one of the last remaining green spaces in the city, into a shopping center. These protests quickly escalated into widespread anti-government unrest, fueled in part by the violent police response to peaceful demonstrations. On June 1, Facebook, Twitter, and 3G mobile networks were reportedly throttled to unusable speeds. Throttling gives governments plausible deniability of censorship, since slow loading times can be blamed on network congestion, especially during mass protests where many people are gathered in a small area. However, users reported VPNs restored access to social platforms, and over 120,000 people in Türkiye installed HotSpot Shield.",CenAlert,TR,manual,2013-06-01
+2020-12-05,2020-12-05,2020-12-05,0.978694039457821,"Twitter, Facebook, Instagram, YouTube, WhatsApp, Facebook, Twitter, Instagram, Facebook Messenger","CenAlert, Access Now, NetBlocks",TR,unknown,2020-02-27
+2016-03-13,2016-03-13,2016-03-13,1.4509521240770709,"Social media, including Facebook and Twitter",CenAlert,TR,manual,2016-03-13
+2019-04-21,2019-04-22,2019-04-21,2.122522272763117,Opera VPN server-side issues,"CenAlert, Other",TR,other,2019-04-21
+2023-05-12,2023-05-13,2023-05-13,2.4136322543056217,Twitter,CenAlert,TR,manual,2023-05-12
+2016-07-15,2016-07-15,2016-07-15,2.9825903871336186,"Social network (Twitter + Facebook) blocks/throttling following attempted coup, Facebook, Twitter, YouTube","CenAlert, OONI, Access Now",TR,community,2016-07-15
+2015-09-08,2015-09-09,2015-09-09,3.4437844769017385,"Twitter thought to be blocked, though disputed by Twitter","CenAlert, Other",TR,other,2015-09-08
+2016-12-19,2016-12-19,2016-12-19,4.154838778680679,Social media,"CenAlert, Access Now",TR,community,2016-12-19
+2024-07-01,2024-07-03,2024-07-02,4.239199736156975,Social media,"CenAlert, NetBlocks",TR,community,2024-07-01
+2016-08-25,2016-08-26,2016-08-25,6.454500555149613,"Facebook, Twitter, YouTube, Vimeo and Instagram","CenAlert, NetBlocks",TR,community,2016-08-25
+2015-10-10,2015-10-12,2015-10-11,6.76354051450448,Twitter,CenAlert,TR,manual,2015-10-10
+2015-04-06,2015-04-08,2015-04-06,7.268651653176609,"Facebook, Twitter, YouTube",CenAlert,TR,manual,2015-04-06
+2024-10-09,2024-10-09,2024-10-09,7.43174267160942,Discord,"CenAlert, OONI",TR,community,2024-10-08
+2016-03-19,2016-03-20,2016-03-20,10.043731745979834,Twitter and Facebook,CenAlert,TR,manual,2016-03-19
+2024-10-23,2024-10-23,2024-10-23,15.525198624201082,"X, Instagram, Facebook, YouTube and TikTok","CenAlert, NetBlocks",TR,community,2024-10-23
+2016-06-28,2016-06-29,2016-06-29,19.087117170510414,"Facebook, Twitter, YouTube","CenAlert, Access Now",TR,community,2016-06-28
+2023-02-08,2023-02-09,2023-02-08,39.76779632601777,"Blocking/throttling Twitter in aftermath of earthquake, Twitter","CenAlert, OONI, Access Now, NetBlocks",TR,community,2023-02-08
+2016-12-23,2016-12-25,2016-12-24,47.71055549971574,"Twitter, Facebook and YouTube","CenAlert, NetBlocks",TR,community,2016-12-22
+2020-02-27,2020-02-28,2020-02-28,64.24754990511849,"Twitter, Facebook, Instagram, YouTube, WhatsApp, Facebook, Twitter, Instagram, Facebook Messenger","CenAlert, Access Now, NetBlocks",TR,community,2020-02-27
+2022-11-13,2022-11-15,2022-11-13,68.73155439989817,"Facebook, Twitter, Instagram, YouTube, Twitter, Instagram, Facebook, YouTube, and some Telegram servers","CenAlert, Access Now, NetBlocks",TR,community,2022-11-13
+2016-11-04,2016-11-06,2016-11-04,72.80186616049664,"Facebook, Twitter and YouTube, WhatsApp, Skype, Instagram",CenAlert,TR,manual,2016-11-04
+2014-03-20,2014-04-07,2014-03-21,158.01008140522052,Twitter,CenAlert,TR,manual,2014-03-20
+2024-08-02,2024-08-11,2024-08-03,470.39272155298613,Instagram,"CenAlert, OONI",TR,community,2024-08-02
+2020-08-25,2020-08-25,2020-08-25,0.17778216142231096,"Some google services including Google translate, bulk SMS blocking, and content filtering over SMS","CenAlert, Access Now",TZ,unknown,2020-10-17
+2023-10-13,2023-10-16,2023-10-14,1.7986036118917923,"Clubhouse, Blocking of social network app Clubhouse","CenAlert, OONI, Access Now",TZ,unknown,2023-08-13
+2021-10-04,2021-10-04,2021-10-04,2.2505420224181996,"Blocking social media (WhatsApp, Facebook Messenger, and Telegram, Twitter, Instagram, TikTok, YouTube) and Tor during elections","CenAlert, Pulse, NetBlocks, OONI",TZ,unknown,2020-10-26
+2020-10-27,2020-11-10,2020-10-31,871.7848009193788,"Blocking social media (WhatsApp, Facebook Messenger, and Telegram, Twitter, Instagram, TikTok, YouTube) and Tor during elections","CenAlert, Pulse, NetBlocks, OONI",TZ,community,2020-10-26
+2015-01-30,2015-01-30,2015-01-30,0.07392011431073975,"2 Social Networks, 1 Email Service, Search Engines",Access Now,UA,unknown,2017-05-15
+2019-08-26,2019-08-26,2019-08-26,0.1450761824433835,"2 Social Networks, 1 Email Service, Search Engines",Access Now,UA,unknown,2017-05-15
+2021-09-25,2021-09-25,2021-09-25,0.17491727718257222,Russia invades Ukraine,Other,UA,unknown,2022-02-24
+2019-06-26,2019-06-26,2019-06-26,0.19171521580699658,"2 Social Networks, 1 Email Service, Search Engines",Access Now,UA,unknown,2017-05-15
+2022-07-04,2022-07-05,2022-07-05,1.5052052301688832,"Facebook, Twitter, YouTube, Viber, Google",Access Now,UA,unknown,2022-07-23
+2023-12-01,2023-12-03,2023-12-01,1.7324399846436123,"Facebook, Twitter, YouTube, Viber, Google","CenAlert, Access Now",UA,unknown,2022-07-23
+2019-04-21,2019-04-22,2019-04-21,7.530091706458066,"2 Social Networks, 1 Email Service, Search Engines","CenAlert, Access Now",UA,unknown,2017-05-15
+2022-06-02,2022-06-10,2022-06-02,8.354210716660333,"Facebook, Twitter, YouTube, Viber, Google",Access Now,UA,unknown,2022-07-23
+2022-02-25,2022-05-15,2022-03-01,325.1845357772345,Russia invades Ukraine,Other,UA,other,2022-02-24
+2017-05-16,2017-06-20,2017-05-19,1102.5258636668505,"2 Social Networks, 1 Email Service, Search Engines","CenAlert, Access Now",UA,community,2017-05-15
+2023-05-01,2023-05-01,2023-05-01,0.15593990574451055,"Blocking of Instagram, Facebook, Twitter, and viber.com as well as other social media sites","CenAlert, OONI, Access Now, NetBlocks",UG,unknown,2021-01-12
+2016-05-11,2016-05-13,2016-05-12,2.3595957501375486,"Blocking social media before presidential inauguration, Facebook, Twitter, YouTube","OONI, Access Now",UG,community,2016-05-11
+2016-02-18,2016-02-21,2016-02-19,6.126921528231048,Social Media,Access Now,UG,community,2016-02-18
+2021-01-09,2021-01-13,2021-01-13,119.07889061356447,"Blocking of Psiphon, Blocking downloads from Google Play Store","CenAlert, OONI",UG,community,2021-01-09
+2021-01-18,2021-02-12,2021-01-18,231.26885583642957,"Blocking of Instagram, Facebook, Twitter, and viber.com as well as other social media sites","CenAlert, OONI, Access Now, NetBlocks",UG,community,2021-01-12
+2018-06-27,2018-07-15,2018-07-01,469.5459033898838,"Social media tax came into effect (blocking access unless paid, circumvention tool websites also blocked)","CenAlert, OONI",UG,community,2018-07-01
+2022-09-30,2022-09-30,2022-09-30,0.4867644768663215,"Facebook, Twitter, Instagram, Telegram, WeChat, VKontakte, LinkedIn, Moi Mir, Odnoklassniki, and YouTube",Access Now,UZ,unknown,2021-11-03
+2024-11-24,2024-11-24,2024-11-24,0.6375693893110466,"Facebook, Twitter, Instagram, Telegram, WeChat, VKontakte, LinkedIn, Moi Mir, Odnoklassniki, and YouTube",Access Now,UZ,unknown,2021-11-03
+2023-04-21,2023-04-22,2023-04-21,1.2684947240781685,"Facebook, Twitter, Instagram, Telegram, WeChat, VKontakte, LinkedIn, Moi Mir, Odnoklassniki, and YouTube",Access Now,UZ,unknown,2021-11-03
+2022-03-22,2022-03-23,2022-03-23,2.5443858735797793,"Facebook, Twitter, Instagram, Telegram, WeChat, VKontakte, LinkedIn, Moi Mir, Odnoklassniki, and YouTube","CenAlert, Access Now",UZ,unknown,2021-11-03
+2023-12-25,2023-12-26,2023-12-25,9.48882643311647,"Facebook, Twitter, Instagram, Telegram, WeChat, VKontakte, LinkedIn, Moi Mir, Odnoklassniki, and YouTube","CenAlert, Access Now",UZ,unknown,2021-11-03
+2018-11-17,2019-01-09,2018-12-05,1375.7106870174348,,Access Now,UZ,unknown,2016-08-31
+2020-03-15,2020-03-15,2020-03-15,0.08520068779488366,DirecTV ceases operations in Venezuela (due to US sanctions),Other,VE,unknown,2020-05-19
+2020-05-15,2020-05-15,2020-05-15,0.3487313232790772,DirecTV ceases operations in Venezuela (due to US sanctions),"CenAlert, Other",VE,other,2020-05-19
+2018-11-11,2018-11-11,2018-11-11,0.5210115094880017,"Blocking Wikipedia, Wikipedia","OONI, NetBlocks",VE,unknown,2019-01-12
+2020-01-12,2020-01-12,2020-01-12,0.5220536739239803,"Facebook, Twitter, Instagram, Facebook Messenger, YouTube, Twitter, Instagram, YouTube, Facebook","Access Now, NetBlocks",VE,unknown,2020-01-05
+2024-05-22,2024-05-22,2024-05-22,0.5684533605435096,"Media/CSO websites, Proton VPN",CenAlert,VE,unknown,2024-07-21
+2022-01-04,2022-01-04,2022-01-04,0.6541292345332224,Airtm,CenAlert,VE,unknown,2020-08-21
+2018-01-03,2018-01-03,2018-01-03,1.066035894175302,Blocking of independent news media,"CenAlert, OONI",VE,unknown,2018-04-11
+2015-12-05,2015-12-06,2015-12-05,1.5144861985067006,Blocking of news websites,"CenAlert, OONI",VE,unknown,2017-04-07
+2018-08-28,2018-08-29,2018-08-28,1.580334594663329,Venezuela announces plan to trace/block accounts of users accessing from outside of Venezuela,"CenAlert, Other",VE,other,2018-08-27
+2018-06-16,2018-06-18,2018-06-17,2.837936570382041,Pornography,CenAlert,VE,manual,2018-06-14
+2020-05-21,2020-05-22,2020-05-21,5.3649285939929925,DirecTV ceases operations in Venezuela (due to US sanctions),"CenAlert, Other",VE,other,2020-05-19
+2018-01-27,2018-01-28,2018-01-28,5.869165879773053,Blocking of independent news media,"CenAlert, OONI",VE,unknown,2018-04-11
+2017-06-29,2017-07-01,2017-06-29,6.027718119874658,"Facebook, Twitter, YouTube, Instagram and Periscope",CenAlert,VE,manual,2017-06-28
+2019-02-22,2019-02-25,2019-02-23,7.444184281157902,"YouTube, VIVOplay, Bing, Google services, Periscope","CenAlert, NetBlocks",VE,community,2019-02-22
+2020-12-05,2020-12-06,2020-12-05,12.760246389048548,Airtm,CenAlert,VE,unknown,2020-08-21
+2019-04-30,2019-05-01,2019-04-30,51.05273940478817,"Twitter, Periscope, YouTube, Facebook and several other services","CenAlert, Pulse, Access Now, NetBlocks",VE,community,2019-04-30
+2020-08-21,2020-08-30,2020-08-24,60.00939259150134,Airtm,CenAlert,VE,manual,2020-08-21
+2024-07-21,2024-08-14,2024-08-09,419.99083444417624,"Media/CSO websites, Proton VPN",CenAlert,VE,manual,2024-07-21
+2014-05-18,2014-05-18,2014-05-18,0.15550048403387162,"Facebook, Instagram","CenAlert, Access Now",VN,unknown,2016-05-14
+2017-10-13,2017-10-13,2017-10-13,0.2683031087385457,Facebook,"CenAlert, Access Now",VN,unknown,2016-05-22
+2019-10-08,2019-10-08,2019-10-08,0.3735696054112836,Facebook,"CenAlert, Access Now",VN,unknown,2020-02-16
+2020-03-13,2020-03-13,2020-03-13,0.42561323323395683,Facebook,"CenAlert, Access Now",VN,unknown,2020-02-16
+2017-08-03,2017-08-03,2017-08-03,0.4818156358084842,Facebook,"CenAlert, Access Now",VN,unknown,2016-05-22
+2022-11-25,2022-11-25,2022-11-25,0.7478692460006613,"Roblox, Wattpad",CenAlert,VN,unknown,2024-03-29
+2015-06-08,2015-06-08,2015-06-08,0.7715504650940765,"Facebook, Instagram","CenAlert, Access Now",VN,unknown,2016-05-14
+2019-04-20,2019-04-20,2019-04-20,1.1750922515461024,Facebook,"CenAlert, Access Now",VN,unknown,2020-02-16
+2018-06-12,2018-06-12,2018-06-12,1.3001898835588097,Facebook,"CenAlert, Access Now",VN,unknown,2020-02-16
+2021-11-10,2021-11-10,2021-11-10,2.284857832841709,Facebook,"CenAlert, Access Now",VN,unknown,2020-02-16
+2022-04-29,2022-04-30,2022-04-30,2.427067850633506,"Roblox, Wattpad",CenAlert,VN,unknown,2024-03-29
+2022-01-03,2022-01-04,2022-01-04,4.2131057776154535,Facebook,"CenAlert, Access Now",VN,unknown,2020-02-16
+2024-02-07,2024-02-07,2024-02-07,4.332746786476918,"Roblox, Wattpad",CenAlert,VN,unknown,2024-03-29
+2022-07-27,2022-07-28,2022-07-27,4.726761854443222,"Roblox, Wattpad",CenAlert,VN,unknown,2024-03-29
+2018-08-14,2018-08-14,2018-08-14,5.25609453194506,Facebook,"CenAlert, Access Now",VN,unknown,2020-02-16
+2020-02-08,2020-02-09,2020-02-08,9.497301507737781,Facebook,"CenAlert, Access Now",VN,unknown,2020-02-16
+2017-06-03,2017-06-03,2017-06-03,10.937349137313578,Facebook,"CenAlert, Access Now",VN,unknown,2016-05-22
+2016-06-05,2016-06-05,2016-06-05,15.100624296716099,Facebook,"CenAlert, Access Now",VN,unknown,2016-05-22
+2019-11-15,2019-11-24,2019-11-16,16.37248622576695,Facebook,Access Now,VN,unknown,2020-02-16
+2021-01-17,2021-01-17,2021-01-17,19.34921698296713,Facebook,"CenAlert, Access Now",VN,unknown,2020-02-16
+2019-05-14,2019-05-16,2019-05-15,22.498204303398857,Facebook,"CenAlert, Access Now",VN,unknown,2020-02-16
+2016-05-21,2016-05-22,2016-05-21,24.88023998671853,Facebook,"CenAlert, Access Now",VN,community,2016-05-22
+2017-01-11,2017-01-13,2017-01-12,27.769958216303905,Facebook,"CenAlert, Access Now",VN,unknown,2016-05-22
+2020-10-27,2020-10-31,2020-10-28,30.192905329158904,Facebook,"CenAlert, Access Now",VN,unknown,2020-02-16
+2016-05-14,2016-05-16,2016-05-15,59.14532996921688,"Facebook, Instagram","CenAlert, Access Now",VN,community,2016-05-14
+2023-01-30,2023-02-09,2023-02-02,98.64377318532956,"Roblox, Wattpad",CenAlert,VN,unknown,2024-03-29
+2020-12-05,2020-12-06,2020-12-06,118.95012547930307,Facebook,"CenAlert, Access Now",VN,unknown,2020-02-16
+2024-03-30,2024-04-15,2024-03-31,417.8270275870749,"Roblox, Wattpad",CenAlert,VN,manual,2024-03-29
+2017-12-08,2017-12-13,2017-12-11,163.61835068238702,,"CenAlert, Access Now",YE,community,2017-12-07
+2021-08-12,2021-08-14,2021-08-12,185.07752037615958,"Blocking of WhatsApp, Facebook, Twitter during elections","CenAlert, OONI, Access Now, NetBlocks, Pulse",ZM,community,2021-08-12
+2020-07-21,2020-07-21,2020-07-21,0.7111579082076016,Throttling,"CenAlert, NetBlocks",ZW,unknown,2020-07-30
+2020-08-23,2020-08-24,2020-08-23,0.7440967194241566,Throttling,NetBlocks,ZW,unknown,2020-07-30
+2021-03-07,2021-03-07,2021-03-07,1.1363002620054452,Throttling,"CenAlert, NetBlocks",ZW,unknown,2020-07-30
+2020-09-06,2020-09-06,2020-09-06,3.215895814060058,Throttling,NetBlocks,ZW,unknown,2020-07-30
+2016-07-06,2016-07-06,2016-07-06,3.582312061863516,Social media,"CenAlert, Access Now",ZW,community,2016-07-06
+2023-08-21,2023-08-23,2023-08-22,23.497321125068304,"Facebook, Twitter, WhatsApp","CenAlert, Access Now",ZW,unknown,2022-02-20
+2020-07-24,2020-08-01,2020-07-30,169.81324071612207,Throttling,"CenAlert, NetBlocks",ZW,community,2020-07-30
+2019-01-15,2019-01-21,2019-01-17,416.46162461018434,"Blocking social media -> Internet shutdown amidst protests, Facebook, Twitter, WhatsApp, Instagram, Telegram, Tinder, Shutdowns","CenAlert, OONI, Access Now, NetBlocks",ZW,community,2019-01-15
+2013-08-30,2013-08-30,2013-08-30,0.6401268832480689,unknown,CenAlert,AE,,
+2014-04-18,2014-04-19,2014-04-19,3.716195713207327,unknown,CenAlert,AE,,
+2015-01-03,2015-01-03,2015-01-03,0.7604212593590276,unknown,CenAlert,AE,,
+2021-08-20,2021-08-20,2021-08-20,1.4898772066544055,unknown,CenAlert,AE,,
+2025-01-19,2025-01-19,2025-01-19,2.765632606826273,unknown,CenAlert,AE,,
+2022-09-14,2022-09-14,2022-09-14,0.1547534068975427,unknown,CenAlert,AZ,,
+2019-05-14,2019-05-14,2019-05-14,0.04145747880459627,unknown,CenAlert,BD,,
+2025-03-14,2025-03-15,2025-03-14,0.2926502849198309,unknown,CenAlert,BD,,
+2022-01-11,2022-01-23,2022-01-13,462.0701083675205,unknown,CenAlert,BF,,
+2024-03-16,2024-03-16,2024-03-16,35.76974664470268,unknown,CenAlert,BF,,
+2018-09-21,2018-09-21,2018-09-21,2.197715607416292,unknown,CenAlert,BJ,,
+2016-10-21,2016-10-21,2016-10-21,0.08505912676452576,unknown,CenAlert,BR,,
+2020-08-30,2020-08-30,2020-08-30,0.019780844556152255,unknown,CenAlert,BR,,
+2022-01-17,2022-01-17,2022-01-17,0.009920085529994793,unknown,CenAlert,BR,,
+2022-11-01,2022-11-02,2022-11-02,0.1062110153021596,unknown,CenAlert,BR,,
+2022-11-06,2022-11-06,2022-11-06,0.25583032054094135,unknown,CenAlert,BR,,
+2022-12-31,2022-12-31,2022-12-31,0.19247116725403712,unknown,CenAlert,BR,,
+2023-01-05,2023-01-05,2023-01-05,0.23207338314489157,unknown,CenAlert,BR,,
+2023-12-16,2023-12-16,2023-12-16,0.035544140007763396,unknown,CenAlert,BY,,
+2025-01-25,2025-01-28,2025-01-25,10.094489411805961,unknown,CenAlert,BY,,
+2025-02-03,2025-02-05,2025-02-03,67.27729983412807,unknown,CenAlert,CD,,
+2017-10-04,2017-10-04,2017-10-04,0.6429945794546192,unknown,CenAlert,CM,,
+2017-10-22,2017-10-22,2017-10-22,0.40377919030715503,unknown,CenAlert,CM,,
+2021-10-04,2021-10-04,2021-10-04,57.39212696094913,unknown,CenAlert,CM,,
+2022-04-02,2022-04-02,2022-04-02,36.26582521221047,unknown,CenAlert,CM,,
+2022-07-13,2022-07-13,2022-07-13,35.389144630849145,unknown,CenAlert,CM,,
+2023-04-25,2023-04-25,2023-04-25,35.0086189332162,unknown,CenAlert,CM,,
+2023-06-06,2023-06-06,2023-06-06,51.63527267025481,unknown,CenAlert,CM,,
+2023-06-30,2023-06-30,2023-06-30,59.39122496663632,unknown,CenAlert,CM,,
+2023-07-14,2023-07-14,2023-07-14,62.45438544569424,unknown,CenAlert,CM,,
+2023-07-25,2023-07-25,2023-07-25,59.627182682313574,unknown,CenAlert,CM,,
+2023-07-29,2023-07-29,2023-07-29,63.726869019796474,unknown,CenAlert,CM,,
+2023-08-02,2023-08-02,2023-08-02,58.230089268361326,unknown,CenAlert,CM,,
+2023-08-04,2023-08-04,2023-08-04,67.95906240848072,unknown,CenAlert,CM,,
+2023-08-14,2023-08-14,2023-08-14,56.24058534836245,unknown,CenAlert,CM,,
+2023-09-25,2023-09-25,2023-09-25,51.71227122784036,unknown,CenAlert,CM,,
+2023-10-18,2023-10-18,2023-10-18,66.89618432302377,unknown,CenAlert,CM,,
+2024-09-26,2024-09-26,2024-09-26,56.59848347086759,unknown,CenAlert,CM,,
+2024-10-21,2024-10-21,2024-10-21,43.03395780496915,unknown,CenAlert,CM,,
+2024-11-01,2024-11-01,2024-11-01,34.793555706731674,unknown,CenAlert,CM,,
+2024-12-18,2024-12-18,2024-12-18,41.976183230622425,unknown,CenAlert,CM,,
+2025-01-20,2025-01-20,2025-01-20,41.03898057877876,unknown,CenAlert,CM,,
+2025-02-10,2025-02-10,2025-02-10,57.461049156703254,unknown,CenAlert,CM,,
+2025-06-23,2025-07-08,2025-07-04,165.86079684552095,unknown,CenAlert,CM,,
+2025-08-20,2025-09-06,2025-09-02,111.25920860685301,unknown,CenAlert,CM,,
+2018-02-17,2018-02-17,2018-02-17,0.45685752687396786,unknown,CenAlert,CN,,
+2018-06-02,2018-06-02,2018-06-02,0.4419690482830134,unknown,CenAlert,CN,,
+2020-10-01,2020-10-01,2020-10-01,7.178214292445368,unknown,CenAlert,CN,,
+2025-07-13,2025-07-13,2025-07-13,0.08080027036515247,unknown,CenAlert,CN,,
+2020-10-25,2020-10-26,2020-10-26,1.0635665820022364,unknown,CenAlert,CU,,
+2022-01-04,2022-01-04,2022-01-04,0.002819577335257062,unknown,CenAlert,CU,,
+2022-05-28,2022-05-28,2022-05-28,0.1346174143468657,unknown,CenAlert,CU,,
+2025-05-01,2025-05-01,2025-05-01,0.02978480625507096,unknown,CenAlert,CU,,
+2025-05-13,2025-05-13,2025-05-13,0.01083402206870554,unknown,CenAlert,CU,,
+2014-10-09,2014-10-09,2014-10-09,0.7374987679303948,unknown,CenAlert,DZ,,
+2014-10-29,2014-10-29,2014-10-29,0.47629046562796207,unknown,CenAlert,DZ,,
+2014-11-17,2014-11-17,2014-11-17,1.3174304903880163,unknown,CenAlert,DZ,,
+2014-12-02,2014-12-03,2014-12-02,1.52372103733659,unknown,CenAlert,DZ,,
+2023-09-07,2023-09-07,2023-09-07,0.07149044868539045,unknown,CenAlert,DZ,,
+2025-03-07,2025-03-07,2025-03-07,0.17961451758444902,unknown,CenAlert,DZ,,
+2025-06-14,2025-06-16,2025-06-15,5.363499445078952,unknown,CenAlert,DZ,,
+2023-07-30,2023-07-30,2023-07-30,1.25560256724766,unknown,CenAlert,EC,,
+2025-06-12,2025-06-13,2025-06-12,5.8437606064233165,unknown,CenAlert,EC,,
+2023-07-12,2023-07-12,2023-07-12,0.7831038070657816,unknown,CenAlert,EG,,
+2025-02-05,2025-02-05,2025-02-05,2.9329454805403112,unknown,CenAlert,EG,,
+2025-03-19,2025-03-19,2025-03-19,0.7660956706409221,unknown,CenAlert,EG,,
+2025-05-26,2025-06-02,2025-05-29,53.695388696406084,unknown,CenAlert,EG,,
+2011-07-26,2011-07-29,2011-07-26,10.886343096211554,unknown,CenAlert,ES,,
+2011-08-09,2011-08-11,2011-08-09,6.121719128262779,unknown,CenAlert,ES,,
+2012-11-14,2012-11-14,2012-11-14,0.2858888220961955,unknown,CenAlert,ES,,
+2014-02-11,2014-02-11,2014-02-11,0.012616299885461757,unknown,CenAlert,ES,,
+2020-12-05,2020-12-05,2020-12-05,0.5966605546411046,unknown,CenAlert,ES,,
+2025-01-12,2025-01-12,2025-01-12,5.189969094035732,unknown,CenAlert,ES,,
+2025-07-13,2025-07-13,2025-07-13,4.691035986909249,unknown,CenAlert,ES,,
+2025-08-15,2025-08-17,2025-08-17,17.966807518447695,unknown,CenAlert,ES,,
+2025-08-23,2025-08-24,2025-08-24,19.102434897821183,unknown,CenAlert,ES,,
+2025-08-30,2025-08-31,2025-08-31,11.931323303603804,unknown,CenAlert,ES,,
+2016-08-06,2016-08-06,2016-08-06,11.001246949288046,unknown,CenAlert,ET,,
+2016-10-09,2016-10-11,2016-10-10,9.38041150168701,unknown,CenAlert,ET,,
+2016-10-13,2016-11-08,2016-10-25,99.78480784217638,unknown,CenAlert,ET,,
+2017-12-12,2017-12-30,2017-12-26,86.44628423584065,unknown,CenAlert,ET,,
+2020-06-19,2020-06-19,2020-06-19,0.19747618669735623,unknown,CenAlert,ET,,
+2020-07-14,2020-08-11,2020-07-15,611.678281150979,unknown,CenAlert,ET,,
+2025-06-07,2025-06-07,2025-06-07,0.5523865051585255,unknown,CenAlert,ET,,
+2017-08-12,2017-08-13,2017-08-13,1.065121943900742,unknown,CenAlert,GB,,
+2017-08-19,2017-08-19,2017-08-19,1.820790124466786,unknown,CenAlert,GB,,
+2017-08-26,2017-08-26,2017-08-26,1.320119392049076,unknown,CenAlert,GB,,
+2022-07-30,2022-07-30,2022-07-30,0.25680046444523796,unknown,CenAlert,GB,,
+2023-01-14,2023-01-14,2023-01-14,0.13144177527270884,unknown,CenAlert,GB,,
+2024-07-24,2024-07-25,2024-07-25,0.4567030896309916,unknown,CenAlert,GB,,
+2025-01-19,2025-01-19,2025-01-19,7.177598555858811,unknown,CenAlert,GB,,
+2025-07-16,2025-07-16,2025-07-16,0.10308348636658593,unknown,CenAlert,GB,,
+2025-07-23,2025-08-14,2025-07-28,747.9489944137688,unknown,CenAlert,GB,,
+2021-06-22,2021-06-22,2021-06-22,0.05728519125249498,unknown,CenAlert,HK,,
+2024-03-28,2024-03-28,2024-03-28,0.1392289196646015,unknown,CenAlert,HK,,
+2018-03-29,2018-03-29,2018-03-29,0.28176177794889945,unknown,CenAlert,ID,,
+2019-05-22,2019-05-26,2019-05-22,249.2412715084096,unknown,CenAlert,ID,,
+2021-11-27,2021-11-27,2021-11-27,0.05567769733262917,unknown,CenAlert,ID,,
+2024-11-15,2024-11-15,2024-11-15,0.28198748711044175,unknown,CenAlert,ID,,
+2025-08-30,2025-08-31,2025-08-31,2.8596612090044724,unknown,CenAlert,ID,,
+2015-08-02,2015-08-08,2015-08-04,107.496514826744,unknown,CenAlert,IN,,
+2018-10-24,2018-11-06,2018-10-25,85.55355755380253,unknown,CenAlert,IN,,
+2018-11-16,2018-11-16,2018-11-16,0.08152833556113137,unknown,CenAlert,IN,,
+2019-04-11,2019-04-13,2019-04-12,4.834794127815655,unknown,CenAlert,IN,,
+2019-12-03,2019-12-05,2019-12-03,4.543910918694991,unknown,CenAlert,IN,,
+2020-03-16,2020-03-28,2020-03-23,113.44715172525378,unknown,CenAlert,IN,,
+2020-03-30,2020-03-31,2020-03-30,1.750408857239023,unknown,CenAlert,IN,,
+2021-03-10,2021-03-11,2021-03-11,2.3140154725046784,unknown,CenAlert,IN,,
+2021-05-06,2021-05-06,2021-05-06,1.2132791069046078,unknown,CenAlert,IN,,
+2021-09-01,2021-09-01,2021-09-01,0.7889501835855697,unknown,CenAlert,IN,,
+2022-07-29,2022-07-31,2022-07-31,5.445742587062767,unknown,CenAlert,IN,,
+2022-12-21,2022-12-21,2022-12-21,0.22404963398327737,unknown,CenAlert,IN,,
+2023-01-14,2023-01-14,2023-01-14,0.6252025610618333,unknown,CenAlert,IN,,
+2023-02-26,2023-02-26,2023-02-26,2.7271937478195127,unknown,CenAlert,IN,,
+2025-05-01,2025-05-01,2025-05-01,3.4641910915907985,unknown,CenAlert,IN,,
+2014-06-13,2014-06-30,2014-06-15,362.847318855191,unknown,CenAlert,IQ,,
+2014-07-07,2014-07-07,2014-07-07,2.5343994968626506,unknown,CenAlert,IQ,,
+2020-12-08,2020-12-08,2020-12-08,0.713020764541409,unknown,CenAlert,IQ,,
+2025-01-05,2025-01-05,2025-01-05,0.037479325734011575,unknown,CenAlert,IQ,,
+2025-07-10,2025-07-10,2025-07-10,0.03475526367102732,unknown,CenAlert,IQ,,
+2017-12-31,2018-01-12,2018-01-01,136.09674291058332,unknown,CenAlert,IR,,
+2019-11-27,2019-11-29,2019-11-28,2.4657755020724075,unknown,CenAlert,IR,,
+2020-12-21,2020-12-26,2020-12-23,0.9006628377599579,unknown,CenAlert,IR,,
+2022-09-01,2022-09-02,2022-09-01,0.5280414935281565,unknown,CenAlert,IR,,
+2022-09-04,2022-09-04,2022-09-04,0.3750411277141079,unknown,CenAlert,IR,,
+2022-09-08,2022-09-11,2022-09-09,1.435354274884097,unknown,CenAlert,IR,,
+2022-09-15,2022-09-15,2022-09-15,0.3192582582182837,unknown,CenAlert,IR,,
+2022-09-17,2022-09-17,2022-09-17,0.3385083756015712,unknown,CenAlert,IR,,
+2022-09-20,2022-11-12,2022-09-23,1888.2972498775096,unknown,CenAlert,IR,,
+2024-05-20,2024-05-20,2024-05-20,0.021466795197554234,unknown,CenAlert,IR,,
+2025-06-13,2025-06-30,2025-06-16,251.61415476202157,unknown,CenAlert,IR,,
+2023-03-05,2023-03-05,2023-03-05,0.4955843020011024,unknown,CenAlert,IT,,
+2019-04-20,2019-04-21,2019-04-20,4.492769427184067,unknown,CenAlert,JO,,
+2019-05-13,2019-05-16,2019-05-13,33.42253083388706,unknown,CenAlert,JO,,
+2025-01-19,2025-01-19,2025-01-19,1.471048135400176,unknown,CenAlert,JO,,
+2025-05-24,2025-05-24,2025-05-24,1.3689410304816398,unknown,CenAlert,JO,,
+2025-05-26,2025-05-27,2025-05-26,0.6313269303529339,unknown,CenAlert,JO,,
+2025-06-03,2025-06-03,2025-06-03,0.10910266311264394,unknown,CenAlert,JO,,
+2019-08-21,2019-08-21,2019-08-21,0.07294947530409067,unknown,CenAlert,KE,,
+2022-12-08,2022-12-09,2022-12-08,0.8005008415303612,unknown,CenAlert,KE,,
+2024-11-08,2024-11-09,2024-11-08,3.1623904709777824,unknown,CenAlert,KE,,
+2025-02-07,2025-02-07,2025-02-07,0.7305038549750583,unknown,CenAlert,KE,,
+2025-06-25,2025-06-25,2025-06-25,4.263077032999392,unknown,CenAlert,KE,,
+2024-04-17,2024-04-26,2024-04-18,287.17303944588207,unknown,CenAlert,KG,,
+2025-06-23,2025-07-08,2025-07-06,190.88512405548252,unknown,CenAlert,KG,,
+2025-08-20,2025-09-06,2025-08-31,299.02824658924936,unknown,CenAlert,KG,,
+2018-07-09,2018-07-09,2018-07-09,40.18937437209104,unknown,CenAlert,KH,,
+2018-10-12,2018-10-12,2018-10-12,39.357619206241154,unknown,CenAlert,KH,,
+2021-03-30,2021-03-30,2021-03-30,1.0886902099124889,unknown,CenAlert,KH,,
+2021-04-30,2021-04-30,2021-04-30,5.198885770389573,unknown,CenAlert,KH,,
+2021-06-01,2021-06-02,2021-06-02,14.647811436576589,unknown,CenAlert,KH,,
+2021-12-14,2021-12-15,2021-12-14,3.3610178048442876,unknown,CenAlert,KH,,
+2021-12-26,2021-12-26,2021-12-26,3.4415533478685667,unknown,CenAlert,KH,,
+2022-01-10,2022-01-10,2022-01-10,2.423175847787057,unknown,CenAlert,KH,,
+2022-06-02,2022-06-02,2022-06-02,2.4735516626268463,unknown,CenAlert,KH,,
+2023-06-03,2023-06-03,2023-06-03,0.03086792442521613,unknown,CenAlert,KH,,
+2024-11-23,2024-11-23,2024-11-23,0.04267987856040634,unknown,CenAlert,KH,,
+2025-02-06,2025-02-06,2025-02-06,2.549192506025662,unknown,CenAlert,KH,,
+2025-02-20,2025-02-20,2025-02-20,6.38429159218083,unknown,CenAlert,KH,,
+2025-05-27,2025-05-27,2025-05-27,0.188238801143072,unknown,CenAlert,KH,,
+2025-06-12,2025-06-13,2025-06-13,37.99885181987392,unknown,CenAlert,KH,,
+2025-07-27,2025-07-28,2025-07-28,31.51085860018388,unknown,CenAlert,KH,,
+2016-04-19,2016-04-20,2016-04-20,0.5868377827120694,unknown,CenAlert,KZ,,
+2018-02-09,2018-02-10,2018-02-09,6.243265765118444,unknown,CenAlert,KZ,,
+2018-02-26,2018-02-26,2018-02-26,0.29698592519916645,unknown,CenAlert,KZ,,
+2020-06-01,2020-06-01,2020-06-01,0.017145167847126386,unknown,CenAlert,KZ,,
+2022-10-01,2022-10-01,2022-10-01,0.5999104685203422,unknown,CenAlert,KZ,,
+2023-07-01,2023-07-01,2023-07-01,0.04382651309592367,unknown,CenAlert,KZ,,
+2023-08-12,2023-08-12,2023-08-12,0.059110174523000714,unknown,CenAlert,KZ,,
+2023-10-24,2023-10-24,2023-10-24,0.002523965395323735,unknown,CenAlert,KZ,,
+2025-06-21,2025-06-21,2025-06-21,0.07820501547536507,unknown,CenAlert,KZ,,
+2025-07-26,2025-07-26,2025-07-26,0.13568395833531666,unknown,CenAlert,KZ,,
+2019-05-14,2019-05-15,2019-05-15,10.119416399399654,unknown,CenAlert,LB,,
+2020-05-15,2020-05-15,2020-05-15,8.052742271589594,unknown,CenAlert,LB,,
+2022-03-31,2022-03-31,2022-03-31,0.014589049540019994,unknown,CenAlert,LK,,
+2025-08-10,2025-08-10,2025-08-10,0.004420099705305047,unknown,CenAlert,LK,,
+2016-01-06,2016-01-21,2016-01-07,474.84011428950845,unknown,CenAlert,MA,,
+2020-03-17,2020-03-17,2020-03-17,3.79399003755109,unknown,CenAlert,MA,,
+2022-06-02,2022-06-02,2022-06-02,0.36257198139480096,unknown,CenAlert,MA,,
+2022-12-13,2022-12-13,2022-12-13,7.472863977617479,unknown,CenAlert,MA,,
+2023-06-02,2023-06-02,2023-06-02,2.243639174223574,unknown,CenAlert,MA,,
+2025-05-12,2025-05-12,2025-05-12,1.4504632842806018,unknown,CenAlert,MA,,
+2025-05-28,2025-05-30,2025-05-29,25.030536855351386,unknown,CenAlert,MA,,
+2021-10-04,2021-10-04,2021-10-04,4.026027539933448,unknown,CenAlert,ML,,
+2019-07-31,2019-07-31,2019-07-31,0.09238017912409413,unknown,CenAlert,MM,,
+2023-12-12,2023-12-12,2023-12-12,0.043246841608053366,unknown,CenAlert,MM,,
+2024-02-15,2024-03-10,2024-02-17,22.571827770038702,unknown,CenAlert,MM,,
+2024-03-12,2024-03-12,2024-03-12,0.05910313170359416,unknown,CenAlert,MM,,
+2024-04-02,2024-04-03,2024-04-03,0.3202450750407708,unknown,CenAlert,MM,,
+2025-07-11,2025-07-11,2025-07-11,0.0006964726383671405,unknown,CenAlert,MM,,
+2025-08-14,2025-08-14,2025-08-14,0.45099787804082236,unknown,CenAlert,MM,,
+2015-01-30,2015-01-30,2015-01-30,0.12895808968261235,unknown,CenAlert,MY,,
+2023-04-20,2023-04-20,2023-04-20,1.706585372223671,unknown,CenAlert,MY,,
+2024-03-16,2024-03-16,2024-03-16,0.06942831573912576,unknown,CenAlert,NG,,
+2017-01-18,2017-01-18,2017-01-18,1.102447980154535,unknown,CenAlert,NP,,
+2018-05-08,2018-05-08,2018-05-08,0.5246898998405967,unknown,CenAlert,NP,,
+2018-11-03,2018-11-06,2018-11-04,4.978861885125614,unknown,CenAlert,NP,,
+2018-12-01,2018-12-01,2018-12-01,0.09120205421296301,unknown,CenAlert,NP,,
+2019-12-13,2019-12-13,2019-12-13,0.021501105667374176,unknown,CenAlert,NP,,
+2019-12-25,2019-12-25,2019-12-25,0.541057814264752,unknown,CenAlert,NP,,
+2021-10-01,2021-10-01,2021-10-01,0.10505400203131021,unknown,CenAlert,NP,,
+2025-09-04,2025-09-06,2025-09-06,153.3917943817668,unknown,CenAlert,NP,,
+2025-05-08,2025-05-08,2025-05-08,11.073668457125393,unknown,CenAlert,OM,,
+2015-07-03,2015-07-03,2015-07-03,0.026263950515889256,unknown,CenAlert,PH,,
+2016-06-03,2016-06-03,2016-06-03,0.025704442942249273,unknown,CenAlert,PH,,
+2016-07-01,2016-07-01,2016-07-01,0.10751789388194588,unknown,CenAlert,PH,,
+2017-01-07,2017-01-07,2017-01-07,0.003608298883752248,unknown,CenAlert,PH,,
+2017-07-19,2017-07-19,2017-07-19,0.027923170094023675,unknown,CenAlert,PH,,
+2018-05-10,2018-05-10,2018-05-10,0.06780782349878578,unknown,CenAlert,PH,,
+2018-10-26,2018-11-08,2018-11-04,14.722450583927568,unknown,CenAlert,PH,,
+2019-10-24,2019-10-24,2019-10-24,0.032001882442129315,unknown,CenAlert,PH,,
+2022-01-01,2022-01-01,2022-01-01,0.0673683492792172,unknown,CenAlert,PH,,
+2023-07-12,2023-07-12,2023-07-12,0.04202835114380754,unknown,CenAlert,PH,,
+2024-11-04,2024-11-04,2024-11-04,0.00447143172347797,unknown,CenAlert,PH,,
+2025-01-19,2025-01-19,2025-01-19,0.5275406421037943,unknown,CenAlert,PH,,
+2025-06-05,2025-06-05,2025-06-05,0.06944782258146098,unknown,CenAlert,PH,,
+2012-05-24,2012-05-24,2012-05-24,0.11353032925900619,unknown,CenAlert,PK,,
+2012-09-22,2012-10-02,2012-09-28,11.289209211844131,unknown,CenAlert,PK,,
+2012-10-04,2013-01-14,2012-12-09,224.5054900766196,unknown,CenAlert,PK,,
+2014-07-29,2014-07-30,2014-07-29,0.4739584011706537,unknown,CenAlert,PK,,
+2023-09-30,2023-09-30,2023-09-30,0.1631077376906127,unknown,CenAlert,PK,,
+2025-03-31,2025-04-01,2025-04-01,5.539701079424994,unknown,CenAlert,PK,,
+2025-04-03,2025-04-03,2025-04-03,1.0466990747941303,unknown,CenAlert,PK,,
+2021-08-20,2021-08-20,2021-08-20,0.01747621657709786,unknown,CenAlert,QA,,
+2021-11-27,2021-11-27,2021-11-27,0.8254257525113253,unknown,CenAlert,QA,,
+2025-08-13,2025-08-15,2025-08-13,66.02453209383273,unknown,CenAlert,QA,,
+2018-04-06,2018-04-06,2018-04-06,0.017033672083886838,unknown,CenAlert,RU,,
+2020-03-16,2020-03-21,2020-03-19,3.8826607123265076,unknown,CenAlert,RU,,
+2020-12-05,2020-12-05,2020-12-05,0.4000486712154204,unknown,CenAlert,RU,,
+2021-11-17,2021-11-17,2021-11-17,0.16354986110546485,unknown,CenAlert,RU,,
+2022-04-09,2022-04-09,2022-04-09,0.818905191776597,unknown,CenAlert,RU,,
+2022-06-02,2022-06-02,2022-06-02,1.1952121171654786,unknown,CenAlert,RU,,
+2014-03-22,2014-03-22,2014-03-22,0.012209585458219152,unknown,CenAlert,SA,,
+2023-06-28,2023-06-30,2023-06-28,1.5343607364906262,unknown,CenAlert,SA,,
+2025-03-30,2025-04-02,2025-03-31,15.840935287614514,unknown,CenAlert,SA,,
+2023-04-23,2023-04-25,2023-04-24,2.3344338612496145,unknown,CenAlert,SD,,
+2023-07-01,2023-07-01,2023-07-01,1.7097514066955433,unknown,CenAlert,SD,,
+2024-01-15,2024-01-15,2024-01-15,0.8972325165873696,unknown,CenAlert,SD,,
+2024-01-24,2024-01-24,2024-01-24,0.14878378838906325,unknown,CenAlert,SD,,
+2023-07-28,2023-07-28,2023-07-28,0.02222099540294531,unknown,CenAlert,SN,,
+2025-06-23,2025-06-27,2025-06-27,0.6296720075213029,unknown,CenAlert,SN,,
+2025-06-30,2025-07-08,2025-07-04,3.0070283848754524,unknown,CenAlert,SN,,
+2025-08-20,2025-09-06,2025-08-25,27.27570015036365,unknown,CenAlert,SN,,
+2025-01-23,2025-01-24,2025-01-23,30.16968991006462,unknown,CenAlert,SS,,
+2022-06-28,2022-06-28,2022-06-28,3.6388599115312417,unknown,CenAlert,SZ,,
+2023-01-05,2023-01-05,2023-01-05,57.63080185428759,unknown,CenAlert,TG,,
+2023-01-09,2023-01-13,2023-01-12,362.0663721411961,unknown,CenAlert,TG,,
+2025-06-23,2025-07-28,2025-07-02,1488.374954282594,unknown,CenAlert,TG,,
+2013-03-02,2013-03-07,2013-03-02,21.667610280150825,unknown,CenAlert,TH,,
+2023-11-19,2023-11-19,2023-11-19,0.5868217347441345,unknown,CenAlert,TH,,
+2019-05-04,2019-05-04,2019-05-04,2.3959296986471514,unknown,CenAlert,TJ,,
+2021-03-16,2021-03-18,2021-03-17,21.753689056745955,unknown,CenAlert,TM,,
+2021-06-16,2021-06-19,2021-06-18,18.31058003796001,unknown,CenAlert,TM,,
+2021-09-06,2021-09-06,2021-09-06,0.8932618087763196,unknown,CenAlert,TM,,
+2021-09-09,2021-09-09,2021-09-09,2.8355653268784984,unknown,CenAlert,TM,,
+2021-10-17,2021-10-17,2021-10-17,0.131070796576239,unknown,CenAlert,TM,,
+2022-01-16,2022-01-16,2022-01-16,0.5578119695117749,unknown,CenAlert,TM,,
+2022-07-11,2022-07-11,2022-07-11,1.1673946746803665,unknown,CenAlert,TM,,
+2022-09-28,2022-09-29,2022-09-29,10.025297359383018,unknown,CenAlert,TM,,
+2022-12-11,2022-12-20,2022-12-16,47.289640806981254,unknown,CenAlert,TM,,
+2023-01-25,2023-01-26,2023-01-25,2.792684513812432,unknown,CenAlert,TM,,
+2023-04-01,2023-04-06,2023-04-03,9.339537069591259,unknown,CenAlert,TM,,
+2023-06-01,2023-06-11,2023-06-08,292.56951842098533,unknown,CenAlert,TM,,
+2024-02-20,2024-02-20,2024-02-20,0.6024634774855961,unknown,CenAlert,TM,,
+2024-11-16,2024-11-24,2024-11-19,54.057138513635124,unknown,CenAlert,TM,,
+2025-02-06,2025-02-06,2025-02-06,5.581200691398852,unknown,CenAlert,TM,,
+2025-03-29,2025-03-31,2025-03-29,79.14483923006729,unknown,CenAlert,TM,,
+2025-07-22,2025-07-27,2025-07-25,118.4651058452954,unknown,CenAlert,TM,,
+2019-01-22,2019-01-22,2019-01-22,0.5132779486493604,unknown,CenAlert,TN,,
+2014-01-10,2014-01-10,2014-01-10,0.013556914561178024,unknown,CenAlert,TR,,
+2014-02-06,2014-02-09,2014-02-07,0.5912094844393465,unknown,CenAlert,TR,,
+2019-05-14,2019-05-14,2019-05-14,0.23869745477057958,unknown,CenAlert,TR,,
+2020-07-01,2020-07-02,2020-07-02,0.8780839546892185,unknown,CenAlert,TR,,
+2025-03-19,2025-03-20,2025-03-20,80.66134132222673,unknown,CenAlert,TR,,
+2021-03-17,2021-03-17,2021-03-17,0.006923537318340944,unknown,CenAlert,TZ,,
+2024-10-06,2024-10-06,2024-10-06,0.010496664751513896,unknown,CenAlert,TZ,,
+2024-12-27,2024-12-27,2024-12-27,0.010536302025062394,unknown,CenAlert,TZ,,
+2025-07-18,2025-07-18,2025-07-18,0.14933030519161394,unknown,CenAlert,TZ,,
+2020-12-05,2020-12-05,2020-12-05,0.3625145308012332,unknown,CenAlert,UA,,
+2021-01-17,2021-01-17,2021-01-17,0.6324232596590647,unknown,CenAlert,UA,,
+2022-02-25,2022-05-16,2022-03-01,266.9317177192058,unknown,CenAlert,UA,,
+2022-05-22,2022-05-22,2022-05-22,0.10430168183054533,unknown,CenAlert,UA,,
+2016-05-11,2016-05-14,2016-05-12,71.80457788855,unknown,CenAlert,UG,,
+2017-09-20,2017-09-20,2017-09-20,45.594714842507855,unknown,CenAlert,UG,,
+2019-07-18,2019-07-18,2019-07-18,0.244424422391198,unknown,CenAlert,UG,,
+2019-07-20,2019-07-21,2019-07-20,0.9838258642979563,unknown,CenAlert,UG,,
+2019-12-24,2019-12-24,2019-12-24,0.04891766870849601,unknown,CenAlert,UG,,
+2021-11-03,2021-11-03,2021-11-03,9.688124986673683,unknown,CenAlert,UZ,,
+2022-07-18,2022-07-18,2022-07-18,0.510494535850082,unknown,CenAlert,UZ,,
+2023-02-13,2023-02-13,2023-02-13,0.35100338873419185,unknown,CenAlert,UZ,,
+2025-06-01,2025-06-01,2025-06-01,0.6299794387966385,unknown,CenAlert,UZ,,
+2017-04-19,2017-04-19,2017-04-19,0.003926101143341576,unknown,CenAlert,VE,,
+2017-12-17,2017-12-17,2017-12-17,0.1370036925587108,unknown,CenAlert,VE,,
+2023-06-15,2023-06-15,2023-06-15,0.012950906453330191,unknown,CenAlert,VE,,
+2023-10-21,2023-10-22,2023-10-22,0.8039770594688971,unknown,CenAlert,VE,,
+2025-01-07,2025-01-15,2025-01-09,172.04055249640612,unknown,CenAlert,VE,,
+2025-01-19,2025-01-19,2025-01-19,4.392956528916635,unknown,CenAlert,VE,,
+2025-03-29,2025-04-02,2025-04-01,7.5550600004240565,unknown,CenAlert,VE,,
+2025-05-23,2025-05-25,2025-05-23,2.3049847272933164,unknown,CenAlert,VE,,
+2011-05-12,2011-05-12,2011-05-12,0.008818032520128583,unknown,CenAlert,VN,,
+2017-03-24,2017-03-24,2017-03-24,0.23549255747997577,unknown,CenAlert,VN,,
+2019-11-15,2019-11-26,2019-11-16,16.747173087508145,unknown,CenAlert,VN,,
+2025-03-19,2025-03-19,2025-03-19,5.3580166880568605,unknown,CenAlert,VN,,
+2025-05-23,2025-05-23,2025-05-23,3.0658750185705586,unknown,CenAlert,VN,,
+2025-05-26,2025-06-07,2025-05-26,107.77498333268738,unknown,CenAlert,VN,,
+2016-10-06,2016-10-06,2016-10-06,3.7648751920360866,unknown,CenAlert,YE,,
+2020-01-11,2020-01-11,2020-01-11,2.3507875191585086,unknown,CenAlert,YE,,
+2020-12-05,2020-12-05,2020-12-05,1.6015284053704733,unknown,CenAlert,YE,,
+2021-02-21,2021-02-21,2021-02-21,0.0352479790508049,unknown,CenAlert,ZW,,
+2025-02-22,2025-02-22,2025-02-22,0.9355809902747065,unknown,CenAlert,ZW,,
+2025-03-30,2025-03-30,2025-03-30,5.109043253977429,unknown,CenAlert,ZW,,
+2025-07-10,2025-07-10,2025-07-10,1.2091286197939262,unknown,CenAlert,ZW,,
+2025-09-07,2025-09-07,2025-09-07,1.0678525374797232,unknown,CenAlert,AE,,
+2025-08-20,2025-09-08,2025-09-02,121.80286016327341,unknown,CenAlert,CM,,
+2025-09-10,2025-09-12,2025-09-11,17.102891825034632,unknown,CenAlert,CM,,
+2025-09-09,2025-09-16,2025-09-11,6.407377825950666,unknown,CenAlert,DZ,,
+2025-09-08,2025-09-08,2025-09-08,0.7916427222776647,unknown,CenAlert,IN,,
+2025-09-10,2025-09-10,2025-09-10,0.3933528147662475,unknown,CenAlert,JO,,
+2025-08-20,2025-09-19,2025-09-09,488.7519610890944,unknown,CenAlert,KG,,
+2025-09-21,2025-09-21,2025-09-21,4.464569789542619,unknown,CenAlert,KG,,
+2025-09-20,2025-09-20,2025-09-20,1.7022660805374161,unknown,CenAlert,NG,,
+2025-09-04,2025-09-09,2025-09-06,296.3848235964548,unknown,CenAlert,NP,,
+2025-09-20,2025-09-20,2025-09-20,12.508362984951841,unknown,CenAlert,PK,,
+2025-08-20,2025-09-19,2025-09-07,46.34216603503259,unknown,CenAlert,SN,,
+2025-09-21,2025-09-21,2025-09-21,0.7529018735695623,unknown,CenAlert,SN,,
+2025-09-08,2025-09-08,2025-09-08,32.39486739285379,unknown,CenAlert,TR,,
+2025-09-21,2025-09-22,2025-09-21,6.024913026594746,unknown,CenAlert,KG,,
+2025-09-21,2025-09-22,2025-09-22,1.8982744916536523,unknown,CenAlert,SN,,

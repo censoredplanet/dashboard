@@ -3,7 +3,7 @@ title: Observatory Dashboard
 ---
 
 ```js
-import SlimSelect from "npm:slim-select";
+import SlimSelect from "npm:slim-select@2.8.1";
 import { fetchDashboard } from "./components/queries.js";
 const params = new URLSearchParams(window.location.search);
 const countryParam = (params.get("country") ?? "").trim();

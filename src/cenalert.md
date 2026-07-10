@@ -8,15 +8,19 @@ title: CenAlert Dashboard
 import { utcParse, utcFormat } from "https://esm.sh/d3-time-format@4";
 import { fetchCenalertEvents } from "./components/queries.js";
 import { fetchCenalertTimeseries } from "./components/queries.js";
+import { formatDMYdots } from "./components/utils.js";
+import { createGridRenderer } from "./components/render-grid.js";
+import { createDetailOpener } from "./components/detail-view.js";
 
 const params = new URLSearchParams(window.location.search);
 const countryParam = (params.get("country") ?? "").trim();
-const parseDate = utcParse("%m/%d/%Y");
+const urlEvent = params.get("event");
+const urlRange = params.get("range") ?? "present";
 const parseISO = utcParse("%Y-%m-%d");
 const fmtDMY = utcFormat("%d.%m.%Y");
 const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
 const countriesNew = await FileAttachment("data/cenalertCountries.json").json();
-
+const tsCache = new Map();
 const countriesList = [...new Set(countriesNew)]
   .filter((code) => code)
   .map((code) => ({ code: String(code).trim().toUpperCase(), name: regionNames.of(code) ?? code }))
@@ -34,111 +38,178 @@ if (countries.includes(countryParam)) {
 }
 ```
 
+```js
+function updateURL(paramsObj = {}, clearEvent = false) {
+  const currentParams = new URLSearchParams(location.search);
 
+  for (const [key, val] of Object.entries(paramsObj)) {
+    if (val === null || val === undefined || val === "") currentParams.delete(key);
+    else currentParams.set(key, val);
+  }
+
+  if (clearEvent) currentParams.delete("event");
+
+  const query = currentParams.toString();
+  const newURL = query ? `${location.pathname}?${query}` : location.pathname;
+
+  history.pushState({}, "", newURL);
+}
+
+```
 ```js
 const countryInput = Inputs.select(countries, {
   label: "Country",
   value: defaultCountry ?? countries[0],
+  onchange: () => {}
 });
 const countryGenerator = Generators.input(countryInput);
-```
 
+const dateRangeOptions = [
+  { label: "Present (past 60 days)", value: "present" },
+  { label: "Past year", value: "year" },
+  { label: "All time", value: "all" },
+  { label: "Custom range", value: "custom" },
+];
+
+const urlRange = params.get("range") ?? "present";
+
+const initialRange =
+  dateRangeOptions.find(o => o.value === urlRange) ??
+  dateRangeOptions[0]; 
+
+const dateRangeInput = Inputs.select(dateRangeOptions, {
+  label: "Date range",
+  format: d => d.label,
+  value: initialRange,
+  onchange: () => {}
+});
+const dateRangeGenerator = Generators.input(dateRangeInput);
+```
+```js
+async function getTimeseriesForCountry(code) {
+  if (!tsCache.has(code)) {
+    const data = await fetchCenalertTimeseries({ country: code });
+    const series = data.map((d) => ({
+      ...d,
+      date: parseISO(d.date),
+      topic: "vpn",
+    }));
+    tsCache.set(code, series);
+  }
+  return tsCache.get(code);
+}
+```
 ```js
 const countryCode = countryNameToCode[countryGenerator];
 const events = await fetchCenalertEvents({
   country: countryCode,
 });
-const timeseriesFetched = await fetchCenalertTimeseries({
-  country: countryCode,
+const timeseriesFetched = await getTimeseriesForCountry(countryCode);
+const allDates = timeseriesFetched
+  .map(d => d.date)
+  .filter(d => d instanceof Date && !isNaN(d)); 
+const earliestDate = new Date(Math.min(...allDates.map(d => d.getTime())));
+const latestDate = new Date(Math.max(...allDates.map(d => d.getTime())));
+
+latestDate.setDate(latestDate.getDate() + 1);
+```
+```js
+if (!globalThis.customDateState) {
+  globalThis.customDateState = { start: null, end: null };
+}
+const storedDates = globalThis.customDateState;
+const customStartDateInput = Inputs.date({
+  label: "Start date",
+  value: storedDates.start ?? null,      
+  min: earliestDate,          
+  max: latestDate             
 });
-const timeseries = timeseriesFetched
-  .map(d => ({ ...d, date: parseISO(d.date), topic: "vpn" }))
-  .sort((a, b) => a.date - b.date);
+const customEndDateInput = Inputs.date({
+  label: "End date",
+  value: storedDates.end ?? null,        
+  min: earliestDate,          
+  max: latestDate          
+});
+
+customStartDateInput.addEventListener?.("input", e => {
+  storedDates.start = e.target.valueAsDate;
+});
+customEndDateInput.addEventListener?.("input", e => {
+  storedDates.end = e.target.valueAsDate;
+});
+
+const customStartDate = Generators.input(customStartDateInput);
+const customEndDate = Generators.input(customEndDateInput);
+
+dateRangeGenerator;
+customStartDate;
+customEndDate;
 ```
 
-
 ```js
-function eventsCard(
-  rows,
-  {
-    title = "Events",
-    colorHeader = "#444",
-    valueKey = "impact",
-    filterStartKey = "startDate",
-    filterEndKey = "endDate",
-    sortBy = "startDate",
-    sort = "desc",
-    useWindow = false,
-  } = {},
-) {
-  const items = rows
-    .map((r) => {
-      const startRaw = String(r[filterStartKey] ?? "").trim();
-      const endRaw = String(r[filterEndKey] ?? "").trim();
-      const sd = startRaw ? parseISO(startRaw) : null;
-      const ed = endRaw ? parseISO(endRaw) : sd;
-
-      return {
-        showStart: sd ? fmtDMY(sd) : startRaw || "unknown",
-        showEnd: ed ? fmtDMY(ed) : endRaw || "unknown",
-        val: Number(r[valueKey]),
-        sd,
-        ed,
-      };
-    })
-    .filter((r) => Number.isFinite(r.val));
-
-  const filtered = useWindow
-    ? items.filter(({ sd, ed }) => {
-        if (!sd && !ed) return false;
-        const s = sd || ed;
-        const e = ed || sd;
-        const [w0, w1] = startEnd;
-        return !(e < w0 || s > w1);
-      })
-    : items;
-
-  const key = sortBy === "end" ? "ed" : "sd";
-  filtered.sort((a, b) => {
-    const av = a[key]?.getTime?.() ?? -Infinity;
-    const bv = b[key]?.getTime?.() ?? -Infinity;
-    return sort === "asc" ? av - bv : bv - av;
-  });
-
-  const rowsShown = filtered;
-
-  return html.fragment`
-    <h2 style="color:${colorHeader}">${title}</h2>
-    <div class="events-grid-header">
-      <div class="h">Start Date</div>
-      <div class="h">End Date</div>
-      <div class="h r">Impact</div>
-    </div>
-    <div class="events-scroll">
-      <div class="events-grid">
-        ${rowsShown.flatMap((d) => [
-          html`<div>${d.showStart}</div>`,
-          html`<div>${d.showEnd}</div>`,
-          html`<div style="text-align:right; justify-self:end;">
-            ${d.val.toLocaleString("en-US")}
-          </div>`,
-        ])}
-      </div>
-    </div>
-  `;
+dateRangeGenerator;
+customStartDate;
+customEndDate;
+const now = new Date();
+let startDate, endDate;
+if (dateRangeGenerator.value === "present") {
+  endDate = now;
+  startDate = new Date(now);
+  startDate.setDate(now.getDate() - 60);
+} else if (dateRangeGenerator.value === "year") {
+  endDate = now;
+  startDate = new Date(now);
+  startDate.setFullYear(now.getFullYear() - 1);
+} else if (dateRangeGenerator.value === "all") {
+  endDate = now;
+}
+else if (dateRangeGenerator.value === "custom") {
+  if (customStartDate && customEndDate) {
+    startDate = customStartDate;
+    endDate = customEndDate;
+    
+    if (startDate > endDate) {
+      alert("⚠️ The end date cannot be before the start date. Please select valid dates.");
+      const temp = startDate;
+      startDate = endDate;
+      endDate = temp;
+    }
+  } else {
+    startDate = null;
+    endDate = null;
+  }
 }
 ```
 
-```js
-const color = Plot.scale({ color: { domain: ["vpn"] } });
-const defaultStartEnd = [
-  timeseries.at(-365).date,
-  timeseries.at(-1).date,
-];
 
-const startEnd = Mutable(defaultStartEnd);
-const setStartEnd = (se) => (startEnd.value = se ?? defaultStartEnd);
-const getStartEnd = () => startEnd.value;
+```js
+const timeseries = (await getTimeseriesForCountry(countryCode))
+  .map(d => ({
+    ...d,
+    topic: "vpn"
+  }))
+  .filter(d => {
+    if (!d.date) return false;
+    return (!startDate || d.date >= startDate) && (!endDate || d.date <= endDate);
+  })
+  .sort((a, b) => a.date - b.date);
+
+```
+
+```js
+let selectedEventKey = null;
+if (urlEvent) {
+  const matched = events.find(ev =>
+    ev.__matchKey === urlEvent || ev.dateLabel === urlEvent || ev.startDate === urlEvent
+  );
+  if (matched) selectedEventKey = matched.__matchKey || matched.dateLabel || matched.startDate;
+}
+
+if (!selectedEventKey && events.length > 0) {
+  selectedEventKey = events[0].__matchKey || events[0].dateLabel || events[0].startDate;
+}
+
+showCountryDetail(countryCode, countryInput.value, selectedEventKey, { scrollIntoView: false });
 ```
 
 ```js
@@ -146,188 +217,180 @@ const zoomedAnomalies = events
   .map((d) => {
     const s = parseISO(String(d.startDate)) ?? new Date(d.startDate);
     const e = parseISO(String(d.endDate)) ?? new Date(d.endDate ?? d.startDate);
-    return { ...d, s, e };
+    return { ...d, s, e, id: `${d.country}-${s}-${e}` };
   })
-  .filter((d) => d.s && d.e && !(d.e < startEnd[0] || d.s > startEnd[1]));
+  .filter((d) => {
+    if (dateRangeGenerator.value.value === "all") return true;
+    return !(d.e < startDate || d.s > endDate);
+  });
 
-const [yMin, yMax] = d3.extent(
-  timeseries.filter(
-    (d) => startEnd[0] <= d.date && d.date < startEnd[1],
-  ),
-  (d) => d.rate,
-);
-
-function sparkbar(max) {
-  return (x) => {
-    const v = Number(x) || 0;
-    const label = v.toLocaleString("en-US", {
-      minimumFractionDigits: 3,
-      maximumFractionDigits: 3,
-    });
-    return htl.html`<div style="
-      background: var(--theme-red);
-      color: black;
-      font: 10px/1.6 var(--sans-serif);
-      width: ${max ? (100 * v) / max : 0}%;
-      float: right;
-      padding-right: 3px;
-      box-sizing: border-box;
-      overflow: visible;
-      display: flex;
-      justify-content: end;">${label}</div>`;
-  };
-}
-
-const filteredEventsNum = events.map((d) => {
-  const isUnknown =
-    String(d.label ?? "")
-      .trim()
-      .toLowerCase() === "unknown";
-  return {
-    ...d,
-    impact: +d.impact,
-    reportedBy: isUnknown ? "CenAlert" : (d.reportedBy ?? ""),
-    description: isUnknown ? "unknown" : (d.description ?? ""),
-  };
-});
-
-const impactMax = d3.max(filteredEventsNum, (d) => d.impact || 0);
+const fmtYMD = d3.utcFormat("%Y.%m.%d");
 ```
 
-<div class="card" style="display:flex; flex-direction:column;">
-  <h2>Filters</h2>
-  <div class="filters-row">
+
+<div class="card-big" style="display:flex; flex-direction:column;">
+      CenAlert is an open-source, data-driven alert system that leverages Google Trends to pinpoint where and when global Internet censorship spikes, amplifying user voices even in hard-to-monitor regions. By detecting surges in searches for circumvention tools, CenAlert provides timely, prioritized insights and notifications to empower advocacy and response, bridging critical gaps left as traditional reporting channels face increasing threats.
+</div>
+<div class="disclaimer-box">
+  CenAlert does not directly measure censorship. Instead, it analyzes changes in user behavior reflected in Google Trends data, which may indicate experiences with or expectations of Internet restrictions. While spikes often coincide with censorship events, alternative explanations, including geoblocking or increased surveillance, are also possible.
+</div>
+<div class="card modern-card">
+  <div class="filters-row modern-filters">
     ${countryInput}
     ${Inputs.select(["VPN"], { label: "Search Term", value: "VPN" })}
+    ${dateRangeInput}
+    ${dateRangeInput.value.value === "custom"
+      ? html`<div class="date-range-custom">${customStartDateInput}${customEndDateInput}</div>`
+      : ""}
   </div>
 </div>
-
-<div class="grid grid-cols-2-3" style="margin-top: 2rem;">
-  <div class="card card-big" style="display: flex; flex-direction: column;">
-    <h2>${startEnd === defaultStartEnd
-        ? "Search volume over the past year"
-        : startEnd.map(fmtDMY).join(" - ")}</h2><br>
-    <span style="flex-grow: 1;">${resize((width, height) =>
-      Plot.plot({
-        width,
-        height,
-        y: {grid: true, label: "rate (%)"},
-        color,
-        marks: [
-          Plot.lineY(timeseries.filter((d) => startEnd[0] <= d.date && d.date < startEnd[1]), 
-          {x: "date", y: "rate", stroke: "topic", curve: "step", tip: true, markerEnd: true}),
-          Plot.rectY(zoomedAnomalies, {
-            x1: d => d.s,
-            x2: d => d.e,
-            y1: yMin,
-            y2: yMax,
-            fill: "#d33",
-            fillOpacity: 0.15,
-            tip: true,
-            title: d =>
-              `𝐂𝐚𝐮𝐬𝐞: ${d.cause}\n` +
-              `𝐃𝐮𝐫𝐚𝐭𝐢𝐨𝐧: ${fmtDMY(d.s)} – ${fmtDMY(d.e)}\n` +
-              (d.impact ? `𝐈𝐦𝐩𝐚𝐜𝐭: ${(+d.impact).toFixed(2)}` : ""),
-          }),
-          Plot.ruleX(zoomedAnomalies.map(d => d.s), { stroke: "#d33", strokeOpacity: 0.85, strokeWidth: 3}),
-          Plot.ruleX(zoomedAnomalies.map(d => d.e), { stroke: "#d33", strokeOpacity: 0.85, strokeWidth: 3})
-        ]
-      })
-    )}</span>
-  </div>
-  <div class="card card-side">
-    ${eventsCard(events, {
-        title: "Events (selected period)",
-        colorHeader: color.apply("vpn"),
-        limit: 20,
-        useWindow: true
-    })}
-  </div>
-</div>
-
 <div class="grid">
-  <div class="card">
-    <h2>Search volume all time (${d3.extent(timeseries, (d) => d.date.getUTCFullYear()).join("–")})</h2>
-    <h3>Click or drag to zoom</h3><br>
-    ${resize((width) =>
-      Plot.plot({
-        width,
-        y: {grid: true, label: "rate (%)"},
-        color,
-        marks: [
-          Plot.ruleY([0]),
-          Plot.lineY(timeseries, {x: "date", y: "rate", stroke: "topic", tip: true}),
-          (index, scales, channels, dimensions, context) => {
-            const x1 = dimensions.marginLeft;
-            const y1 = 0;
-            const x2 = dimensions.width - dimensions.marginRight;
-            const y2 = dimensions.height;
-            const brushed = (event) => {
-              if (!event.sourceEvent) return;
-              let {selection} = event;
-              if (!selection) {
-                const r = 10;
-                let [px] = d3.pointer(event, context.ownerSVGElement);
-                px = Math.max(x1 + r, Math.min(x2 - r, px));
-                selection = [px - r, px + r];
-                g.call(brush.move, selection);
-              }
-              setStartEnd(selection.map(scales.x.invert));
-            };
-            const pointerdowned = (event) => {
-              const pointerleave = new PointerEvent("pointerleave", {bubbles: true, pointerType: "mouse"});
-              event.target.dispatchEvent(pointerleave);
-            };
-            const brush = d3.brushX().extent([[x1, y1], [x2, y2]]).on("brush end", brushed);
-            const g = d3.create("svg:g").call(brush);
-            g.call(brush.move, getStartEnd().map(scales.x));
-            g.on("pointerdown", pointerdowned);
-            return g.node();
-          }
-        ]
-      })
-    )}
-  </div>
-  <div class="card" style="display:flex; flex-direction:column;">
-    <h2>All Events</h2>
-    <div style="flex:1; min-height:0; overflow:auto;">
-      ${Inputs.table(filteredEventsNum, {
-        columns: ["startDate","endDate","reportedBy","description","peak","impact"],
-        header: {
-          startDate: "Start Date",
-          endDate: "End Date",
-          description: "Reported Cause",
-          reportedBy: "Reported By",
-          peak: "Peak Date",
-          impact: "Impact"
-        },
-        width: {
-          description: 240,
-          reportedBy: 130,
-          impact: 25,
-          startDate: 40,
-          endDate: 40,
-          peak: 40
-        },
-        rows: 18,
-        sort: "startDate",
-        reverse: true,
-        format: {
-          impact: sparkbar(impactMax),
-          startDate: d => d ? fmtDMY(parseISO(String(d))) : "",
-          endDate:   d => d ? fmtDMY(parseISO(String(d))) : "",
-          peak:   d => d ? fmtDMY(parseISO(String(d))) : "",
-          description: d => {
-            const s = String(d ?? "");
-            return html`<span class="cell-ellipsis" data-full=${s} aria-label=${s}>${s}</span>`;
-            }
-        }
-      })}
+  <div class="card modern-card">
+    <div class="search-volume-header">
+      <h2>Search volume (${
+        d3.extent(timeseries, d => d.date)
+          .map(d3.utcFormat("%Y.%m.%d"))
+          .join(" – ")
+      })</h2>
+      <div class="highlight-toggle-wrapper">
+        ${highlightToggle}
+      </div>
     </div>
+    ${searchVolumeContainer}
   </div>
 </div>
 
 ```js
+const highlightToggle = Inputs.toggle({
+  label: "Show event highlights",
+  value: true,
+});
+
+
+const searchVolumeContainer = document.createElement("div");
+searchVolumeContainer.id = "search-volume-container";
+searchVolumeContainer.style.minHeight = "60px"; 
+```
+
+```js
+function renderSearchVolumePlot() {
+  searchVolumeContainer.innerHTML = "";
+
+  const width = Math.max(600, Math.min(window.innerWidth - 80, 1200)); 
+  const showHighlight = Boolean(highlightToggle.value);
+
+  const y1 = d3.min(timeseries, d => d.rate);
+  const y2 = d3.max(timeseries, d => d.rate);
+
+  const plotColors = {
+    text: getComputedStyle(document.documentElement).getPropertyValue("--plot-text").trim(),
+    line: getComputedStyle(document.documentElement).getPropertyValue("--plot-line").trim(),
+    grid: getComputedStyle(document.documentElement).getPropertyValue("--plot-grid").trim(),
+    bg:   getComputedStyle(document.documentElement).getPropertyValue("--plot-bg").trim()
+  };
+  const isDark = document.documentElement.classList.contains("dark");
+
+  const tooltipFill = isDark ? "black" : "white";
+  const marks = [
+    Plot.ruleY([0], { stroke: plotColors.grid }),
+    Plot.lineY(timeseries, {
+      x: "date",
+      y: "rate",
+      stroke: plotColors.line,
+      tip: {
+        fill: tooltipFill,
+        stroke: "black",
+        textColor: "black",
+        color: "black"
+      },
+      title: d =>
+        `Topic: ${d.topic || "Unknown topic"}\n` +
+        `Date: ${fmtYMD(d.date)}\n` +
+        `Rate: ${d.rate != null ? d.rate.toFixed(2) : "N/A"}`
+    }),
+  ];
+
+  if (showHighlight && Array.isArray(zoomedAnomalies) && zoomedAnomalies.length) {
+    marks.push(
+      Plot.rectY(zoomedAnomalies, {
+        x1: d => d.s,
+        x2: d => d.e,
+        y1: y2,
+        y2: 0,
+        fill: "#df9d81",
+        fillOpacity: 0.35,
+        stroke: "#f56363",
+        strokeOpacity: 0.6,
+        strokeWidth: 0.7,
+        tip: {
+          fill: tooltipFill,
+          stroke: "black",
+          textColor: "black",
+          color: "black"
+        },
+        title: d =>
+          `Cause: ${d.cause}\n` +
+          `Duration: ${fmtDMY(d.s)} – ${fmtDMY(d.e)}\n` +
+          (d.impact ? `Impact: ${(+d.impact).toFixed(2)}` : "")
+      }),
+    );
+    
+    marks.push(
+      Plot.ruleX(zoomedAnomalies.map(d => d.s), {
+        stroke: "#ef4444",
+        strokeOpacity: 0.6,
+        strokeWidth: 0.7
+      }),
+      Plot.ruleX(zoomedAnomalies.map(d => d.e), {
+        stroke: "#ef4444",
+        strokeOpacity: 0.6,
+        strokeWidth: 0.7
+      })
+    );
+  }
+
+  const plotSvg = Plot.plot({
+    style: {
+      background: plotColors.bg,
+      color: plotColors.text,
+      fontSize: "13px"
+    },
+    width,
+    grid: true,
+    y: { grid: true, label: "", stroke: plotColors.grid },
+    x: { label: "", stroke: plotColors.grid },
+    marks
+  });
+
+  plotSvg.addEventListener("click", () => {
+    const v = plotSvg.value;
+    if (!v || !v.date) return;
+    const clicked = v.date;
+    const selectedEvent = events.find(ev => {
+      const evStart = parseISO(ev.startDate) ?? new Date(ev.startDate);
+      const evEnd = parseISO(ev.endDate) ?? new Date(ev.endDate ?? ev.startDate);
+      return +evStart <= +clicked && +clicked <= +evEnd + DAY;
+    });
+
+    if (selectedEvent) {
+      const name = countryInput.value;
+      const code = countryNameToCode[name] ?? countryCode;
+
+      showCountryDetail(code, name, selectedEvent.startDate, { scrollIntoView: true });
+    }
+  });
+
+  searchVolumeContainer.appendChild(plotSvg);
+}
+```
+
+```js
+renderSearchVolumePlot();
+
+["input", "change"].forEach(ev =>
+  highlightToggle.addEventListener?.(ev, renderSearchVolumePlot)
+);
+
 let _tip = document.getElementById("table-tooltip");
 if (!_tip) {
   _tip = document.createElement("div");
@@ -363,8 +426,183 @@ if (!window._tableTooltipBound) {
     }
   });
 }
+
+countryInput.addEventListener("change", async () => {
+  const country = countryInput.value;
+  const newCode = countryNameToCode[country];
+
+  updateURL({ country }, true);
+
+  const range = dateRangeInput?.value?.value;
+  const newEvents = await fetchCenalertEvents({ country, range });
+
+  const hasEvents = Array.isArray(newEvents) && newEvents.length > 0;
+  if (hasEvents) {
+    const first = newEvents[0];
+    const firstKey = first.__matchKey || first.dateLabel || null;
+    if (firstKey) {
+      updateURL({ country, ...(range ? { range } : {}), event: firstKey }, false);
+      showCountryDetail(newCode, country, firstKey, { scrollIntoView: false });
+      return;
+    }
+  }
+
+  updateURL({ country: newCode, ...(range ? { range } : {}) }, true);
+  showCountryDetail(newCode, country, null, { scrollIntoView: false });
+  renderSearchVolumePlot();
+});
+
+dateRangeInput.addEventListener("change", async () => {
+  const range = dateRangeInput.value.value;
+  const country = countryInput.value;
+  const newCode = countryNameToCode[country];
+  const scrollY = window.scrollY;
+
+  updateURL({ range }, true);
+
+  const newEvents = await fetchCenalertEvents({ country: newCode, range });
+
+  const hasEvents = Array.isArray(newEvents) && newEvents.length > 0;
+  if (hasEvents) {
+    const first = newEvents[0];
+    const firstKey = first.__matchKey || first.dateLabel || null;
+    if (firstKey) {
+      updateURL({ country: newCode, range, event: firstKey }, false);
+      
+      showCountryDetail(newCode, country, firstKey, { scrollIntoView: false });
+      return;
+    }
+  }
+
+  updateURL({ country: newCode, range }, true);
+  showCountryDetail(newCode, country, null, { scrollIntoView: false });
+  renderSearchVolumePlot();
+});
+
 ```
+
+```js
+const DAY = 24 * 60 * 60 * 1000;
+const PX_PADDING = -20;
+
+const eventCounts = events.reduce((acc, d) => {
+  const code = String(d.country).toUpperCase();
+  acc[code] = (acc[code] || 0) + 1;
+  return acc;
+}, {});
+
+const enriched = events.map((d) => ({
+  ...d,
+  countryName: regionNames.of(String(d.country).toUpperCase()) || d.country,
+}));
+
+const uniqueCountries = [
+  ...new Map(enriched.map((d) => [d.country, d.countryName])).entries(),
+]
+  .map(([code, name]) => ({
+    code,
+    name,
+  }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+  const uniqueCountriesWithEvents = uniqueCountries.map(({ code, name }) => ({
+  code,
+  name,
+  totalEvents: eventCounts[code] || 0,
+}));
+
+const formatImpact = new Intl.NumberFormat("de-AT", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+  useGrouping: false,
+}).format;
+
+const softBreakLongTokens = (s, every = 16) =>
+  String(s).replace(new RegExp(`(\\S{${every}})(?=\\S)`, "g"), "$1 ");
+
+const gridSection = html`<div class="card card-with-search" style="display:none"></div>`;
+const detailSection = html`<div class="card detail-view modern-card"></div>`;
+
+const gridHeader = html`<div class="card-header"></div>`;
+
+const grid = html`<div class="tiles-grid"></div>`;
+gridSection.append(gridHeader, grid);
+
+let currentList = uniqueCountriesWithEvents;
+const state = {
+  selectedCode: null,
+  tsCache: new Map(),
+  setCurrentList: (list) => { currentList = list; }
+};
+
+const openDetail = createDetailOpener({
+  html, d3, Plot, resize,
+  DAY, PX_PADDING,
+  events, formatImpact, softBreakLongTokens,
+  gridSection, detailSection,
+  formatDMYdots,
+});
+
+async function showCountryDetail(code, name, selectedEventKey, opts = { scrollIntoView: false }) {
+  const displayName = typeof name === "string" ? name : (countryInput?.value || String(code));
+
+  const prevScrollY = window.scroll
+ const fullSeries = (await getTimeseriesForCountry(code))
+  .map(d => ({
+    ...d,
+    topic: "vpn"
+  }))
+  .sort((a, b) => a.date - b.date);
+  const hasAnyEvents = Array.isArray(timeseries) && timeseries.length > 0;
+
+  openDetail(code, name, fullSeries, timeseries, hasAnyEvents, selectedEventKey);
+  if (opts.scrollIntoView) {
+    detailSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+  window.scrollTo(0, scrollY);
+}
+const renderGrid = createGridRenderer({ html, parseISO, openDetail });
+
+renderGrid(
+  grid,
+  uniqueCountriesWithEvents,
+  state
+);
+
+display(gridSection);
+display(detailSection);
+
+```
+
 <style>
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    color: #222;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+:root {
+  --font-sans: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #444;
+  --color-accent: #1e90ff;
+  --bg: #ffffff;
+  --bg-alt: #f5f5f7;
+  --text: #222222;
+  --text-light: #555555;
+  --border: #e5e5e5;
+  --card-bg: #ffffff;
+  --plot-text: var(--text);
+  --plot-line: var(--text);
+  --plot-grid: var(--text-light);
+  --plot-bg: transparent;
+}
+
+
 .filters-row {
   display: flex;
   gap: 1rem;
@@ -374,11 +612,15 @@ if (!window._tableTooltipBound) {
 .filters-row > * {
   flex: 1 1 220px;
 }
-
-.card-side {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
+.disclaimer-box {
+  background: #960808ff !important;
+  color: white !important;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  margin: 1rem 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  font-family: var(--font-sans);
 }
 
 .events-grid > .h {
@@ -390,12 +632,64 @@ if (!window._tableTooltipBound) {
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   text-align: center;
 }
+.modern-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+  background: linear-gradient(145deg, #f9f9fb, #ffffff);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.modern-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  align-items: flex-start; 
+}
 
-.events-scroll {
+.modern-filters .filter-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 220px;
+}
+
+.modern-filters label {
+  font-weight: 500;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  color: var(--color-text-primary);
+  text-align: center; 
+  margin-bottom: 0.25rem;
+}
+
+.modern-filters input, 
+.modern-filters select {
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  padding: 0.4rem 0.4rem;
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  justify-content: center; 
+  font-family: var(--font-sans);
+  width: 100%;
+}
+
+.modern-filters input[type="date"] {
+  min-width: 140px; 
+  height: 2rem;  
+  justify-content: center; 
+  padding: 0.45rem 0.75rem;
+}
+.date-range-custom {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: flex-end; 
+}
+
+.date-range-custom .filter-group {
   flex: 1;
-  min-height: 0;
-  overflow: auto;
-  position: relative;
 }
 
 .events-grid {
@@ -404,43 +698,27 @@ if (!window._tableTooltipBound) {
   gap: 0.25rem 0.5rem;
   align-items: center;
   justify-items: left;
+  border-radius: 1rem;
+  background: linear-gradient(145deg, #f9f9fb, #ffffff);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .events-grid > .r {
   text-align: center;
 }
 
-.grid-cols-2-3 {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
+.detail-view.modern-card {
+  gap: 0; 
+  padding: 1rem; 
 }
 
-@media (min-width: 560px) {
-  .grid-cols-2-3 {
-    grid-template-columns: 1fr 1fr;
+.card-big {
+    display: flex;
+    flex-wrap: wrap;
+    color: var(--color-text-primary);
+    padding: 0rem 0rem;
+    font-family: var(--font-sans);
   }
-}
-
-@media (min-width: 840px) {
-  .grid-cols-2-3 {
-    grid-template-columns: 2fr 1fr;
-    grid-auto-rows: 260px;
-    align-items: stretch;
-  }
-  .card-big {
-    grid-column: 1;
-    grid-row: 1 / span 2;
-  }
-  .card-side {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-  }
-}
-
-.card-side h2 {
-    margin-bottom: 0;
-}
 
 .events-grid-header {
   display: grid;
@@ -465,12 +743,9 @@ if (!window._tableTooltipBound) {
   position: fixed;
   z-index: 99999;
   max-width: min(60vw, 520px);
-  background: rgba(121, 116, 116, 0.88);
-  color: #fff;
   padding: 6px 8px;
   border-radius: 6px;
   font: 12px/1.35 var(--sans-serif, system-ui, sans-serif);
-  box-shadow: 0 4px 14px rgba(0,0,0,.3);
   pointer-events: none;
   transform: translate(8px, 12px);
   opacity: 0;
@@ -484,4 +759,149 @@ if (!window._tableTooltipBound) {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+
+.detail-view .detail-header {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  overflow: hidden;
+  height: 100%;
+  max-height: 78vh; 
+  min-height: 0;
+  margin-bottom: .5rem;
+}
+
+.card-with-search {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+
+.tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.tile.card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  cursor: pointer;
+  padding: 2rem 1rem;
+  font-size: 1.2rem;
+  user-select: none;
+  transition: transform .05s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.search-volume-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 115%;
+}
+
+.search-volume-header h2 {
+  font-family: var(--font-sans);
+  font-size: 1.1rem !important;
+  font-weight: 500;
+  display: flex;
+  color: var(--color-text-secondary);
+  justify-content: space-between;
+  align-items: center;
+}
+
+.highlight-toggle-wrapper label {
+  display: flex !important; 
+  font-family: var(--font-sans);   
+  align-items: center;       
+  gap: 5rem;
+  white-space: nowrap;  
+  font-size: 0.8rem;   
+}
+
+.highlight-toggle-wrapper input[type="checkbox"] {
+  appearance: none; 
+  -webkit-appearance: none;
+  width: 32px;
+  height: 16px;
+  background: #ddd;
+  border-radius: 16px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.highlight-toggle-wrapper input[type="checkbox"]:checked {
+  background: #4f46e5;
+}
+
+.highlight-toggle-wrapper input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.highlight-toggle-wrapper input[type="checkbox"]:checked::after {
+  transform: translateX(16px); 
+}
+
+.tile.card:hover {
+  transform: translateY(-2px);
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 14px rgba(0,0,0,.06);
+}
+.tile.card.selected {
+  border-color: #1e90ff;
+  box-shadow: 0 0 0 3px rgba(30,144,255,.15);
+}
+
+.tile.card .flag {
+  font-size: 1.8rem;
+}
+
+.timeline-scroller{
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.timeline-scroller::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.timeline-scroller::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.timeline-scroller::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+/* Firefox */
+.timeline-scroller {
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+}
+
+.plot-tooltip {
+  font-family: var(--font-sans) !important;
+  font-size: 13px !important;
+  line-height: 1.4;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text);
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+
 </style>
