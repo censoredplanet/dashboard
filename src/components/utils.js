@@ -44,17 +44,8 @@ export function leafColor(name) {
 }
 
 export function sparkbar() {
-  return (x) => htl.html`<div style="
-    background: var(--theme-red);
-    color: black;
-    font: 10px/1.6 var(--sans-serif);
-    width: ${x}%;
-    float: right;
-    padding-right: 3px;
-    box-sizing: border-box;
-    overflow: visible;
-    display: flex;
-    justify-content: end;">${x.toLocaleString('en-US')}%`;
+  return (x) =>
+    htl.html`<div class="sparkbar" style="width: ${x}%;">${x.toLocaleString('en-US')}%</div>`;
 }
 
 export function updateBounds(start, end, dataMaxDate, dataMinDate) {

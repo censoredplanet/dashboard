@@ -44,16 +44,8 @@ export function downloadLinks(
     download(blob, 'json');
   };
 
-  return htl.html`<div style="
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid #eee;
-    font-size: 12px;
-    text-align: right;
-    font-family: var(--sans-serif);
-    color: #666;
-  ">
+  return htl.html`<div class="download-links">
     <span>Download Data: </span>
-    <a href="#" onclick=${onJson} style="color: #17827B; text-decoration: none; font-weight: bold;">JSON</a>
+    <a href="#" onclick=${onJson}>JSON</a>
   </div>`;
 }

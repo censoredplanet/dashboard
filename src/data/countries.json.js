@@ -1,8 +1,8 @@
 const GRAPHQL_ENDPOINT =
-  process.env.GRAPHQL_ENDPOINT || "https://data.censoredplanet.org/query";
+  process.env.GRAPHQL_ENDPOINT || 'https://data.censoredplanet.org/query';
 
 const endDate = new Date().toISOString().slice(0, 10);
-const START_DATE_DEFAULT = "2018-01-01";
+const START_DATE_DEFAULT = '2018-01-01';
 
 const query = `
   query GetInterferenceRateByCountry($range: DateRange!) {
@@ -21,8 +21,8 @@ const variables = {
 };
 
 const res = await fetch(GRAPHQL_ENDPOINT, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ query, variables }),
 });
 
@@ -32,7 +32,7 @@ if (!res.ok) {
 
 const { data, errors } = await res.json();
 if (errors) {
-  throw new Error(errors.map((e) => e.message).join("\n"));
+  throw new Error(errors.map((e) => e.message).join('\n'));
 }
 
 process.stdout.write(JSON.stringify(data.interferenceRateByCountry));

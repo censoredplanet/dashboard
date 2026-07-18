@@ -1,9 +1,8 @@
 ---
 title: CenAlert Dashboard
+style: styles/cenalert.css
 ---
 [![Censored Planet Logo](logo-umichlab.svg)](/)
-
-<link rel="stylesheet" href="./styles/cenalert.css">
 
 ```js
 import { utcParse, utcFormat } from "https://esm.sh/d3-time-format@4";
@@ -207,8 +206,18 @@ const zoomedAnomalies = events
     return { ...d, s, e, id: `${d.country}-${s}-${e}` };
   })
   .filter((d) => {
-    if (dateRangeGenerator.value.value === "all") return true;
+    if (dateRangeGenerator.value === "all") return true;
     return !(d.e < startDate || d.s > endDate);
+  })
+  .map((d) => {
+    if (startDate && endDate) {
+      return {
+        ...d,
+        s: new Date(Math.max(d.s.getTime(), startDate.getTime())),
+        e: new Date(Math.min(d.e.getTime(), endDate.getTime()))
+      };
+    }
+    return d;
   });
 
 const fmtYMD = d3.utcFormat("%Y.%m.%d");
@@ -216,10 +225,16 @@ const fmtYMD = d3.utcFormat("%Y.%m.%d");
 
 
 <div class="card-big" style="display:flex; flex-direction:column;">
+  <div style="margin-bottom: 1rem;">
+    <a href="https://censoredplanet.org/papers/cenalert.pdf" target="_blank" style="display: inline-flex; align-items: center; background: #3bcbcbff; color: #0f172a; padding: 6px 14px; border-radius: 9999px; font-size: 0.8rem; font-weight: 600; text-decoration: none; border: 1px solid #17827B; transition: background 0.2s;">
+      <span style="margin-right: 6px;">📄</span> Read the CenAlert paper
+      <svg style="width: 16px; height: 16px; margin-left: 6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+    </a>
+  </div>
       CenAlert is an open-source, data-driven alert system that leverages Google Trends to pinpoint where and when global Internet censorship spikes, amplifying user voices even in hard-to-monitor regions. By detecting surges in searches for circumvention tools, CenAlert provides timely, prioritized insights and notifications to empower advocacy and response, bridging critical gaps left as traditional reporting channels face increasing threats.
 </div>
 <div class="disclaimer-box">
-  CenAlert does not directly measure censorship. Instead, it analyzes changes in user behavior reflected in Google Trends data, which may indicate experiences with or expectations of Internet restrictions. While spikes often coincide with censorship events, alternative explanations, including geoblocking or increased surveillance, are also possible.
+  CenAlert identifies censorship through user behavior rather than direct network measurements. By tracking surges in demand for VPNs and similar tools, it highlights when users are actively trying to bypass restrictions. While these spikes highly correlate with censorship, they may also indicate other access issues like georestrictions or responses to new digital laws.
 </div>
 <div class="card modern-card">
   <div class="filters-row modern-filters">

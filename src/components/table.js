@@ -32,9 +32,7 @@ export function createResponsiveTable(searchResult, width, context) {
   );
 
   const container = document.createElement('div');
-  container.style.width = '100%';
-  container.style.display = 'flex';
-  container.style.flexDirection = 'column';
+  container.className = 'observatory-table';
 
   container.append(table);
   container.append(footer);
