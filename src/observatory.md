@@ -1,5 +1,6 @@
 ---
 title: Observatory Dashboard
+style: styles/observatory.css
 ---
 
 ```js
@@ -17,7 +18,6 @@ import { createResponsiveTable } from "./components/table.js";
 const params = new URLSearchParams(window.location.search);
 const countryParam = (params.get("country") ?? "").trim();
 ```
-<link rel="stylesheet" href="./styles/observatory.css">
 <link href="https://unpkg.com/slim-select@2.8.1/dist/slimselect.css" rel="stylesheet" />
 
 [![Censored Planet Logo](logo-umichlab.svg)](/)

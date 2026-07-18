@@ -9,8 +9,8 @@
     "observable": "observable",
     "lint": "eslint \"src/components/**/*.{js,mjs,cjs}\"",
     "lint:fix": "eslint \"src/components/**/*.{js,mjs,cjs}\" --fix",
-    "format": "prettier \"src/components/**/*.{js,mjs,cjs}\" --write",
-    "format:check": "prettier \"src/components/**/*.{js,mjs,cjs}\" --check"
+    "format": "prettier \"src/**/*.{js,mjs,cjs,css}\" --write",
+    "format:check": "prettier \"src/**/*.{js,mjs,cjs,css}\" --check"
   },
   "dependencies": {
     "@observablehq/framework": "^1.13.3",

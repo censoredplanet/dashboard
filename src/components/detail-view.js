@@ -50,7 +50,6 @@ export function createDetailOpener(deps) {
         src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${twemojiFlagCode(
           code,
         )}.svg"
-        style="width: 1.6rem; height: 1.6rem; vertical-align: middle;"
       />
     `;
 
@@ -69,7 +68,29 @@ export function createDetailOpener(deps) {
         ? html`<span class="date-range">(${dateRangeLabel})</span>`
         : ''}
     </h2>`;
-    const detailHeader = html`<div class="detail-header">${heading}</div>`;
+    const legend = html`
+      <div class="top-legend-wrap">
+        <div class="legend-desc">
+          <strong>Impact Score:</strong> Scores the severity of an event based
+          on how high and how long VPN searches surged, helping prioritize
+          investigations.
+        </div>
+        <div class="legend-scale-container">
+          <span class="legend-label">Low</span>
+          <div class="legend-circles">
+            <div class="circle c-low" title="Low Impact"></div>
+            <div class="circle c-mod" title="Moderate Impact"></div>
+            <div class="circle c-high" title="High Impact"></div>
+            <div class="circle c-sev" title="Severe Impact"></div>
+          </div>
+          <span class="legend-label">Severe</span>
+        </div>
+      </div>
+    `;
+
+    const detailHeader = html`<div class="detail-header-container">
+      ${heading}${legend}
+    </div>`;
 
     detailSection.append(detailHeader);
     if (!countryEvents.length) {
@@ -132,8 +153,6 @@ export function createDetailOpener(deps) {
       rangeEnd,
     );
 
-    footer.style.marginTop = '1rem';
-
     summaryWrap.append(summaryTitle, summaryBody, footer);
 
     // initial sizes
@@ -145,8 +164,6 @@ export function createDetailOpener(deps) {
 
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
     const VISIBLE_ROWS = isMobile ? 2 : 5;
-
-    summaryWrap.style.overflowY = 'auto';
 
     function computeSizes() {
       const widthNow = Math.max(280, graphWrap.clientWidth || width || 480);
@@ -169,9 +186,7 @@ export function createDetailOpener(deps) {
       .create('svg')
       .attr('viewBox', `0 0 ${width} ${height}`)
       .attr('preserveAspectRatio', 'xMinYMin meet')
-      .style('width', '100%')
-      .style('height', `${height}px`)
-      .style('display', 'block');
+      .style('height', `${height}px`);
 
     const g = svg.append('g');
 
@@ -180,8 +195,7 @@ export function createDetailOpener(deps) {
       .data(countryEvents.map((d, i) => ({ ...d, i })))
       .join('g')
       .attr('class', 'node')
-      .attr('transform', () => `translate(${laneX}, ${margin.top + r})`)
-      .style('cursor', 'pointer');
+      .attr('transform', () => `translate(${laneX}, ${margin.top + r})`);
     node
       .append('rect')
       .attr('class', 'event-tile')
@@ -272,9 +286,9 @@ export function createDetailOpener(deps) {
           const impactLevel = impactLabels[d.impactQuartile ?? 0];
           const impactScore = d.title || '—';
           summaryBody.innerHTML = `
-          <div style="margin-bottom: .4rem;"><strong>Date: </strong>${d.dateLabel}</div>
-          <div style="margin-bottom: .4rem;"><strong>Impact score:</strong> ${impactScore}</div>
-          <div style="margin-bottom: .4rem;"><strong>Level:</strong> ${impactLevel}</div>
+          <div><strong>Date: </strong>${d.dateLabel}</div>
+          <div><strong>Impact score:</strong> ${impactScore}</div>
+          <div><strong>Level:</strong> ${impactLevel}</div>
           <div><strong>Context:</strong> ${d.description && d.description.length > 0 ? d.description : 'No additional explanation.'}</div>
         `;
         }
@@ -439,15 +453,11 @@ export function createDetailOpener(deps) {
         }),
       );
 
-      const meta = html`<div
-        class="event-meta"
-        style="margin-top:.5rem;"
-      ></div>`;
+      const meta = html`<div class="event-meta"></div>`;
       bodyEl.append(chart, meta);
     }
 
     renderRight(countryEvents.length ? countryEvents[0] : null);
-    scroller.style.overflowY = 'auto';
     scroller.append(svg.node());
 
     function layoutNodes() {
@@ -651,280 +661,3 @@ export function createDetailOpener(deps) {
   }
   return openDetail;
 }
-
-const style = document.createElement('style');
-style.textContent = `
-:root {
-  --font-sans: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "IBM Plex Mono", monospace;
-  --color-text-primary: #1a1a1a;
-  --color-text-secondary: #444;
-  --color-accent: #17827B;
-  --font-sans: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "IBM Plex Mono", monospace;
-  --color-text-primary: #1a1a1a;
-  --color-text-secondary: #444;
-  --bg: #ffffff;
-  --bg-alt: #f5f5f7;
-  --text: #222222;
-  --text-light: #555555;
-  --border: #e5e5e5;
-  --card-bg: #ffffff;
-  --plot-text: var(--text);
-  --plot-line: var(--text);
-  --plot-grid: var(--text-light);
-  --plot-bg: transparent;
-}
-
-.detail-section {
-  height: calc(100vh - 120px);
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-
-.detail-grid {
-  gap: 1.5rem;
-  min-height: 0;
-  margin-top: 1.25rem;
-  font-family: var(--font-sans);
-  color: var(--color-text-primary);
-  flex: 1 1 auto;
-  display: flex;
-  align-items: stretch;
-  min-height: 0;
-}
-
-.left-col,
-.center-col,
-.right-col {
-  border-radius: 1rem;
-  padding: 1rem 1.25rem;
-  background: #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-  display: flex;
-  align-self: stretch;
-  flex-direction: column;
-  flex: 1 1 0;
-  min-height: 0;
-  min-width: 0; 
-  
-  justify-content: flex-start;
-}
-
-.left-col {
-  padding: 0;
-}
-
-.events-scroller {
-  padding: 1rem 0rem;
-}
-
-.left-col { flex: 0 0 clamp(160px, 18%, 260px); }
-.center-col { flex: 1 1 0%; }
-.right-col { flex: 0 0 clamp(160px, 20%, 320px); max-width: 360px; }
-
-.events-scroller {
-  border: none !important;
-}
-
-.events-scroller,
-.summary-wrap,
-.graph-wrap {
-  overflow-y: auto;
-  flex: 1 1 0;
-  min-height: 0;
-}
-
-.detail-title {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 1.7rem;
-  letter-spacing: -0.01em;
-  color: var(--color-text-primary);
-  margin-bottom: 0.01rem;
-}
-
-.detail-title .country-name {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-sans);
-  font-weight: 500;
-  font-size: 1.1rem !important;
-  letter-spacing: -0.01em;
-  color: var(--color-text-primary);
-}
-
-.detail-title .flag {
-  font-size: 1.6rem;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-}
-
-.detail-title .date-range {
-  font-weight: 500;
-  font-size: 1.1rem;
-  color: var(--color-text-secondary);
-}
-
-/* === Section subtitles === */
-.right-title {
-  font-family: var(--font-sans);
-  font-size: 1rem !important;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  letter-spacing: -0.01em;
-  margin-bottom: 0.7rem;
-}
-
-.summary-title {
-  font-family: var(--font-sans);
-  font-size: 1rem !important;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  letter-spacing: -0.01em;
-  margin-bottom: 0.7rem;
-}
-
-.graph-wrap {
-  width: 100%;
-  flex: 1 1 auto;
-  min-height: 0;
-  min-width: 0;
-  overflow: hidden;
-}
-
-.graph-wrap svg {
-  width: 100%;
-  height: auto;
-  max-height: none;
-  display: block;
-  overflow: visible;
-  max-width: 100%;
-  transform-origin: top left;
-  display: block;
-  margin-bottom: 0.1rem;
-  box-sizing: border-box;
-}
-
-.graph-wrap text, 
-.graph-wrap svg text {
-  font-family: var(--font-sans);
-  font-size: 0.9rem;
-  fill: var(--color-text-secondary);
-}
-
-.summary-body {
-  font-size: 0.95rem;
-  line-height: 1.55;
-  color: var(--color-text-secondary);
-  border-top: 1px solid #e6e6e6;
-  padding-top: 0.5rem;
-  flex-grow: 1;
-}
-
-.summary-body div {
-  margin-bottom: 0.5rem;
-}
-
-.summary-body strong {
-  color: var(--color-text-primary);
-  font-weight: 600;
-}
-
-#bottom-desc {
-  font-size: 0.9rem;
-  color: #555;
-  margin-top: 0.75rem;
-  line-height: 1.5;
-  padding-top: 0.75rem;
-  font-style: italic;
-}
-
-.node text {
-  font-family: var(--font-sans);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-}
-
-.node .event-tile {
-  transition: fill 140ms ease, stroke 140ms ease, transform 140ms ease;
-  fill: transparent;
-  stroke: transparent;
-  cursor: pointer;
-}
-
-.node:hover .event-tile {
-  stroke: rgba(30,144,255,0.4);
-  fill: rgba(30,144,255,0.05);
-}
-
-.node.active .event-tile {
-  stroke: var(--color-accent);
-  fill: rgba(23, 130, 123, 0.1);
-}
-
-.timeline-scroller::-webkit-scrollbar {
-  height: 8px;
-  width: 8px;
-}
-
-.timeline-scroller::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.timeline-scroller::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-.events-scroller::-webkit-scrollbar {
-  width: 4px;
-}
-
-.events-scroller::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-.events-scroller::-webkit-scrollbar-track {
-  background: transparent;
-}
-.summary-wrap::-webkit-scrollbar {
-  width: 4px;
-}
-
-.summary-wrap::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-.summary-wrap::-webkit-scrollbar-track {
-  background: transparent;
-}
-/* Firefox */
-.timeline-scroller {
-  scrollbar-width: thin;
-  scrollbar-color: #888 transparent;
-}
-
-@media (max-width: 900px) {
-  .detail-grid {
-    flex-direction: column;
-  }
-  .left-col, .right-col {
-    flex: 1 1 auto;
-    max-width: 100%;
-  }
-  .detail-title {
-    font-size: 1.4rem;
-  }
-}
-
-`;
-document.head.appendChild(style);
