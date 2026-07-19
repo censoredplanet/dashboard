@@ -516,8 +516,8 @@ body {
   }
 
   .events-scroller {
-    min-height: 50vh;
-    max-height: 75vh;
+    min-height: 0;
+    max-height: 240px;
   }
 
   .detail-title {
