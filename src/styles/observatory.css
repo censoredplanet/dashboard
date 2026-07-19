@@ -118,6 +118,10 @@
   }
 }
 
+.card--network .download-links {
+  margin-top: 1.5rem;
+}
+
 .observatory-table {
   display: flex;
   flex-direction: column;

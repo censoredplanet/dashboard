@@ -158,7 +158,7 @@ const search = Generators.input(searchInput);
 </div>
 
 <div class = "grid grid-cols-2">
-    <div class="grid-colspan-2 card">
+    <div class="grid-colspan-2 card card--network">
       <h2>Outcome per Network</h2><br>
       ${resize(width => hierarchicalBarChart(networkData, width))}
       ${downloadLinks(networkData, "cp-observatory", "outcome-network", country.value, start.value, end.value, source.value)}
