@@ -83,6 +83,41 @@
   min-width: 300px;
 }
 
+.search-control {
+  position: relative;
+  min-height: 1.6rem;
+}
+
+.search-control.is-searching button {
+  visibility: hidden;
+}
+
+.search-control.is-searching::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0.6rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-top: -0.55rem;
+  border: 2px solid color-mix(in oklab, #17827b, transparent 75%);
+  border-top-color: #17827b;
+  border-radius: 50%;
+  animation: search-spin 0.7s linear infinite;
+}
+
+@keyframes search-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-control.is-searching::after {
+    animation: none;
+  }
+}
+
 .observatory-table {
   display: flex;
   flex-direction: column;

@@ -112,18 +112,27 @@ const domainSelector = createDomainSelector(domainsArray, defaultDomains);
 </div>
 
 ```js
-const searchButton = view(Inputs.button("Search"));
+const searchForm = Inputs.button("Search");
+searchForm.classList.add("search-control");
+const searchButton = view(searchForm);
+
+function setSearching(busy) {
+  searchForm.classList.toggle("is-searching", busy);
+  searchForm.querySelector("button").disabled = busy;
+  searchForm.setAttribute("aria-busy", String(busy));
+}
 ```
 
 ```js
 searchButton;
+setSearching(true);
 const queryResults = await fetchDashboard(
   country.value,
   source.value,
   start.value,
   end.value,
   defaultDomains,
-);
+).finally(() => setSearching(false));
 let subNetworkData = aggregateMetricsBySubnetwork(queryResults);
 let stackedBarData = aggregateByDateOutcome(queryResults);
 const networkData = aggregateByNetwork(queryResults);
