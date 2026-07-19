@@ -636,7 +636,6 @@ export function createDetailOpener(deps) {
     deps.seriesForSelectedCountry = fullseries;
     renderDetail(code, name, countryEvents, countryHasAnyEvents);
     detailSection.hidden = false;
-    window.scrollTo({ top: detailSection.offsetTop, behavior: 'smooth' });
 
     if (selectedEventKey) {
       const nodes = Array.from(detailSection.querySelectorAll('.node'));

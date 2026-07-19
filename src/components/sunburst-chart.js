@@ -18,11 +18,11 @@ const breadcrumbHeight = 30;
 
 const getResponsiveBreadcrumb = (windowWidth) => {
   if (windowWidth <= 480) {
-    return { width: 70, textLength: 10, fontSize: 10 };
+    return { width: 70, textLength: 10, fontSize: 10, showPercentage: false };
   } else if (windowWidth <= 768) {
-    return { width: 150, textLength: 15, fontSize: 14 };
+    return { width: 150, textLength: 15, fontSize: 14, showPercentage: true };
   } else {
-    return { width: 250, textLength: 20, fontSize: 16 };
+    return { width: 250, textLength: 20, fontSize: 16, showPercentage: true };
   }
 };
 
@@ -113,16 +113,20 @@ function breadcrumb(datasun, windowWidth) {
   const config = getResponsiveBreadcrumb(windowWidth);
   const breadcrumbWidth = config.width;
   const count = datasun.sequence.length || 0;
+  const showPercentage = config.showPercentage && datasun.percentage > 0;
+  const percentageWidth = showPercentage ? config.fontSize * 4 : 0;
   const totalSvgWidth = Math.max(
     breadcrumbWidth * 2,
-    count * breadcrumbWidth + 20,
+    count * breadcrumbWidth + 20 + percentageWidth,
   );
 
   const svg = d3
     .create('svg')
     .attr('viewBox', `0 0 ${totalSvgWidth} ${breadcrumbHeight}`)
-    .style('width', `${totalSvgWidth}px`)
-    .style('height', `${breadcrumbHeight}px`)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
+    .style('width', '100%')
+    .style('max-width', `${totalSvgWidth}px`)
+    .style('height', 'auto')
     .style('font', `${config.fontSize}px sans-serif`)
     .style('margin', '5px 0');
 
@@ -162,7 +166,7 @@ function breadcrumb(datasun, windowWidth) {
       return name.length > maxLength ? name.slice(0, maxLength) + '...' : name;
     });
 
-  if (datasun.percentage > 0) {
+  if (showPercentage) {
     svg
       .append('text')
       .text(datasun.percentage + '%')
@@ -289,7 +293,8 @@ function sunburst(width, networkData, sourceValue) {
     .append('g')
     .attr('fill', 'none')
     .attr('pointer-events', 'all')
-    .on('mouseleave', () => {
+    .on('pointerleave', (event) => {
+      if (event.pointerType === 'touch') return;
       path.attr('fill-opacity', 1);
       label.style('visibility', 'hidden');
       element.value = { sequence: [], percentage: 0.0 };
@@ -299,7 +304,7 @@ function sunburst(width, networkData, sourceValue) {
     .data(root.descendants().filter((d) => d.depth && d.x1 - d.x0 > 0.001))
     .join('path')
     .attr('d', mousearc)
-    .on('mouseenter', (event, d) => {
+    .on('pointerenter', (event, d) => {
       const sequence = d.ancestors().reverse().slice(1);
       path.attr('fill-opacity', (node) =>
         sequence.indexOf(node) >= 0 ? 1.0 : 0.3,
