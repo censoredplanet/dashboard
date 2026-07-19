@@ -6,13 +6,15 @@ import { downloadLinks } from './data-download.js';
 export function createResponsiveTable(searchResult, width, context) {
   const { country, start, end, source } = context;
 
+  const compact = width < 640;
   const table = Inputs.table(searchResult, {
     sort: 'unexpected_rate',
     reverse: true,
-    rows: 20,
+    rows: compact ? 12 : 20,
     width: width,
     maxWidth: width,
-    layout: 'fixed',
+    layout: compact ? 'auto' : 'fixed',
+    select: false,
     format: {
       unexpected_rate: sparkbar(),
     },

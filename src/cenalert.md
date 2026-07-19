@@ -57,8 +57,6 @@ const dateRangeOptions = [
   { label: "Custom range", value: "custom" },
 ];
 
-const urlRange = params.get("range") ?? "present";
-
 const initialRange =
   dateRangeOptions.find(o => o.value === urlRange) ??
   dateRangeOptions[0]; 
@@ -279,7 +277,10 @@ searchVolumeContainer.style.minHeight = "60px";
 function renderSearchVolumePlot() {
   searchVolumeContainer.innerHTML = "";
 
-  const width = Math.max(600, Math.min(window.innerWidth - 80, 1200));
+  const width = Math.min(
+    Math.max(320, searchVolumeContainer.clientWidth || window.innerWidth - 80),
+    1200,
+  );
   const showHighlight = Boolean(highlightToggle.value);
   const chart = createSearchVolumeChart(timeseries, {
     zoomedAnomalies,
@@ -434,9 +435,7 @@ const openDetail = createDetailOpener({
 });
 
 async function showCountryDetail(code, name, selectedEventKey, opts = { scrollIntoView: false }) {
-  const displayName = typeof name === "string" ? name : (countryInput?.value || String(code));
-
-  const prevScrollY = window.scroll
+  const prevScrollY = window.scrollY;
  const fullSeries = (await getTimeseriesForCountry(code))
   .map(d => ({
     ...d,
@@ -450,7 +449,7 @@ async function showCountryDetail(code, name, selectedEventKey, opts = { scrollIn
     detailSection.scrollIntoView({ behavior: "smooth", block: "start" });
     return;
   }
-  window.scrollTo(0, scrollY);
+  window.scrollTo(0, prevScrollY);
 }
 
 display(detailSection);

@@ -156,7 +156,13 @@ export function createDetailOpener(deps) {
     summaryWrap.append(summaryTitle, summaryBody, footer);
 
     // initial sizes
-    let { widthNow: currentWidth, r, baseMinRow, nodeGap } = computeSizes();
+    let {
+      widthNow: currentWidth,
+      r,
+      baseMinRow,
+      nodeGap,
+      topOffset,
+    } = computeSizes();
     const margin = { top: 24, right: 10, bottom: 24, left: 20 };
 
     let width = graphWrap.clientWidth;
@@ -167,16 +173,25 @@ export function createDetailOpener(deps) {
 
     function computeSizes() {
       const widthNow = Math.max(280, graphWrap.clientWidth || width || 480);
+      const compact = widthNow < 640;
       const computedR = Math.round(
-        Math.max(40, Math.min(140, widthNow * 0.15)),
+        compact
+          ? Math.max(24, Math.min(44, widthNow * 0.11))
+          : Math.max(40, Math.min(140, widthNow * 0.15)),
       );
-      const computedBaseMinRow = Math.max(80, Math.round(0.9 * computedR + 40));
-      const computedNodeGap = Math.max(24, Math.round(computedR * 0.8));
+      const computedBaseMinRow = compact
+        ? Math.max(50, Math.round(1.6 * computedR))
+        : Math.max(80, Math.round(0.9 * computedR + 40));
+      const computedNodeGap = compact
+        ? Math.max(14, Math.round(computedR * 0.35))
+        : Math.max(24, Math.round(computedR * 0.8));
+      const computedTopOffset = compact ? computedR + 8 : computedR * 0.6 + 40;
       return {
         widthNow,
         r: computedR,
         baseMinRow: computedBaseMinRow,
         nodeGap: computedNodeGap,
+        topOffset: computedTopOffset,
       };
     }
 
@@ -337,7 +352,7 @@ export function createDetailOpener(deps) {
       const titleEl = graphWrap.querySelector('.right-title');
       const bodyEl = graphWrap.querySelector('.right-body');
       const mobileExtra = window.matchMedia('(max-width: 768px)').matches
-        ? 380
+        ? 120
         : 0;
 
       titleEl.textContent = selectedEvent
@@ -363,8 +378,9 @@ export function createDetailOpener(deps) {
       }
       if (!selectedEvent) {
         const yMax = d3.max(seriesFiltered, (d) => d.rate);
-        const chart = resize(() =>
+        const chart = resize((chartWidth) =>
           Plot.plot({
+            width: chartWidth,
             height:
               margin.top +
               margin.bottom +
@@ -406,10 +422,7 @@ export function createDetailOpener(deps) {
           x: 'date',
           y: 'rate',
           curve: 'step',
-          tip: {
-            fill: true,
-            stroke: 'black',
-          },
+          tip: true,
           title: (d) =>
             `Date: ${fmtYMD(d.date)}\n` +
             `Value: ${d.rate != null ? d.rate.toFixed(2) : 'N/A'}`,
@@ -438,8 +451,9 @@ export function createDetailOpener(deps) {
           }),
         );
 
-      const chart = resize((_width) =>
+      const chart = resize((chartWidth) =>
         Plot.plot({
+          width: chartWidth,
           height:
             margin.top +
             margin.bottom +
@@ -469,7 +483,7 @@ export function createDetailOpener(deps) {
         foEl.attr('height', rowH);
       });
 
-      let yCursor = r * 0.6 + 40;
+      let yCursor = topOffset;
       node.each(function (d) {
         d.__y = yCursor;
         d3.select(this).attr('transform', `translate(${laneX}, ${d.__y})`);
@@ -500,6 +514,7 @@ export function createDetailOpener(deps) {
       r = sizes.r;
       baseMinRow = sizes.baseMinRow;
       nodeGap = sizes.nodeGap;
+      topOffset = sizes.topOffset;
 
       width = graphWrap.clientWidth || width || 800;
       laneX = margin.left + r;
@@ -514,13 +529,8 @@ export function createDetailOpener(deps) {
       node
         .selectAll('text')
         .nodes()
-        .forEach((t, idx) => {
-          const sel = d3.select(t);
-          if (idx % 2 === 0) {
-            sel.style('font-size', `${Math.round(r * 0.45)}px`);
-          } else {
-            sel.style('font-size', `${Math.round(r * 0.36)}px`);
-          }
+        .forEach((t) => {
+          d3.select(t).style('font-size', `${Math.round(r * 0.35)}px`);
         });
 
       fo.attr('y', r * 0.1);
