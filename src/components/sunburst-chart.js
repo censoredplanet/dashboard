@@ -307,7 +307,7 @@ function sunburst(width, networkData, sourceValue) {
 
       const val = d.value || 0;
       const rootVal = root.value || 1;
-      const percentage = ((100 * val) / rootVal).toPrecision(3);
+      const percentage = String(+((100 * val) / rootVal).toFixed(3));
 
       label
         .style('visibility', null)
