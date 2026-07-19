@@ -401,14 +401,13 @@ export function createDetailOpener(deps) {
 
       const yMin = d3.min(series, (d) => d.rate);
       const yMax = d3.max(series, (d) => d.rate);
-      const tooltipFill = 'white';
       const marks = [
         Plot.lineY(series, {
           x: 'date',
           y: 'rate',
           curve: 'step',
           tip: {
-            fill: tooltipFill,
+            fill: true,
             stroke: 'black',
           },
           title: (d) =>

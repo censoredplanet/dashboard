@@ -420,6 +420,11 @@ body {
   margin-top: 0.5rem;
 }
 
+#search-volume-container svg,
+.graph-wrap svg {
+  --plot-background: var(--theme-background-alt);
+}
+
 .node {
   cursor: pointer;
 }
