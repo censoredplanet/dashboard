@@ -24,8 +24,6 @@ export function createSearchVolumeChart(
       .getPropertyValue('--plot-bg')
       .trim(),
   };
-  const isDark = document.documentElement.classList.contains('dark');
-  const tooltipFill = isDark ? 'black' : 'white';
 
   const y2 = d3.max(timeseries, (d) => d.rate);
 
@@ -35,7 +33,7 @@ export function createSearchVolumeChart(
       x: 'date',
       y: 'rate',
       stroke: plotColors.line,
-      tip: { fill: tooltipFill, stroke: 'black', textColor: 'black' },
+      tip: { fill: true, stroke: 'black', textColor: 'black' },
       title: (d) =>
         `Topic: ${d.topic || 'Unknown'}\nDate: ${fmtYMD(d.date)}\nRate: ${d.rate?.toFixed(2) ?? 'N/A'}`,
     }),
@@ -53,7 +51,7 @@ export function createSearchVolumeChart(
         stroke: '#f56363',
         strokeOpacity: 0.6,
         strokeWidth: 0.7,
-        tip: { fill: tooltipFill, stroke: 'black', textColor: 'black' },
+        tip: { fill: true, stroke: 'black', textColor: 'black' },
         title: (d) =>
           `Cause: ${d.cause}\nDuration: ${fmtDMY(d.s)} – ${fmtDMY(d.e)}\n${d.impact ? `Impact: ${(+d.impact).toFixed(2)}` : ''}`,
       }),
