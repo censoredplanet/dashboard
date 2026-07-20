@@ -49,7 +49,8 @@ function freezeStyles(clone) {
   const stage = document.createElement('div');
   stage.setAttribute(
     'style',
-    'position:absolute;left:-99999px;top:0;width:2000px;',
+    'position:absolute;left:-99999px;top:0;width:2000px;' +
+      `color:${LIGHT_THEME['--theme-foreground']};font-family:${FONT};`,
   );
   for (const [name, value] of Object.entries(LIGHT_THEME)) {
     stage.style.setProperty(name, value);
@@ -80,6 +81,35 @@ async function inlineAsset(url) {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(markup)}`;
 }
 
+const NOTE_SIZE = 11;
+const NOTE_LEADING = 15;
+
+function measureText(text, fontSize, weight = 400) {
+  const context = document.createElement('canvas').getContext('2d');
+  context.font = `${weight} ${fontSize}px ${FONT}`;
+  return context.measureText(text).width;
+}
+
+function wrapText(text, maxWidth, fontSize, firstLineWidth = maxWidth) {
+  const context = document.createElement('canvas').getContext('2d');
+  context.font = `${fontSize}px ${FONT}`;
+
+  const lines = [];
+  let line = '';
+  for (const word of String(text).split(/\s+/).filter(Boolean)) {
+    const candidate = line ? `${line} ${word}` : word;
+    const limit = lines.length === 0 ? firstLineWidth : maxWidth;
+    if (line && context.measureText(candidate).width > limit) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = candidate;
+    }
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
 function svgEl(name, attrs) {
   const el = document.createElementNS(SVG_NS, name);
   for (const [key, value] of Object.entries(attrs)) {
@@ -107,6 +137,8 @@ function textEl(content, attrs) {
  * @param {string} options.title heading printed above the chart
  * @param {Array<[string, string]>} options.meta label/value pairs for the caption
  * @param {string} options.logoUrl URL of an SVG logo, e.g. FileAttachment(…).href
+ * @param {string} [options.notes] free text rendered below the chart, wrapped
+ * @param {string} [options.notesLabel] bold prefix for the notes block
  * @param {string} options.filename download name, without extension
  * @param {string} [options.background] poster background colour
  */
@@ -114,6 +146,8 @@ export async function exportChartPng({
   chart,
   title,
   meta,
+  notes,
+  notesLabel,
   logoUrl,
   filename,
   background = '#ffffff',
@@ -125,7 +159,15 @@ export async function exportChartPng({
 
   const headerHeight = PAD + LOGO_HEIGHT + 46;
   const width = chartWidth + PAD * 2;
-  const height = headerHeight + chartHeight + PAD;
+  const notePrefix = notes && notesLabel ? `${notesLabel}: ` : '';
+  const prefixWidth = notePrefix ? measureText(notePrefix, NOTE_SIZE, 600) : 0;
+  const noteLines = notes
+    ? wrapText(notes, chartWidth, NOTE_SIZE, chartWidth - prefixWidth)
+    : [];
+  const notesHeight = noteLines.length
+    ? noteLines.length * NOTE_LEADING + PAD
+    : 0;
+  const height = headerHeight + chartHeight + notesHeight + PAD;
 
   const clone = chart.cloneNode(true);
   clone.setAttribute('width', chartWidth);
@@ -174,6 +216,37 @@ export async function exportChartPng({
   const group = svgEl('g', { transform: `translate(${PAD}, ${headerHeight})` });
   group.append(clone);
   poster.append(group);
+
+  if (noteLines.length) {
+    const note = textEl('', {
+      x: PAD,
+      y: headerHeight + chartHeight + PAD,
+      'font-size': NOTE_SIZE,
+      fill: '#444444',
+    });
+    noteLines.forEach((line, i) => {
+      if (i === 0 && notePrefix) {
+        const label = document.createElementNS(SVG_NS, 'tspan');
+        label.setAttribute('x', PAD);
+        label.setAttribute('font-weight', '600');
+        label.setAttribute('fill', '#1a1a1a');
+        label.textContent = notePrefix;
+        note.append(label);
+
+        const rest = document.createElementNS(SVG_NS, 'tspan');
+        rest.textContent = line;
+        note.append(rest);
+        return;
+      }
+
+      const span = document.createElementNS(SVG_NS, 'tspan');
+      span.setAttribute('x', PAD);
+      if (i > 0) span.setAttribute('dy', NOTE_LEADING);
+      span.textContent = line;
+      note.append(span);
+    });
+    poster.append(note);
+  }
 
   poster.append(
     textEl('censoredplanet.org', {

@@ -467,7 +467,7 @@ const openDetail = createDetailOpener({
   html, d3, Plot, resize,
   DAY, PX_PADDING,
   events, formatImpact, softBreakLongTokens,
-  detailSection, formatDMYdots,
+  detailSection, formatDMYdots, logoUrl
 });
 
 async function showCountryDetail(code, name, selectedEventKey, opts = { scrollIntoView: false }) {

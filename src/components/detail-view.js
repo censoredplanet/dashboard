@@ -1,4 +1,5 @@
 import { downloadLinks } from './data-download.js';
+import { exportChartPng } from './chart-export.js';
 
 export function createDetailOpener(deps) {
   const {
@@ -14,6 +15,7 @@ export function createDetailOpener(deps) {
     detailSection,
     startDate,
     endDate,
+    logoUrl,
   } = deps;
 
   function updateEventUrl(selectedEvent) {
@@ -466,8 +468,34 @@ export function createDetailOpener(deps) {
         }),
       );
 
-      const meta = html`<div class="event-meta"></div>`;
+      const meta = html`<div class="event-meta download-links"></div>`;
       bodyEl.append(chart, meta);
+
+      const impactLabels = ['Low', 'Moderate', 'High', 'Severe'];
+      const level = impactLabels[selectedEvent.impactQuartile ?? 0];
+      const exportLink = html`<span>Download Chart: <a href="#">PNG</a></span>`;
+      exportLink.querySelector('a').onclick = async (clickEvent) => {
+        clickEvent.preventDefault();
+        const svg = bodyEl.querySelector('svg');
+        if (!svg) return;
+        await exportChartPng({
+          chart: svg,
+          logoUrl,
+          title: `${name} — ${selectedEvent.dateLabel}`,
+          meta: [
+            ['Country', name],
+            ['Date', selectedEvent.dateLabel],
+            ['Impact score', selectedEvent.title || '—'],
+            ['Level', level],
+          ],
+          notes: selectedEvent.description || '',
+          notesLabel: 'Context',
+          filename: `cp-cenalert-event-${name.replace(/[^\w-]+/g, '-')}-${
+            selectedEvent.startISO ?? fmtYMD(selectedEvent.date)
+          }`,
+        });
+      };
+      meta.append(exportLink);
     }
 
     renderRight(countryEvents.length ? countryEvents[0] : null);
