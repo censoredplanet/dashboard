@@ -83,6 +83,9 @@ async function inlineAsset(url) {
 
 const NOTE_SIZE = 11;
 const NOTE_LEADING = 15;
+const CAPTION_SIZE = 11;
+const CAPTION_LEADING = 14;
+const CREDIT = 'dashboard.censoredplanet.org';
 
 function measureText(text, fontSize, weight = 400) {
   const context = document.createElement('canvas').getContext('2d');
@@ -156,9 +159,18 @@ export async function exportChartPng({
   const chartWidth = Math.round(box.width);
   const bbox = chart.getBBox();
   const chartHeight = Math.ceil(Math.max(box.height, bbox.y + bbox.height)) + 4;
-
-  const headerHeight = PAD + LOGO_HEIGHT + 46;
   const width = chartWidth + PAD * 2;
+  const captionTop = PAD + LOGO_HEIGHT + 42;
+  const creditWidth = measureText(CREDIT, CAPTION_SIZE);
+  const creditFitsBesideLogo =
+    width - PAD - creditWidth > PAD + LOGO_HEIGHT * 6 + 12;
+  const captionText = [
+    ...meta.map(([label, value]) => `${label}: ${value}`),
+    ...(creditFitsBesideLogo ? [] : [CREDIT]),
+  ].join('   ·   ');
+  const captionLines = wrapText(captionText, chartWidth, CAPTION_SIZE);
+  const headerHeight =
+    captionTop + (captionLines.length - 1) * CAPTION_LEADING + 10;
   const notePrefix = notes && notesLabel ? `${notesLabel}: ` : '';
   const prefixWidth = notePrefix ? measureText(notePrefix, NOTE_SIZE, 600) : 0;
   const noteLines = notes
@@ -204,14 +216,20 @@ export async function exportChartPng({
     }),
   );
 
-  poster.append(
-    textEl(meta.map(([label, value]) => `${label}: ${value}`).join('   ·   '), {
-      x: PAD,
-      y: PAD + LOGO_HEIGHT + 42,
-      'font-size': 11,
-      fill: '#555555',
-    }),
-  );
+  const caption = textEl('', {
+    x: PAD,
+    y: captionTop,
+    'font-size': CAPTION_SIZE,
+    fill: '#555555',
+  });
+  captionLines.forEach((line, i) => {
+    const span = document.createElementNS(SVG_NS, 'tspan');
+    span.setAttribute('x', PAD);
+    if (i > 0) span.setAttribute('dy', CAPTION_LEADING);
+    span.textContent = line;
+    caption.append(span);
+  });
+  poster.append(caption);
 
   const group = svgEl('g', { transform: `translate(${PAD}, ${headerHeight})` });
   group.append(clone);
@@ -248,15 +266,17 @@ export async function exportChartPng({
     poster.append(note);
   }
 
-  poster.append(
-    textEl('censoredplanet.org', {
-      x: width - PAD,
-      y: PAD + 20,
-      'font-size': 11,
-      fill: '#888888',
-      'text-anchor': 'end',
-    }),
-  );
+  if (creditFitsBesideLogo) {
+    poster.append(
+      textEl(CREDIT, {
+        x: width - PAD,
+        y: PAD + 20,
+        'font-size': CAPTION_SIZE,
+        fill: '#888888',
+        'text-anchor': 'end',
+      }),
+    );
+  }
 
   const markup = new XMLSerializer().serializeToString(poster);
   const image = new Image();
