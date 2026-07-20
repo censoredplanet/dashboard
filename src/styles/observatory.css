@@ -122,6 +122,12 @@
   margin-top: 1.5rem;
 }
 
+@media (max-width: 640px) {
+  .card--network .download-links {
+    margin-top: 2.5rem;
+  }
+}
+
 .observatory-table {
   display: flex;
   flex-direction: column;
