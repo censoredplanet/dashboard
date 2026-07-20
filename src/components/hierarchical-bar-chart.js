@@ -42,10 +42,11 @@ export function transformFlatData(flatData) {
 }
 
 export function hierarchicalBarChart(networkData, width) {
-  const marginTop = 30;
-  const marginRight = 30;
+  const compact = width < 640;
+  const marginTop = compact ? 46 : 30;
+  const marginRight = compact ? 12 : 30;
   const marginBottom = 0;
-  const marginLeft = 200;
+  const marginLeft = compact ? Math.max(90, Math.round(width * 0.34)) : 200;
   const barStep = 27;
   const duration = 750;
   const barPadding = 3 / barStep;
@@ -96,10 +97,17 @@ export function hierarchicalBarChart(networkData, width) {
     g
       .attr('class', 'x-axis')
       .attr('transform', `translate(0,${marginTop})`)
-      .call(d3.axisTop(x).ticks(width / 80, 's'))
-      .call((g) =>
-        (g.selection ? g.selection() : g).select('.domain').remove(),
-      );
+      .call(d3.axisTop(x).ticks(compact ? 4 : width / 80, 's'))
+      .call((sel) => {
+        const s = sel.selection ? sel.selection() : sel;
+        s.select('.domain').remove();
+        s.selectAll('text')
+          .attr('transform', compact ? 'rotate(-90)' : null)
+          .attr('text-anchor', compact ? 'start' : 'middle')
+          .attr('x', compact ? 4 : null)
+          .attr('y', compact ? -2 : null)
+          .attr('dy', compact ? '0.32em' : null);
+      });
 
   function calculateHeight(d) {
     const numChildren = d.children ? d.children.length : 1;
@@ -187,14 +195,8 @@ export function hierarchicalBarChart(networkData, width) {
       .transition(transition1)
       .attr('transform', stagger());
 
-    const totalValue = d.children.reduce(
-      (sum, child) =>
-        sum +
-        Object.values(child.data.stackedValues || {}).reduce(
-          (a, b) => a + b,
-          0,
-        ),
-      0,
+    const totalValue = d3.max(d.children, (child) =>
+      Object.values(child.data.stackedValues || {}).reduce((a, b) => a + b, 0),
     );
 
     x.domain([0, totalValue]);
@@ -225,16 +227,10 @@ export function hierarchicalBarChart(networkData, width) {
     svg.select('.background').transition(transition1).attr('height', newHeight);
 
     const exit = svg.selectAll('.enter').attr('class', 'exit');
-    const totalParentValue = d.parent.children.reduce(
-      (sum, child) =>
-        sum +
-        Object.values(child.data.stackedValues || {}).reduce(
-          (a, b) => a + b,
-          0,
-        ),
-      0,
+    const totalParentValue = d3.max(d.parent.children, (child) =>
+      Object.values(child.data.stackedValues || {}).reduce((a, b) => a + b, 0),
     );
-    x.domain([0, totalParentValue]);
+    x.domain([0, totalParentValue || 1]);
 
     svg.selectAll('.x-axis').transition(transition1).call(xAxis);
     exit.selectAll('g').transition(transition1).attr('transform', stagger());
@@ -285,14 +281,18 @@ export function hierarchicalBarChart(networkData, width) {
       .attr('x', marginLeft - 6)
       .attr('y', (barStep * (1 - barPadding)) / 2)
       .attr('dy', '.35em')
-      .attr('font-size', '14px')
+      .attr('font-size', compact ? '11px' : '14px')
       .attr('fill', '#17827B')
       .text((d) => {
-        const maxChars = window.innerWidth <= 768 ? 10 : 18;
+        const charWidth = (compact ? 11 : 14) * 0.58;
+        const maxChars = Math.max(
+          6,
+          Math.floor((marginLeft - 10) / charWidth) - (compact ? 1 : 0),
+        );
         return truncateText(d.data.name, maxChars);
       })
       .on('mouseover', function (event, d) {
-        if (d.data.name.length > 15) {
+        if (d.data.name !== event.currentTarget.textContent) {
           axisTooltip.transition().duration(200).style('opacity', 0.9);
           axisTooltip
             .html(d.data.name)
@@ -340,13 +340,8 @@ export function hierarchicalBarChart(networkData, width) {
     .style('max-width', '100%')
     .style('height', 'auto');
 
-  const totalValue = (root.children || []).reduce(
-    (sum, child) =>
-      sum +
-      (child.data.stackedValues
-        ? Object.values(child.data.stackedValues).reduce((a, b) => a + b, 0)
-        : 0),
-    0,
+  const totalValue = d3.max(root.children || [], (child) =>
+    Object.values(child.data.stackedValues || {}).reduce((a, b) => a + b, 0),
   );
 
   x.domain([0, totalValue || 1]);
