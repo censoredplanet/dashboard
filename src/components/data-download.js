@@ -45,7 +45,7 @@ export function downloadLinks(
   };
 
   return htl.html`<div class="download-links">
-    <span>Download Data: </span>
+    <span>Download: </span>
     <a href="#" onclick=${onJson}>JSON</a>
   </div>`;
 }

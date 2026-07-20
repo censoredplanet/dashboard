@@ -13,6 +13,7 @@ import { createDetailOpener } from "./components/detail-view.js";
 import { downloadLinks } from "./components/data-download.js";
 import { updateURL } from "./components/utils.js";
 import { createSearchVolumeChart } from "./components/time-series-chart.js"; 
+import { exportChartPng } from "./components/chart-export.js";
 
 const params = new URLSearchParams(window.location.search);
 const countryParam = (params.get("country") ?? "").trim();
@@ -257,7 +258,7 @@ const fmtYMD = d3.utcFormat("%Y.%m.%d");
       </div>
     </div>
     ${searchVolumeContainer}
-    ${downloadLinks(timeseries, "cp-cenalert", "search-volume", countryInput.value, startDate ?? earliestDate, endDate ?? latestDate)}
+    ${searchVolumeFooter}
   </div>
 </div>
 
@@ -271,6 +272,41 @@ const highlightToggle = Inputs.toggle({
 const searchVolumeContainer = document.createElement("div");
 searchVolumeContainer.id = "search-volume-container";
 searchVolumeContainer.style.minHeight = "60px"; 
+```
+
+```js
+const logoUrl = FileAttachment("logo-umichlab.svg").href;
+const fmtExport = d3.utcFormat("%Y.%m.%d");
+const fmtFile = d3.utcFormat("%Y%m%d");
+const safe = (s) => String(s).replace(/[^\w-]+/g, "-").replace(/^-|-$/g, "");
+
+const searchVolumeFooter = downloadLinks(
+  timeseries, "cp-cenalert", "search-volume",
+  countryInput.value, startDate ?? earliestDate, endDate ?? latestDate,
+);
+
+const exportPngLink = html`<a href="#">PNG</a>`;
+exportPngLink.onclick = async (event) => {
+  event.preventDefault();
+  const chart = searchVolumeContainer.querySelector("svg");
+  if (!chart) return;
+
+  const [from, to] = d3.extent(timeseries, (d) => d.date);
+  await exportChartPng({
+    chart,
+    logoUrl,
+    title: `Search Volume — ${countryInput.value}`,
+    meta: [
+      ["Country", countryInput.value],
+      ["Period", `${fmtExport(from)} – ${fmtExport(to)}`],
+      ["Keyword", "VPN"],
+      ["Event highlights", highlightToggle.value ? "shown" : "hidden"],
+    ],
+    filename: `cp-cenalert-search-volume-${safe(countryInput.value)}-${fmtFile(from)}-${fmtFile(to)}`,
+  });
+};
+
+searchVolumeFooter.append(document.createTextNode(" · "), exportPngLink);
 ```
 
 ```js

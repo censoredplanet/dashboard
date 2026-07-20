@@ -9,22 +9,12 @@ export function createSearchVolumeChart(
   const fmtYMD = d3.utcFormat('%Y.%m.%d');
   const fmtDMY = d3.utcFormat('%d.%m.%Y');
 
-  // Plot styling
   const plotColors = {
-    text: getComputedStyle(document.documentElement)
-      .getPropertyValue('--plot-text')
-      .trim(),
-    line: getComputedStyle(document.documentElement)
-      .getPropertyValue('--plot-line')
-      .trim(),
-    grid: getComputedStyle(document.documentElement)
-      .getPropertyValue('--plot-grid')
-      .trim(),
-    bg: getComputedStyle(document.documentElement)
-      .getPropertyValue('--plot-bg')
-      .trim(),
+    text: 'var(--plot-text)',
+    line: 'var(--plot-line)',
+    grid: 'var(--plot-grid)',
+    bg: 'var(--plot-bg)',
   };
-
   const y2 = d3.max(timeseries, (d) => d.rate);
 
   const marks = [
@@ -33,7 +23,7 @@ export function createSearchVolumeChart(
       x: 'date',
       y: 'rate',
       stroke: plotColors.line,
-      tip: { fill: true, stroke: 'black', textColor: 'black' },
+      tip: true,
       title: (d) =>
         `Topic: ${d.topic || 'Unknown'}\nDate: ${fmtYMD(d.date)}\nRate: ${d.rate?.toFixed(2) ?? 'N/A'}`,
     }),
@@ -51,7 +41,7 @@ export function createSearchVolumeChart(
         stroke: '#f56363',
         strokeOpacity: 0.6,
         strokeWidth: 0.7,
-        tip: { fill: true, stroke: 'black', textColor: 'black' },
+        tip: true,
         title: (d) =>
           `Cause: ${d.cause}\nDuration: ${fmtDMY(d.s)} – ${fmtDMY(d.e)}\n${d.impact ? `Impact: ${(+d.impact).toFixed(2)}` : ''}`,
       }),
