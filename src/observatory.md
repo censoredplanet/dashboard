@@ -7,6 +7,7 @@ style: styles/observatory.css
 import SlimSelect from "npm:slim-select@2.8.1";
 import { fetchDashboard } from "./components/queries.js";
 import { downloadLinks } from "./components/data-download.js"
+import { exportChartPng } from "./components/chart-export.js";
 import { fmt, leafColor, sparkbar, updateBounds } from "./components/utils.js"
 import { aggregateMetricsBySubnetwork, aggregateByDateOutcome, aggregateByNetwork, transformFlatData } from "./components/aggregators.js";
 import { createStackedBarChart } from "./components/stacked-bar-chart.js"
@@ -152,10 +153,54 @@ const search = Generators.input(searchInput);
 <div class = "grid grid-cols-2">
     <div class="grid-colspan-2 card">
       <h2>Outcome Timeline</h2><br>
-      ${resize(width => createStackedBarChart(width, start.value, end.value, stackedBarData, source))}
-      ${downloadLinks(stackedBarData, "cp-observatory", "outcome-timeline", country.value, start.value, end.value, source.value)}
+      ${outcomeTimeline}
+      ${outcomeTimelineFooter}
     </div>
 </div>
+
+```js
+const logoUrl = FileAttachment("logo-umichlab.svg").href;
+const fmtDate = (d) =>
+  d instanceof Date ? d.toISOString().slice(0, 10) : String(d ?? "");
+const safe = (s) => String(s).replace(/[^\w-]+/g, "-").replace(/^-|-$/g, "");
+
+const outcomeTimeline = resize((width) =>
+  createStackedBarChart(width, start.value, end.value, stackedBarData, source),
+);
+
+const outcomeTimelineFooter = downloadLinks(
+  stackedBarData, "cp-observatory", "outcome-timeline",
+  country.value, start.value, end.value, source.value,
+);
+
+const outcomeTimelinePng = html`<a href="#">PNG</a>`;
+outcomeTimelinePng.onclick = async (event) => {
+  event.preventDefault();
+  const chart = outcomeTimeline.querySelector("svg");
+  if (!chart) return;
+
+  await exportChartPng({
+    chart,
+    logoUrl,
+    title: `Outcome Timeline — ${country.value}`,
+    meta: [
+      ["Country", country.value],
+      ["Source", source.value],
+      ["Period", `${fmtDate(start.value)} – ${fmtDate(end.value)}`],
+    ],
+    notes: defaultDomains.join(", "),
+    notesLabel: "Domains",
+    filename: `cp-observatory-outcome-timeline-${safe(country.value)}-${fmtDate(
+      start.value,
+    )}-${fmtDate(end.value)}`,
+  });
+};
+
+outcomeTimelineFooter.append(
+  document.createTextNode(" · "),
+  outcomeTimelinePng,
+);
+```
 
 <div class = "grid grid-cols-2">
     <div class="grid-colspan-2 card card--network">
