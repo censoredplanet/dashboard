@@ -1,7 +1,5 @@
 import * as d3 from 'npm:d3';
 
-import { leafColor } from './utils.js';
-
 export function createStackedBarChart(
   width,
   startDate,
@@ -148,7 +146,7 @@ export function createStackedBarChart(
     .append('rect')
     .attr('width', legendRectSize)
     .attr('height', legendRectSize)
-    .attr('fill', (d) => leafColor(d));
+    .attr('fill', (d) => colorMapping[d]);
   entry
     .append('text')
     .attr('x', legendRectSize + paddingX)
@@ -196,6 +194,26 @@ export function createStackedBarChart(
       tooltip.style('visibility', 'hidden');
       d3.select(this).style('stroke', 'none');
     });
+
+  svg
+    .append('g')
+    .attr('class', 'y-axis')
+    .attr('transform', `translate(${marginLeft},0)`)
+    .call(
+      d3
+        .axisLeft(y)
+        .ticks(Math.max(3, (height - marginTop - marginBottom) / 45), 's')
+        .tickSizeOuter(0),
+    )
+    .call((g) =>
+      g
+        .append('text')
+        .attr('x', 0)
+        .attr('y', marginTop - 10)
+        .attr('fill', 'currentColor')
+        .attr('text-anchor', 'start')
+        .attr('font-size', 11),
+    );
 
   const xAxisG = svg
     .append('g')
