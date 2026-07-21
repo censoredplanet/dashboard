@@ -1,6 +1,6 @@
 import * as d3 from 'npm:d3';
 
-import { leafColor } from './utils.js';
+import { makeLeafColor } from './utils.js';
 
 export function transformFlatData(flatData) {
   const networkGroups = {};
@@ -53,6 +53,38 @@ export function hierarchicalBarChart(networkData, width) {
 
   const newdata = transformFlatData(networkData);
 
+  // down()/up() mutate the SVG in place without recording where they are, so
+  // an exported image has no way to say which level it shows. Tracked here and
+  // exposed on the returned node.
+  let currentNode = null;
+
+  const outcomeTotals = new Map();
+  for (const row of networkData || []) {
+    if (!row.outcome) continue;
+    const count = Number(row.total_count) || 0;
+    outcomeTotals.set(
+      row.outcome,
+      (outcomeTotals.get(row.outcome) ?? 0) + count,
+    );
+  }
+  const outcomeColor = makeLeafColor(outcomeTotals);
+  // Heaviest first, so the legend reads dark to light in step with the shades.
+  const outcomes = [...outcomeTotals.keys()].sort(
+    (a, b) =>
+      (outcomeTotals.get(b) ?? 0) - (outcomeTotals.get(a) ?? 0) ||
+      a.localeCompare(b),
+  );
+
+  const legendRectSize = 14;
+  const legendRowHeight = 20;
+  const legendItemGap = 18;
+  const legendColumns = compact
+    ? 1
+    : Math.max(1, Math.floor((width - marginLeft) / 240));
+  const legendRows = Math.ceil(outcomes.length / legendColumns);
+  const legendHeight = outcomes.length ? legendRows * legendRowHeight + 10 : 0;
+  const chartTop = marginTop + legendHeight;
+
   let tooltip = d3.select('body .chart-tooltip');
   if (tooltip.empty()) {
     tooltip = d3
@@ -96,7 +128,7 @@ export function hierarchicalBarChart(networkData, width) {
   const xAxis = (g) =>
     g
       .attr('class', 'x-axis')
-      .attr('transform', `translate(0,${marginTop})`)
+      .attr('transform', `translate(0,${chartTop})`)
       .call(d3.axisTop(x).ticks(compact ? 4 : width / 80, 's'))
       .call((sel) => {
         const s = sel.selection ? sel.selection() : sel;
@@ -111,7 +143,7 @@ export function hierarchicalBarChart(networkData, width) {
 
   function calculateHeight(d) {
     const numChildren = d.children ? d.children.length : 1;
-    return numChildren * barStep + 15 + marginBottom;
+    return numChildren * barStep + 15 + marginBottom + legendHeight;
   }
 
   function processData(data) {
@@ -166,12 +198,24 @@ export function hierarchicalBarChart(networkData, width) {
     });
   }
 
-  function truncateText(text, maxLength) {
-    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+  function truncateText(name, maxChars) {
+    if (name.length <= maxChars) return name;
+
+    const as = /AS\d+/.exec(name);
+    if (as) {
+      const rest = name.slice(as.index + as[0].length).replace(/^[\s-]+/, '');
+      const room = maxChars - as[0].length - 2;
+      return room > 3 ? `${as[0]} ${rest.slice(0, room)}…` : as[0];
+    }
+
+    const head = Math.ceil((maxChars - 1) / 2);
+    const tail = Math.floor((maxChars - 1) / 2);
+    return `${name.slice(0, head)}…${name.slice(-tail)}`;
   }
 
   function down(svg, d) {
     if (!d.children || d3.active(svg.node())) return;
+    currentNode = d;
     svg.select('.background').datum(d);
     const newHeight = calculateHeight(d);
     const transition1 = svg.transition().duration(duration);
@@ -215,6 +259,7 @@ export function hierarchicalBarChart(networkData, width) {
 
   function up(svg, d) {
     if (!d.parent || !svg.selectAll('.exit').empty()) return;
+    currentNode = d.parent;
     svg.select('.background').datum(d.parent);
     const transition1 = svg.transition().duration(duration);
     const transition2 = transition1.transition();
@@ -265,7 +310,7 @@ export function hierarchicalBarChart(networkData, width) {
     const g = svg
       .insert('g', selector)
       .attr('class', 'enter')
-      .attr('transform', `translate(0,${marginTop + barStep * barPadding})`)
+      .attr('transform', `translate(0,${chartTop + barStep * barPadding})`)
       .attr('text-anchor', 'end')
       .style('font', '10px sans-serif');
 
@@ -312,7 +357,7 @@ export function hierarchicalBarChart(networkData, width) {
       .attr('x', (d) => x(d.start))
       .attr('width', (d) => x(d.end) - x(d.start))
       .attr('height', barStep * (1 - barPadding))
-      .attr('fill', (d) => leafColor(d.metric))
+      .attr('fill', (d) => outcomeColor(d.metric))
       .on('mouseover', function (event, d) {
         d3.select(this).style('opacity', 0.8);
         tooltip.transition().duration(200).style('opacity', 0.9);
@@ -330,6 +375,7 @@ export function hierarchicalBarChart(networkData, width) {
   }
 
   const root = processData(newdata);
+  currentNode = root;
   const initialHeight = calculateHeight(root);
 
   const svg = d3
@@ -356,10 +402,54 @@ export function hierarchicalBarChart(networkData, width) {
     .attr('cursor', 'pointer')
     .on('click', (event, d) => up(svg, d));
 
+  if (outcomes.length) {
+    const legend = svg
+      .append('g')
+      .attr('class', 'outcome-legend')
+      .attr('transform', `translate(${marginLeft},12)`);
+
+    const columnWidth =
+      (width - marginLeft - marginRight) / legendColumns - legendItemGap;
+
+    legend
+      .selectAll('g')
+      .data(outcomes)
+      .join('g')
+      .attr('transform', (d, i) => {
+        const column = i % legendColumns;
+        const row = Math.floor(i / legendColumns);
+        return `translate(${column * (columnWidth + legendItemGap)},${
+          row * legendRowHeight
+        })`;
+      })
+      .call((entry) => {
+        entry
+          .append('rect')
+          .attr('width', legendRectSize)
+          .attr('height', legendRectSize)
+          .attr('rx', 2)
+          .attr('fill', (d) => outcomeColor(d));
+        entry
+          .append('text')
+          .attr('x', legendRectSize + 6)
+          .attr('y', legendRectSize / 2)
+          .attr('dy', '0.35em')
+          .attr('font-size', 11)
+          .attr('fill', 'currentColor')
+          .text((d) => d);
+      });
+  }
+
   svg.append('g').call(xAxis);
   svg.append('g').call(yAxis);
 
   const node = svg.node();
+
+  node.currentView = () => ({
+    depth: currentNode?.depth ?? 0,
+    name: currentNode?.data?.name ?? null,
+  });
+
   let isVisible = false;
   const observer = new IntersectionObserver(
     (entries) => {

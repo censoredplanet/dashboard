@@ -205,10 +205,57 @@ outcomeTimelineFooter.append(
 <div class = "grid grid-cols-2">
     <div class="grid-colspan-2 card card--network">
       <h2>Outcome per Network</h2><br>
-      ${resize(width => hierarchicalBarChart(networkData, width))}
-      ${downloadLinks(networkData, "cp-observatory", "outcome-network", country.value, start.value, end.value, source.value)}
+      ${outcomeNetwork}
+      ${outcomeNetworkFooter}
     </div>
 </div>
+
+```js
+const outcomeNetwork = resize((width) =>
+  hierarchicalBarChart(networkData, width),
+);
+
+const outcomeNetworkFooter = downloadLinks(
+  networkData, "cp-observatory", "outcome-network",
+  country.value, start.value, end.value, source.value,
+);
+
+const outcomeNetworkPng = html`<a href="#">PNG</a>`;
+outcomeNetworkPng.onclick = async (event) => {
+  event.preventDefault();
+  const chart = outcomeNetwork.querySelector("svg");
+  if (!chart) return;
+
+  const view = chart.currentView?.() ?? { depth: 0, name: null };
+  const drilled = view.depth >= 1 && view.name;
+
+  await exportChartPng({
+    chart,
+    logoUrl,
+    title: `Outcome per Network — ${country.value}`,
+    meta: [
+      ["Country", country.value],
+      ["Source", source.value],
+      ["Period", `${fmtDate(start.value)} – ${fmtDate(end.value)}`],
+      ...(drilled ? [["Network", view.name]] : []),
+    ],
+    notes: defaultDomains.join(", "),
+    notesLabel: "Domains",
+    filename: [
+      "cp-observatory-outcome-network",
+      safe(country.value),
+      ...(drilled ? [safe(view.name)] : []),
+      fmtDate(start.value),
+      fmtDate(end.value),
+    ].join("-"),
+  });
+};
+
+outcomeNetworkFooter.append(
+  document.createTextNode(" · "),
+  outcomeNetworkPng,
+);
+```
 
 <div class="grid grid-cols-2">
   <div class="grid-colspan-2 card">
