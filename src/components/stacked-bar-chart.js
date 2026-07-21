@@ -1,5 +1,7 @@
 import * as d3 from 'npm:d3';
 
+import { makeLeafColor } from './utils.js';
+
 export function createStackedBarChart(
   width,
   startDate,
@@ -73,40 +75,15 @@ export function createStackedBarChart(
     .domain([0, d3.max(series, (s) => d3.max(s, (d) => d[1]))])
     .rangeRound([height - marginBottom, height - marginBottom]);
 
-  const baseColors = {
-    success: ['#0bba13', '#81C784'],
-    error: ['#9e0202', '#C62828'],
-    warning: ['#E65100', '#FFE0B2'],
-    info: ['#263238', '#CFD8DC'],
-  };
-  const getCategory = (o) =>
-    o.includes('✅')
-      ? 'success'
-      : o.includes('❗️')
-        ? 'error'
-        : o.includes('❓')
-          ? 'warning'
-          : o.includes('❔')
-            ? 'info'
-            : 'other';
-
-  const colorMapping = {};
-  Object.entries(
-    series.reduce((acc, s) => {
-      const cat = getCategory(s.key);
-      (acc[cat] = acc[cat] || []).push(s.key);
-      return acc;
-    }, {}),
-  ).forEach(([cat, keys]) => {
-    const [c0, c1] = baseColors[cat] || ['#bbbbbb', '#bbbbbb'];
-    const palette =
-      keys.length > 1
-        ? d3
-            .range(keys.length)
-            .map((i) => d3.interpolate(c0, c1)(i / (keys.length - 1)))
-        : [c0];
-    keys.forEach((k, i) => (colorMapping[k] = palette[i]));
-  });
+  const outcomeTotals = new Map();
+  for (const row of data) {
+    const count = Number(row.count) || 0;
+    outcomeTotals.set(
+      row.outcome,
+      (outcomeTotals.get(row.outcome) ?? 0) + count,
+    );
+  }
+  const outcomeColor = makeLeafColor(outcomeTotals);
 
   const svg = d3
     .create('svg')
@@ -146,7 +123,7 @@ export function createStackedBarChart(
     .append('rect')
     .attr('width', legendRectSize)
     .attr('height', legendRectSize)
-    .attr('fill', (d) => colorMapping[d]);
+    .attr('fill', (d) => outcomeColor(d));
   entry
     .append('text')
     .attr('x', legendRectSize + paddingX)
@@ -161,7 +138,7 @@ export function createStackedBarChart(
     .selectAll('g')
     .data(series)
     .join('g')
-    .attr('fill', (d) => colorMapping[d.key]);
+    .attr('fill', (d) => outcomeColor(d.key));
   const bars = barGroups
     .selectAll('rect')
     .data((d) => d.map((v) => ({ ...v, key: d.key })))

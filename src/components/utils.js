@@ -1,3 +1,4 @@
+import * as d3 from 'npm:d3';
 import * as htl from 'npm:htl';
 
 export const formatDMYdots = (s) => {
@@ -41,6 +42,46 @@ export function leafColor(name) {
   if (name.startsWith('❓')) return '#f56565';
   if (name.startsWith('❔')) return '#ada6a6cb';
   return '#bbbbbb';
+}
+
+const LIGHTNESS_SPAN = 46;
+
+/**
+ * Builds a colour lookup that gives every outcome its own shade.
+ *
+ * @param {Map<string, number>|Iterable<[string, number]>} counts totals per
+ *     outcome label, as produced by the chart's own data
+ * @return {(name: string) => string}
+ */
+export function makeLeafColor(counts) {
+  const totals = counts instanceof Map ? counts : new Map(counts);
+
+  const families = new Map();
+  for (const name of totals.keys()) {
+    const key = ['✅', '❗️', '❓', '❔'].find((s) => name.startsWith(s)) ?? '';
+    if (!families.has(key)) families.set(key, []);
+    families.get(key).push(name);
+  }
+  for (const members of families.values()) {
+    members.sort(
+      (a, b) =>
+        (totals.get(b) ?? 0) - (totals.get(a) ?? 0) || a.localeCompare(b),
+    );
+  }
+
+  const colors = new Map();
+  for (const [key, members] of families) {
+    const base = d3.hcl(leafColor(key || 'other'));
+    members.forEach((name, i) => {
+      const offset =
+        members.length > 1 ? (i / (members.length - 1)) * LIGHTNESS_SPAN : 0;
+      const shade = d3.hcl(base);
+      shade.l = Math.min(80, base.l + offset);
+      colors.set(name, shade.formatHex());
+    });
+  }
+
+  return (name) => colors.get(name) ?? leafColor(name);
 }
 
 export function sparkbar() {
