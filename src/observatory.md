@@ -260,6 +260,61 @@ outcomeNetworkFooter.append(
 <div class="grid grid-cols-2">
   <div class="grid-colspan-2 card">
     <h2>Measurement Summary</h2><br>
-    ${resize(width => measurementSummary(networkData, width, source.value))}
+    ${measurementSummaryHost}
+    ${measurementSummaryFooter}
   </div>
 </div>
+
+```js
+const measurementSummaryHost = resize((width) =>
+  measurementSummary(networkData, width, source.value),
+);
+
+const measurementSummaryFooter = downloadLinks(
+  networkData, "cp-observatory", "measurement-summary",
+  country.value, start.value, end.value, source.value,
+);
+
+const measurementSummaryPng = html`<a href="#">PNG</a>`;
+measurementSummaryPng.onclick = async (event) => {
+  event.preventDefault();
+  const chart = measurementSummaryHost.querySelector("svg.sunburst");
+  if (!chart) return;
+  
+  const selection = chart.getSelection?.() ?? null;
+  const { sequence = [], percentage = 0 } = chart.value ?? {};
+  const selectedPath = selection
+    ? sequence.map((d) => d.data.name).join(" → ")
+    : "";
+
+  await exportChartPng({
+    chart,
+    logoUrl,
+    title: `Measurement Summary — ${country.value}`,
+    meta: [
+      ["Country", country.value],
+      ["Source", source.value],
+      ["Period", `${fmtDate(start.value)} – ${fmtDate(end.value)}`],
+      ...(selectedPath
+        ? [
+            ["Selected", selectedPath],
+            ["Share", `${percentage}%`],
+          ]
+        : []),
+    ],
+    notes: defaultDomains.join(", "),
+    notesLabel: "Domains",
+    filename: [
+      "cp-observatory-measurement-summary",
+      safe(country.value),
+      fmtDate(start.value),
+      fmtDate(end.value),
+    ].join("-"),
+  });
+};
+
+measurementSummaryFooter.append(
+  document.createTextNode(" · "),
+  measurementSummaryPng,
+);
+```
