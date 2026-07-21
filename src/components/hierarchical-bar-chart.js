@@ -20,9 +20,9 @@ export function transformFlatData(flatData) {
       };
     }
     const count = parseInt(item.total_count);
-    networkGroups[item.network].children[item.subnetwork].stackedValues[
-      item.outcome
-    ] = count;
+    const subnet = networkGroups[item.network].children[item.subnetwork];
+    subnet.stackedValues[item.outcome] =
+      (subnet.stackedValues[item.outcome] || 0) + count;
     networkGroups[item.network].stackedValues[item.outcome] =
       (networkGroups[item.network].stackedValues[item.outcome] || 0) + count;
   });
@@ -41,7 +41,7 @@ export function transformFlatData(flatData) {
   };
 }
 
-export function hierarchicalBarChart(networkData, width) {
+export function hierarchicalBarChart(networkData, width, sourceValue) {
   const compact = width < 640;
   const marginTop = compact ? 46 : 30;
   const marginRight = compact ? 12 : 30;
@@ -51,7 +51,17 @@ export function hierarchicalBarChart(networkData, width) {
   const duration = 750;
   const barPadding = 3 / barStep;
 
-  const newdata = transformFlatData(networkData);
+  const rows =
+    sourceValue === 'DNS'
+      ? (networkData || []).map((d) => ({
+          ...d,
+          outcome: d.outcome.includes(':')
+            ? d.outcome.split(':')[0]
+            : d.outcome,
+        }))
+      : networkData || [];
+
+  const newdata = transformFlatData(rows);
 
   // down()/up() mutate the SVG in place without recording where they are, so
   // an exported image has no way to say which level it shows. Tracked here and
@@ -59,7 +69,7 @@ export function hierarchicalBarChart(networkData, width) {
   let currentNode = null;
 
   const outcomeTotals = new Map();
-  for (const row of networkData || []) {
+  for (const row of rows) {
     if (!row.outcome) continue;
     const count = Number(row.total_count) || 0;
     outcomeTotals.set(

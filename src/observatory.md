@@ -271,7 +271,7 @@ outcomeTimelineFooter.append(
 
 ```js
 const outcomeNetwork = resize((width) =>
-  hierarchicalBarChart(networkData, width),
+  hierarchicalBarChart(networkData, width, source.value),
 );
 
 const outcomeNetworkFooter = downloadLinks(
