@@ -8,7 +8,7 @@ import SlimSelect from "npm:slim-select@2.8.1";
 import { fetchDashboard } from "./components/queries.js";
 import { downloadLinks } from "./components/data-download.js"
 import { exportChartPng } from "./components/chart-export.js";
-import { fmt, leafColor, sparkbar, updateBounds } from "./components/utils.js"
+import { fmt, leafColor, sparkbar, updateBounds, updateURL } from "./components/utils.js"
 import { aggregateMetricsBySubnetwork, aggregateByDateOutcome, aggregateByNetwork, transformFlatData } from "./components/aggregators.js";
 import { createStackedBarChart } from "./components/stacked-bar-chart.js"
 import { hierarchicalBarChart } from "./components/hierarchical-bar-chart.js"
@@ -18,6 +18,15 @@ import { createResponsiveTable } from "./components/table.js";
 
 const params = new URLSearchParams(window.location.search);
 const countryParam = (params.get("country") ?? "").trim();
+const sourceParam = (params.get("source") ?? "").trim().toUpperCase();
+const startParam = (params.get("start") ?? "").trim();
+const endParam = (params.get("end") ?? "").trim();
+const domainsParam = (params.get("domains") ?? "").trim();
+const countryCodes = await FileAttachment("data/country-codes.csv").csv({
+  typed: true,
+});
+const nameByCode = new Map(countryCodes.map((d) => [d.code, d.name]));
+const codeByName = new Map(countryCodes.map((d) => [d.name, d.code]));
 ```
 <link href="https://unpkg.com/slim-select@2.8.1/dist/slimselect.css" rel="stylesheet" />
 
@@ -26,7 +35,7 @@ const countryParam = (params.get("country") ?? "").trim();
 ```js
 const sources = ["DNS", "HTTPS", "HTTP", "ECHO", "DISCARD"];
 const source = Inputs.select(sources, {
-  value: "HTTPS",
+  value: sources.includes(sourceParam) ? sourceParam : "HTTPS",
   label: "Source",
   sort: true,
   unique: true,
@@ -34,9 +43,14 @@ const source = Inputs.select(sources, {
 
 const countriesRaw = await FileAttachment("./data/countries.json").json();
 const countriesList = countriesRaw.map((d) => d.country);
+// Accepts a code (?country=IR) or a name (?country=Iran); links written before
+// the switch to codes still resolve.
+const requestedCountry =
+  nameByCode.get(countryParam.toUpperCase()) ?? countryParam;
 const defaultCountry =
-  countriesList.find((c) => c.toLowerCase() === countryParam.toLowerCase()) ??
-  "Russia";
+  countriesList.find(
+    (c) => c.toLowerCase() === requestedCountry.toLowerCase(),
+  ) ?? "Russia";
 const country = Inputs.select(countriesList, {
   value: defaultCountry,
   label: "Country",
@@ -59,18 +73,31 @@ const domains = Inputs.select(domainsArray, {
 
 const dataMinDate = new Date("2018-01-01");
 const dataMaxDate = new Date();
+
+const dateFromParam = (value, fallback) => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return fallback;
+  const parsed = new Date(value);
+  if (Number.isNaN(+parsed) || parsed < dataMinDate || parsed > dataMaxDate) {
+    return fallback;
+  }
+  return value;
+};
+
 const start = Inputs.date({
   label: "Start Date",
   min: fmt(dataMinDate),
   max: fmt(dataMaxDate),
-  value: fmt(new Date(Date.now() - 21 * 24 * 60 * 60 * 1000)),
+  value: dateFromParam(
+    startParam,
+    fmt(new Date(Date.now() - 21 * 24 * 60 * 60 * 1000)),
+  ),
 });
 
 const end = Inputs.date({
   label: "End Date",
   min: fmt(dataMinDate),
   max: fmt(dataMaxDate),
-  value: fmt(dataMaxDate),
+  value: dateFromParam(endParam, fmt(dataMaxDate)),
 });
 updateBounds(start, end, dataMaxDate, dataMinDate);
 
@@ -86,6 +113,31 @@ let defaultDomains = [
   "www.pornhub.com",
   "www.hrc.org",
 ];
+if (domainsParam) {
+  const known = new Set(domainsArray.map((d) => d.domain));
+  const asked = [
+    ...new Set(domainsParam.split(",").map((d) => d.trim()).filter(Boolean)),
+  ];
+  const requested = asked.filter((d) => known.has(d)).slice(0, 10);
+
+  const dropped = asked.filter((d) => !known.has(d));
+  if (dropped.length) {
+    console.warn(
+      `Ignored ${dropped.length} unknown domain(s) from the URL: ${dropped.join(", ")}`,
+    );
+  }
+  if (asked.length > requested.length + dropped.length) {
+    console.warn("More than 10 domains requested; only the first 10 are used.");
+  }
+
+  if (requested.length) {
+    defaultDomains = requested;
+  } else {
+    console.warn(
+      "No usable domains in the URL; falling back to the default selection.",
+    );
+  }
+}
 
 const domainSelector = createDomainSelector(domainsArray, defaultDomains);
 ```
@@ -127,6 +179,13 @@ function setSearching(busy) {
 ```js
 searchButton;
 setSearching(true);
+updateURL({
+  country: codeByName.get(country.value) ?? country.value,
+  source: source.value,
+  start: fmt(new Date(start.value)),
+  end: fmt(new Date(end.value)),
+  domains: defaultDomains.join(","),
+});
 const queryResults = await fetchDashboard(
   country.value,
   source.value,
@@ -280,7 +339,7 @@ measurementSummaryPng.onclick = async (event) => {
   event.preventDefault();
   const chart = measurementSummaryHost.querySelector("svg.sunburst");
   if (!chart) return;
-  
+
   const selection = chart.getSelection?.() ?? null;
   const { sequence = [], percentage = 0 } = chart.value ?? {};
   const selectedPath = selection
