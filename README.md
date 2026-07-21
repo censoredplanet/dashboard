@@ -19,6 +19,9 @@ timeline, an outcome-per-network breakdown and a measurement summary.
 search-volume time series with event highlights, alongside a detail view pairing
 an event timeline with per-event impact and context.
 
+Every chart can be downloaded as JSON or exported as a PNG, composed with the
+logo, the active filters and a caption.
+
 ## Getting started
 
 Requires Node 18 or newer.
@@ -53,11 +56,51 @@ pages import. Each one posts a GraphQL query and prints JSON.
 | `cenalertCountries.json.js`         | `cenalertCountries`                                              | all time           |
 | `cenalertEvents.json.js`            | `cenalertEvents`                                                 | last 6 months      |
 
+These loaders feed the home page only. The observatory and cenalert pages query
+the API live through `src/components/queries.js` as you change filters, so their
+data is not build-time and not subject to these ranges. In particular
+`fetchCenalertEvents` sends no date range unless one is supplied, so the CenAlert
+page shows a country's full event history until you narrow it with the date range
+control.
+
 Loader output is cached in `src/.observablehq/cache`. Because several loaders
 compute their range relative to _today_, a stale cache will quietly serve old
 windows — run `npm run clean` to force a refetch.
 
 `src/data/domains.csv` is a static list used by the observatory domain picker.
+
+`src/data/country-codes.csv` maps ISO codes to the country names the API expects.
+The dashboard table stores those exact names, which `Intl.DisplayNames` does not
+reproduce, so both pages read names from here rather than deriving them.
+Regenerate it whenever that dict changes.
+
+## URL parameters
+
+Both dashboard pages read their filter state from the URL on load and write it
+back as it changes, so any view can be bookmarked, shared or cited.
+
+**Observatory**
+
+| Parameter      | Value                                                        |
+| -------------- | ------------------------------------------------------------ |
+| `country`      | ISO 3166-1 alpha-2 code, e.g. `IR`. Names are also accepted. |
+| `source`       | One of `DNS`, `HTTPS`, `HTTP`, `ECHO`, `DISCARD`             |
+| `start`, `end` | `YYYY-MM-DD`, between 2018-01-01 and today                   |
+| `domains`      | Comma-separated, matched against `domains.csv`, capped at 10 |
+
+Written when Search is pressed, so the address describes the results on screen
+rather than a selection that has not been applied yet.
+
+**CenAlert**
+
+| Parameter      | Value                                                            |
+| -------------- | ---------------------------------------------------------------- |
+| `country`      | ISO code, from the 72 countries CenAlert covers. Names accepted. |
+| `range`        | `present`, `year`, `all` or `custom`                             |
+| `start`, `end` | `YYYY-MM-DD`, only meaningful with `range=custom`                |
+| `event`        | Identifies the selected event in the detail view                 |
+
+Every parameter validates and falls back to the default silently.
 
 ## Project structure
 
@@ -67,6 +110,7 @@ windows — run `npm run clean` to force a refetch.
 │  ├─ components            # importable JS modules, shared across pages
 │  │  ├─ queries.js         # browser-side GraphQL calls
 │  │  ├─ detail-view.js     # cenalert event timeline + impact panel
+│  │  ├─ chart-export.js    # PNG export composed as a poster
 │  │  ├─ time-series-chart.js
 │  │  ├─ stacked-bar-chart.js
 │  │  ├─ hierarchical-bar-chart.js
@@ -74,7 +118,7 @@ windows — run `npm run clean` to force a refetch.
 │  │  ├─ domain-selector.js # Slim Select multi-select
 │  │  ├─ table.js
 │  │  ├─ aggregators.js
-│  │  ├─ data-download.js   # "Download Data: JSON" footer
+│  │  ├─ data-download.js   # "Download: JSON · PNG" footer
 │  │  └─ utils.js
 │  ├─ data                  # data loaders and static data
 │  ├─ styles
@@ -104,6 +148,11 @@ so `src/observatory.md` is served at `/observatory`.
 `observablehq.config.js`. It imports the framework defaults and the built-in
 themes, and defines the design tokens — but deliberately contains no rules that
 paint anything.
+
+Light and dark are chosen by the reader's system setting. Framework has no
+in-page toggle; `base.css` imports one theme per `prefers-color-scheme` branch,
+and the design tokens point at the framework's `--theme-*` variables so both
+modes follow automatically.
 
 Each page has its own stylesheet named in its front matter:
 
@@ -157,22 +206,28 @@ Prettier is pinned to 3.8.1 in the lockfile; 3.9.x formats some template literal
 differently, so install from the lockfile rather than letting `^3.8.1` float.
 
 ## Deploying
- 
+
 This app is served from a **static host**, not from Observable. `npm run deploy`
 exists because it ships with the Framework template, but it publishes to
 Observable and is not the path used here — ignore it.
- 
+
 The actual workflow is build and upload:
- 
+
 ```sh
+npm run clean          # loaders derive their range from today
 npm run build          # writes ./dist
 # then copy ./dist to the web root of the static host
 ```
- 
+
 `dist` is entirely self-contained: pre-rendered HTML, hashed CSS and JS bundles,
 and the JSON that the data loaders produced at build time. No Node runtime is
 needed on the server, and there is nothing to configure beyond serving files.
- 
+
+`preserveExtension: true` in `observablehq.config.js` keeps `.html` in the URLs,
+so pages are served at `/observatory.html` rather than `/observatory`. That is
+deliberate — it means the host needs no rewrite rules, and internal links are
+generated to match.
+
 Because the data is baked in at build time, the site is only as fresh as its last
 build — rebuild and re-upload to refresh it. Run `npm run clean` first, since
 several loaders derive their date range from _today_ and a warm cache will
@@ -185,7 +240,7 @@ otherwise reuse an older window.
 | `npm install`          | Install or reinstall dependencies                     |
 | `npm run dev`          | Start the local preview server on port 3000           |
 | `npm run build`        | Build the static site into `./dist`                   |
-| `npm run deploy`       | Deploy to Observable                                  |
+| `npm run deploy`       | Deploy to Observable (unused — see Deploying)         |
 | `npm run clean`        | Clear the data loader cache in `src/.observablehq`    |
 | `npm run observable`   | Run the Framework CLI, e.g. `npm run observable help` |
 | `npm run lint`         | Report ESLint problems                                |

@@ -19,14 +19,23 @@ const params = new URLSearchParams(window.location.search);
 const countryParam = (params.get("country") ?? "").trim();
 const urlEvent = params.get("event");
 const urlRange = params.get("range") ?? "present";
+const startParam = (params.get("start") ?? "").trim();
+const endParam = (params.get("end") ?? "").trim();
 const parseISO = utcParse("%Y-%m-%d");
 const fmtDMY = utcFormat("%d.%m.%Y");
-const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+
+const countryCodes = await FileAttachment("data/country-codes.csv").csv({
+  typed: true,
+});
+const nameByCode = new Map(countryCodes.map((d) => [d.code, d.name]));
 const countriesNew = await FileAttachment("data/cenalertCountries.json").json();
 const tsCache = new Map();
 const countriesList = [...new Set(countriesNew)]
   .filter((code) => code)
-  .map((code) => ({ code: String(code).trim().toUpperCase(), name: regionNames.of(code) ?? code }))
+  .map((raw) => {
+    const code = String(raw).trim().toUpperCase();
+    return { code, name: nameByCode.get(code) ?? code };
+  })
   .sort((a, b) => a.name.localeCompare(b.name));
 
 const countryNameToCode = {};
@@ -35,9 +44,12 @@ for (const { name, code } of countriesList) {
 }
 
 const countries = countriesList.map((c) => c.name);
+const requestedName =
+  countriesList.find((c) => c.code === countryParam.toUpperCase())?.name ??
+  countryParam;
 let defaultCountry = "Russia";
-if (countries.includes(countryParam)) {
-  defaultCountry = countryParam;
+if (countries.includes(requestedName)) {
+  defaultCountry = requestedName;
 }
 
 const DAY = 24 * 60 * 60 * 1000;
@@ -99,8 +111,24 @@ const latestDate = new Date(Math.max(...allDates.map(d => d.getTime())));
 latestDate.setDate(latestDate.getDate() + 1);
 ```
 ```js
+// A date from the URL is honoured only if it parses and sits inside the range
+// this country's series actually covers; anything else is ignored.
+const dateFromParam = (value) => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+  const parsed = new Date(value);
+  if (Number.isNaN(+parsed) || parsed < earliestDate || parsed > latestDate) {
+    return null;
+  }
+  return parsed;
+};
+const fmtParam = (d) =>
+  d instanceof Date && !Number.isNaN(+d) ? d.toISOString().slice(0, 10) : null;
+
 if (!globalThis.customDateState) {
-  globalThis.customDateState = { start: null, end: null };
+  globalThis.customDateState = {
+    start: dateFromParam(startParam),
+    end: dateFromParam(endParam),
+  };
 }
 const storedDates = globalThis.customDateState;
 const customStartDateInput = Inputs.date({
@@ -118,9 +146,11 @@ const customEndDateInput = Inputs.date({
 
 customStartDateInput.addEventListener?.("input", e => {
   storedDates.start = e.target.valueAsDate;
+  updateURL({ start: fmtParam(storedDates.start) });
 });
 customEndDateInput.addEventListener?.("input", e => {
   storedDates.end = e.target.valueAsDate;
+  updateURL({ end: fmtParam(storedDates.end) });
 });
 
 const customStartDate = Generators.input(customStartDateInput);
@@ -388,17 +418,20 @@ countryInput.addEventListener("change", async () => {
   const country = countryInput.value;
   const newCode = countryNameToCode[country];
 
-  updateURL({ country }, true);
+  updateURL({ country: newCode }, true);
 
   const range = dateRangeInput?.value?.value;
-  const newEvents = await fetchCenalertEvents({ country, range });
+  const newEvents = await fetchCenalertEvents({ country: newCode, range });
 
   const hasEvents = Array.isArray(newEvents) && newEvents.length > 0;
   if (hasEvents) {
     const first = newEvents[0];
     const firstKey = first.__matchKey || first.dateLabel || null;
     if (firstKey) {
-      updateURL({ country, ...(range ? { range } : {}), event: firstKey }, false);
+      updateURL(
+        { country: newCode, ...(range ? { range } : {}), event: firstKey },
+        false,
+      );
       showCountryDetail(newCode, country, firstKey, { scrollIntoView: false });
       return;
     }
@@ -415,7 +448,16 @@ dateRangeInput.addEventListener("change", async () => {
   const newCode = countryNameToCode[country];
   const scrollY = window.scrollY;
 
-  updateURL({ range }, true);
+  updateURL(
+    range === "custom"
+      ? {
+          range,
+          start: fmtParam(storedDates.start),
+          end: fmtParam(storedDates.end),
+        }
+      : { range, start: null, end: null },
+    true,
+  );
 
   const newEvents = await fetchCenalertEvents({ country: newCode, range });
 
@@ -449,7 +491,7 @@ const eventCounts = events.reduce((acc, d) => {
 
 const enriched = events.map((d) => ({
   ...d,
-  countryName: regionNames.of(String(d.country).toUpperCase()) || d.country,
+  countryName: nameByCode.get(String(d.country).toUpperCase()) || d.country,
 }));
 
 const formatImpact = new Intl.NumberFormat("de-AT", {
