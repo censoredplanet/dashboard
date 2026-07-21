@@ -18,11 +18,11 @@ const breadcrumbHeight = 30;
 
 const getResponsiveBreadcrumb = (windowWidth) => {
   if (windowWidth <= 480) {
-    return { width: 70, textLength: 10, fontSize: 10, showPercentage: false };
+    return { width: 70, textLength: 10, fontSize: 10 };
   } else if (windowWidth <= 768) {
-    return { width: 150, textLength: 15, fontSize: 14, showPercentage: true };
+    return { width: 150, textLength: 15, fontSize: 14 };
   } else {
-    return { width: 250, textLength: 20, fontSize: 16, showPercentage: true };
+    return { width: 250, textLength: 20, fontSize: 16 };
   }
 };
 
@@ -113,11 +113,9 @@ function breadcrumb(datasun, windowWidth) {
   const config = getResponsiveBreadcrumb(windowWidth);
   const breadcrumbWidth = config.width;
   const count = datasun.sequence.length || 0;
-  const showPercentage = config.showPercentage && datasun.percentage > 0;
-  const percentageWidth = showPercentage ? config.fontSize * 4 : 0;
   const totalSvgWidth = Math.max(
     breadcrumbWidth * 2,
-    count * breadcrumbWidth + 20 + percentageWidth,
+    count * breadcrumbWidth + 20,
   );
 
   const svg = d3
@@ -165,18 +163,6 @@ function breadcrumb(datasun, windowWidth) {
       const maxLength = config.textLength;
       return name.length > maxLength ? name.slice(0, maxLength) + '...' : name;
     });
-
-  if (showPercentage) {
-    svg
-      .append('text')
-      .text(datasun.percentage + '%')
-      .attr('x', count * breadcrumbWidth + 15)
-      .attr('y', breadcrumbHeight / 2)
-      .attr('dy', '0.35em')
-      .attr('fill', '#17827B')
-      .style('font-weight', 'bold')
-      .attr('text-anchor', 'start');
-  }
 
   return svg.node();
 }
@@ -249,6 +235,7 @@ function sunburst(width, networkData, sourceValue) {
     .text('of measurements');
 
   svg
+    .attr('class', 'sunburst')
     .attr('viewBox', `${-radius} ${-radius} ${width} ${width}`)
     .style('max-width', `${width}px`)
     .style('font-family', 'sans-serif');
@@ -289,38 +276,53 @@ function sunburst(width, networkData, sourceValue) {
 
   observer.observe(element);
 
+  let pinned = null;
+  const showSelection = (d) => {
+    if (!d) {
+      path.attr('fill-opacity', 1);
+      label.style('visibility', 'hidden');
+      element.value = { sequence: [], percentage: 0.0 };
+      element.dispatchEvent(new CustomEvent('input'));
+      return;
+    }
+
+    const sequence = d.ancestors().reverse().slice(1);
+    path.attr('fill-opacity', (node) =>
+      sequence.indexOf(node) >= 0 ? 1.0 : 0.3,
+    );
+
+    const val = d.value || 0;
+    const rootVal = root.value || 1;
+    const percentage = String(+((100 * val) / rootVal).toFixed(3));
+
+    label
+      .style('visibility', null)
+      .select('.percentage')
+      .text(percentage + '%');
+    element.value = { sequence, percentage };
+    element.dispatchEvent(new CustomEvent('input'));
+  };
+
   svg
     .append('g')
     .attr('fill', 'none')
     .attr('pointer-events', 'all')
     .on('pointerleave', (event) => {
       if (event.pointerType === 'touch') return;
-      path.attr('fill-opacity', 1);
-      label.style('visibility', 'hidden');
-      element.value = { sequence: [], percentage: 0.0 };
-      element.dispatchEvent(new CustomEvent('input'));
+      showSelection(pinned);
     })
     .selectAll('path')
     .data(root.descendants().filter((d) => d.depth && d.x1 - d.x0 > 0.001))
     .join('path')
     .attr('d', mousearc)
-    .on('pointerenter', (event, d) => {
-      const sequence = d.ancestors().reverse().slice(1);
-      path.attr('fill-opacity', (node) =>
-        sequence.indexOf(node) >= 0 ? 1.0 : 0.3,
-      );
-
-      const val = d.value || 0;
-      const rootVal = root.value || 1;
-      const percentage = String(+((100 * val) / rootVal).toFixed(3));
-
-      label
-        .style('visibility', null)
-        .select('.percentage')
-        .text(percentage + '%');
-      element.value = { sequence, percentage };
-      element.dispatchEvent(new CustomEvent('input'));
+    .style('cursor', 'pointer')
+    .on('pointerenter', (event, d) => showSelection(d))
+    .on('click', (event, d) => {
+      pinned = pinned === d ? null : d;
+      showSelection(d);
     });
+
+  element.getSelection = () => pinned ?? null;
 
   return element;
 }

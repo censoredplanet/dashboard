@@ -7,6 +7,7 @@ style: styles/observatory.css
 import SlimSelect from "npm:slim-select@2.8.1";
 import { fetchDashboard } from "./components/queries.js";
 import { downloadLinks } from "./components/data-download.js"
+import { exportChartPng } from "./components/chart-export.js";
 import { fmt, leafColor, sparkbar, updateBounds } from "./components/utils.js"
 import { aggregateMetricsBySubnetwork, aggregateByDateOutcome, aggregateByNetwork, transformFlatData } from "./components/aggregators.js";
 import { createStackedBarChart } from "./components/stacked-bar-chart.js"
@@ -152,22 +153,168 @@ const search = Generators.input(searchInput);
 <div class = "grid grid-cols-2">
     <div class="grid-colspan-2 card">
       <h2>Outcome Timeline</h2><br>
-      ${resize(width => createStackedBarChart(width, start.value, end.value, stackedBarData, source))}
-      ${downloadLinks(stackedBarData, "cp-observatory", "outcome-timeline", country.value, start.value, end.value, source.value)}
+      ${outcomeTimeline}
+      ${outcomeTimelineFooter}
     </div>
 </div>
+
+```js
+const logoUrl = FileAttachment("logo-umichlab.svg").href;
+const fmtDate = (d) =>
+  d instanceof Date ? d.toISOString().slice(0, 10) : String(d ?? "");
+const safe = (s) => String(s).replace(/[^\w-]+/g, "-").replace(/^-|-$/g, "");
+
+const outcomeTimeline = resize((width) =>
+  createStackedBarChart(width, start.value, end.value, stackedBarData, source),
+);
+
+const outcomeTimelineFooter = downloadLinks(
+  stackedBarData, "cp-observatory", "outcome-timeline",
+  country.value, start.value, end.value, source.value,
+);
+
+const outcomeTimelinePng = html`<a href="#">PNG</a>`;
+outcomeTimelinePng.onclick = async (event) => {
+  event.preventDefault();
+  const chart = outcomeTimeline.querySelector("svg");
+  if (!chart) return;
+
+  await exportChartPng({
+    chart,
+    logoUrl,
+    title: `Outcome Timeline — ${country.value}`,
+    meta: [
+      ["Country", country.value],
+      ["Source", source.value],
+      ["Period", `${fmtDate(start.value)} – ${fmtDate(end.value)}`],
+    ],
+    notes: defaultDomains.join(", "),
+    notesLabel: "Domains",
+    filename: `cp-observatory-outcome-timeline-${safe(country.value)}-${fmtDate(
+      start.value,
+    )}-${fmtDate(end.value)}`,
+  });
+};
+
+outcomeTimelineFooter.append(
+  document.createTextNode(" · "),
+  outcomeTimelinePng,
+);
+```
 
 <div class = "grid grid-cols-2">
     <div class="grid-colspan-2 card card--network">
       <h2>Outcome per Network</h2><br>
-      ${resize(width => hierarchicalBarChart(networkData, width))}
-      ${downloadLinks(networkData, "cp-observatory", "outcome-network", country.value, start.value, end.value, source.value)}
+      ${outcomeNetwork}
+      ${outcomeNetworkFooter}
     </div>
 </div>
+
+```js
+const outcomeNetwork = resize((width) =>
+  hierarchicalBarChart(networkData, width),
+);
+
+const outcomeNetworkFooter = downloadLinks(
+  networkData, "cp-observatory", "outcome-network",
+  country.value, start.value, end.value, source.value,
+);
+
+const outcomeNetworkPng = html`<a href="#">PNG</a>`;
+outcomeNetworkPng.onclick = async (event) => {
+  event.preventDefault();
+  const chart = outcomeNetwork.querySelector("svg");
+  if (!chart) return;
+
+  const view = chart.currentView?.() ?? { depth: 0, name: null };
+  const drilled = view.depth >= 1 && view.name;
+
+  await exportChartPng({
+    chart,
+    logoUrl,
+    title: `Outcome per Network — ${country.value}`,
+    meta: [
+      ["Country", country.value],
+      ["Source", source.value],
+      ["Period", `${fmtDate(start.value)} – ${fmtDate(end.value)}`],
+      ...(drilled ? [["Network", view.name]] : []),
+    ],
+    notes: defaultDomains.join(", "),
+    notesLabel: "Domains",
+    filename: [
+      "cp-observatory-outcome-network",
+      safe(country.value),
+      ...(drilled ? [safe(view.name)] : []),
+      fmtDate(start.value),
+      fmtDate(end.value),
+    ].join("-"),
+  });
+};
+
+outcomeNetworkFooter.append(
+  document.createTextNode(" · "),
+  outcomeNetworkPng,
+);
+```
 
 <div class="grid grid-cols-2">
   <div class="grid-colspan-2 card">
     <h2>Measurement Summary</h2><br>
-    ${resize(width => measurementSummary(networkData, width, source.value))}
+    ${measurementSummaryHost}
+    ${measurementSummaryFooter}
   </div>
 </div>
+
+```js
+const measurementSummaryHost = resize((width) =>
+  measurementSummary(networkData, width, source.value),
+);
+
+const measurementSummaryFooter = downloadLinks(
+  networkData, "cp-observatory", "measurement-summary",
+  country.value, start.value, end.value, source.value,
+);
+
+const measurementSummaryPng = html`<a href="#">PNG</a>`;
+measurementSummaryPng.onclick = async (event) => {
+  event.preventDefault();
+  const chart = measurementSummaryHost.querySelector("svg.sunburst");
+  if (!chart) return;
+  
+  const selection = chart.getSelection?.() ?? null;
+  const { sequence = [], percentage = 0 } = chart.value ?? {};
+  const selectedPath = selection
+    ? sequence.map((d) => d.data.name).join(" → ")
+    : "";
+
+  await exportChartPng({
+    chart,
+    logoUrl,
+    title: `Measurement Summary — ${country.value}`,
+    meta: [
+      ["Country", country.value],
+      ["Source", source.value],
+      ["Period", `${fmtDate(start.value)} – ${fmtDate(end.value)}`],
+      ...(selectedPath
+        ? [
+            ["Selected", selectedPath],
+            ["Share", `${percentage}%`],
+          ]
+        : []),
+    ],
+    notes: defaultDomains.join(", "),
+    notesLabel: "Domains",
+    filename: [
+      "cp-observatory-measurement-summary",
+      safe(country.value),
+      fmtDate(start.value),
+      fmtDate(end.value),
+    ].join("-"),
+  });
+};
+
+measurementSummaryFooter.append(
+  document.createTextNode(" · "),
+  measurementSummaryPng,
+);
+```
