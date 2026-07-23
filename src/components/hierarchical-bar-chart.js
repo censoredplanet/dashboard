@@ -153,7 +153,7 @@ export function hierarchicalBarChart(networkData, width, sourceValue) {
 
   function calculateHeight(d) {
     const numChildren = d.children ? d.children.length : 1;
-    return numChildren * barStep + 15 + marginBottom + legendHeight;
+    return chartTop + numChildren * barStep + 15 + marginBottom;
   }
 
   function processData(data) {
